@@ -10,7 +10,8 @@ public static class FlowerMapper
         return new FlowerResponse
         {
             Id = entity.Id,
-            Name = entity.FlowerName.Name
+            Name = entity.FlowerName.Name,
+            Slug = entity.Slug
         };
     }
 
@@ -18,7 +19,6 @@ public static class FlowerMapper
     {
         return new Flower
         {
-            // Name = request.Name
         };
     }
 }
