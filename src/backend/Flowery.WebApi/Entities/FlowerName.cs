@@ -1,10 +1,10 @@
 ﻿using Flowery.WebApi.Shared.Enums;
 
-namespace Flowery.WebApi.Flowers;
+namespace Flowery.WebApi.Entities;
 
 public sealed class FlowerName
 {
     public int FlowerId { get; set; }
-    public LanguageCode LanguageCode { get; set; } = null!;
+    public LanguageCode LanguageCode { get; set; }
     public string Name { get; set; } = null!;
 }

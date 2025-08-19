@@ -1,4 +1,4 @@
-﻿namespace Flowery.WebApi.Categories;
+﻿namespace Flowery.WebApi.Entities;
 
 public sealed class Category
 {

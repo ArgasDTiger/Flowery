@@ -1,4 +1,6 @@
-﻿namespace Flowery.WebApi.Users;
+﻿using Flowery.WebApi.Features.Users;
+
+namespace Flowery.WebApi.Entities;
 
 public sealed class User
 {
@@ -9,6 +11,6 @@ public sealed class User
     public string? PhoneNumber { get; set; }
     public string PasswordSalt { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
-    public UserRole Role { get; set; } = null!;
+    public UserRole Role { get; set; }
     public bool IsEmailVerified { get; set; }
 }

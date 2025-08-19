@@ -1,4 +1,4 @@
-﻿namespace Flowery.WebApi.Users;
+﻿namespace Flowery.WebApi.Entities;
 
 public sealed class UserFlower
 {

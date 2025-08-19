@@ -1,4 +1,4 @@
-﻿namespace Flowery.WebApi.Shared.Entities;
+﻿namespace Flowery.WebApi.Entities.Abstractions;
 
 public interface IDeletable
 {

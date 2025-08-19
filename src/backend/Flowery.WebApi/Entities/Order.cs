@@ -1,6 +1,4 @@
-﻿using Flowery.WebApi.Flowers;
-
-namespace Flowery.WebApi.Orders;
+﻿namespace Flowery.WebApi.Entities;
 
 public sealed class Order
 {

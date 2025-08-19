@@ -1,6 +1,6 @@
-﻿using Flowery.WebApi.Shared.Entities;
+﻿using Flowery.WebApi.Entities.Abstractions;
 
-namespace Flowery.WebApi.Flowers;
+namespace Flowery.WebApi.Entities;
 
 public sealed class Flower : IDeletable
 {
