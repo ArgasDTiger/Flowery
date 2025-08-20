@@ -28,24 +28,22 @@ public sealed class Query : IQuery
     
         var offset = (paginationParams.PageNumber - 1) * paginationParams.PageSize;
     
-        const string sql = """
-                           SELECT 
-                               f.Id,
-                               fn.Name,
-                               f.Slug,
-                               f.Price
-                           FROM Flowers f
-                           JOIN FlowerName fn ON f.Id = fn.FlowerId
-                           WHERE f.IsDeleted = 0
-                           ORDER BY @OrderBy @OrderDirection
-                           OFFSET @Offset ROWS
-                           FETCH NEXT @PageSize ROWS ONLY
-                           """;
-    
+        string sql = $"""
+                      SELECT
+                          f.id,
+                          fn.name,
+                          f.slug,
+                          f.price
+                      FROM flowers f
+                      JOIN flowername fn ON f.id = fn.flowerid
+                      WHERE f.isdeleted = false
+                      ORDER BY {orderBy} {sortDirection}
+                      OFFSET @Offset ROWS
+                      FETCH NEXT @PageSize ROWS ONLY
+                      """;
+
         var flowers = await dbConnection.QueryAsync<Response>(sql, new
         {
-            OrderBy = orderBy,
-            OrderDirection = sortDirection,
             Offset = offset,
             PageSize = paginationParams.PageSize
         });

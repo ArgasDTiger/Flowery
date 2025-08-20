@@ -23,7 +23,7 @@ public sealed class SortDirectionConverter : JsonConverter<SortDirection>
             "desc" => SortDirection.Descending,
             "descending" => SortDirection.Descending,
             "1" => SortDirection.Descending,
-            _ => throw new JsonException($"Invalid SortDirection: {value}")
+            _ => throw new JsonException($"Invalid SortDirection: {value}.")
         };
     }
 

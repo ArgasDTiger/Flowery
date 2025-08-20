@@ -19,7 +19,7 @@ public sealed class SortFieldConverter : JsonConverter<SortField>
         {
             "name" => SortField.Name,
             "price" => SortField.Price,
-            _ => throw new JsonException($"Invalid SortField: {value}")
+            _ => throw new JsonException($"Invalid SortField: {value}.")
         };
     }
 

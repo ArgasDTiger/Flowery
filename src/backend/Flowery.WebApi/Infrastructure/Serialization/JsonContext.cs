@@ -9,4 +9,8 @@ namespace Flowery.WebApi.Infrastructure.Serialization;
 [JsonSerializable(typeof(IEnumerable<Response>))]
 [JsonSerializable(typeof(SortField))]
 [JsonSerializable(typeof(SortDirection))]
+[JsonSourceGenerationOptions(
+    PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+    Converters = [typeof(SortDirectionConverter), typeof(SortFieldConverter)]
+)]
 public partial class JsonContext : JsonSerializerContext;
