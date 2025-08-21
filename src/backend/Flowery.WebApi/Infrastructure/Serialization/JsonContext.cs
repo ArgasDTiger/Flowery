@@ -6,7 +6,7 @@ namespace Flowery.WebApi.Infrastructure.Serialization;
 
 [JsonSerializable(typeof(Request))]
 [JsonSerializable(typeof(Response))]
-[JsonSerializable(typeof(IEnumerable<Response>))]
+[JsonSerializable(typeof(List<Response>))]
 [JsonSerializable(typeof(SortField))]
 [JsonSerializable(typeof(SortDirection))]
 [JsonSourceGenerationOptions(

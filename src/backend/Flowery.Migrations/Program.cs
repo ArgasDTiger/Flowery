@@ -3,6 +3,9 @@ using DbUp;
 using DbUp.Engine.Output;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Npgsql;
+
+const string defaultSchema = "public";
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -44,9 +47,22 @@ try
 
     EnsureDatabase.For.PostgresqlDatabase(connectionString);
 
+    var migrationsPath = Path.Combine(basePath, "..", "..", "..", "Migrations");
+    using (var connection = new NpgsqlConnection(connectionString))
+    {
+        connection.Open();
+        using (var command = connection.CreateCommand())
+        {
+            var schema = config["schema"] ?? defaultSchema;
+            command.CommandText = $"CREATE SCHEMA IF NOT EXISTS {schema};";
+            command.ExecuteNonQuery();
+        }
+    }
+
     var upgrader = DeployChanges.To
         .PostgresqlDatabase(connectionString)
-        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+        .WithScriptsFromFileSystem(migrationsPath)
+        .WithExecutionTimeout(TimeSpan.FromMinutes(5))
         .LogTo(new ConsoleUpgradeLog())
         .Build();
 
