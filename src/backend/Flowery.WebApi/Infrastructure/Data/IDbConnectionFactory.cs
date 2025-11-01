@@ -1,8 +1,8 @@
-﻿using System.Data;
+﻿using System.Data.Common;
 
 namespace Flowery.WebApi.Infrastructure.Data;
 
 public interface IDbConnectionFactory
 {
-    Task<IDbConnection> CreateConnectionAsync(CancellationToken cancellationToken);
+    Task<DbConnection> CreateConnectionAsync(CancellationToken cancellationToken);
 }

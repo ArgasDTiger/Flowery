@@ -10,4 +10,5 @@ public sealed class Flower : IDeletable
     public DateTime? DeletedAtUtc { get; set; }
     public decimal Price { get; set; }
     public FlowerName FlowerName { get; set; } = null!;
+    public string Description { get; set; } = null!;
 }

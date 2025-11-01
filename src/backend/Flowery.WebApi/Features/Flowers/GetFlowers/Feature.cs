@@ -23,7 +23,7 @@ public sealed class GetFlowersFeature : IFeature
                     var result = await handler.GetFlowers(request, cancellationToken);
 
                     return result.Match(
-                        flowers => Results.Ok(flowers),
+                        Results.Ok,
                         errors => Results.ValidationProblem(errors.ToValidationProblemDictionary()));
                 })
             // .RequireAuthorization()

@@ -5,6 +5,7 @@ namespace Flowery.WebApi.Shared.Extensions;
 
 public static class SlugifierExtension
 {
+    // TODO: pass LanguageCode to use proper remapping
     public static string GenerateSlug(this string value, int currentCount = 0)
     {
         if (string.IsNullOrWhiteSpace(value))

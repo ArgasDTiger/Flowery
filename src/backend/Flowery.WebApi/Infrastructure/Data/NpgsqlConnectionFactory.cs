@@ -1,9 +1,9 @@
-﻿using System.Data;
+﻿using System.Data.Common;
 using Npgsql;
 
 namespace Flowery.WebApi.Infrastructure.Data;
 
-public class NpgsqlConnectionFactory : IDbConnectionFactory
+public sealed class NpgsqlConnectionFactory : IDbConnectionFactory
 {
     private readonly string _connectionString;
 
@@ -12,7 +12,7 @@ public class NpgsqlConnectionFactory : IDbConnectionFactory
         _connectionString = connectionString;
     }
     
-    public async Task<IDbConnection> CreateConnectionAsync(CancellationToken cancellationToken)
+    public async Task<DbConnection> CreateConnectionAsync(CancellationToken cancellationToken)
     {
         var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
