@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Flowery.WebApi.Features.Flowers.CreateFlower;
 
-public sealed class Feature : IFeature
+public sealed class CreateFlowerFeature : IFeature
 {
     public static void Register(IServiceCollection services)
     {
@@ -19,17 +19,26 @@ public sealed class Feature : IFeature
     {
         endpoints.MapPost("api/v1/flowers",
             async ([FromServices] IHandler handler, [FromServices] IValidator<Request> validator,
-                [FromBody] Request request, CancellationToken cancellationToken) =>
+                [FromServices] ILogger<CreateFlowerFeature> logger, [FromBody] Request request,
+                CancellationToken cancellationToken) =>
             {
-                ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-                if (!validationResult.IsValid)
+                try
                 {
-                    return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
-                }
+                    ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-                var result = await handler.CreateFlower(request, cancellationToken);
-                return Results.Created(); // TODO: return location header
+                    if (!validationResult.IsValid)
+                    {
+                        return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
+                    }
+
+                    Guid createdFlowerId = await handler.CreateFlower(request, cancellationToken);
+                    return Results.Created(new Uri($"api/v1/flowers/{createdFlowerId}", UriKind.Relative), createdFlowerId);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError("Error occured while creating flower: {Message}", ex.Message);
+                    return Results.InternalServerError();
+                }
             });
     }
 }

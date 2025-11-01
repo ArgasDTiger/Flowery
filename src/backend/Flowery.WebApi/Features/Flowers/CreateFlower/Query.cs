@@ -9,17 +9,6 @@ public sealed class Query : IQuery
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
 
-    private const string InsertFlowerSql = """
-                                           INSERT INTO flowers (price, slug, description)
-                                           VALUES (@Price, @Slug, @Description)
-                                           RETURNING id;
-                                           """;
-
-    private const string CopyCommand = """
-                                       COPY flowername (flowerid, languagecode, name) 
-                                       FROM STDIN (FORMAT BINARY)
-                                       """;
-
     public Query(IDbConnectionFactory dbConnectionFactory)
     {
         _dbConnectionFactory = dbConnectionFactory;
@@ -27,21 +16,20 @@ public sealed class Query : IQuery
 
     public async Task<Guid> CreateFlower(DatabaseModel model, CancellationToken cancellationToken)
     {
-        NpgsqlConnection npgsqlConnection =
+        NpgsqlConnection connection =
             (NpgsqlConnection)await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        await using var connection = npgsqlConnection;
-        await using var transaction = await npgsqlConnection.BeginTransactionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
         try
         {
-            Guid newFlowerId = await npgsqlConnection.QuerySingleAsync<Guid>(
+            Guid newFlowerId = await connection.QuerySingleAsync<Guid>(
                 InsertFlowerSql,
-                new { model.Price, model.Slug, model.Description },
+                model,
                 transaction);
 
             if (model.FlowerNames.Length > 0)
             {
                 await using var importer =
-                    await npgsqlConnection.BeginBinaryImportAsync(CopyCommand, cancellationToken);
+                    await connection.BeginBinaryImportAsync(CopyCommand, cancellationToken);
                 foreach (var flowerName in model.FlowerNames)
                 {
                     await importer.StartRowAsync(cancellationToken);
@@ -65,4 +53,15 @@ public sealed class Query : IQuery
             throw;
         }
     }
+    
+    private const string InsertFlowerSql = """
+                                           INSERT INTO flowers (price, slug, description)
+                                           VALUES (@Price, @Slug, @Description)
+                                           RETURNING id;
+                                           """;
+
+    private const string CopyCommand = """
+                                       COPY flowername (flowerid, languagecode, name) 
+                                       FROM STDIN (FORMAT BINARY)
+                                       """;
 }

@@ -18,21 +18,30 @@ public sealed class GetFlowersFeature : IFeature
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("api/v1/flowers",
-            async ([FromServices] IHandler handler, [FromServices] IValidator<Request> validator,
+            async ([FromServices] IHandler handler,
+                [FromServices] IValidator<Request> validator,
+                [FromServices] ILogger<GetFlowersFeature> logger,
                 [AsParameters] Request request,
                 CancellationToken cancellationToken) =>
             {
-                ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-                if (!validationResult.IsValid)
+                try
                 {
-                    return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
-                }
+                    ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-                var responses = await handler.GetFlowers(request, cancellationToken);
-                return Results.Ok(responses);
+                    if (!validationResult.IsValid)
+                    {
+                        return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
+                    }
+
+                    var responses = await handler.GetFlowers(request, cancellationToken);
+                    return Results.Ok(responses);
+                }
+                catch (Exception e)
+                {
+                    logger.LogError("Error occured while getting flowers: {Message}", e.Message);
+                    return Results.InternalServerError();
+                }
             });
         // .RequireAuthorization()
-        ;
     }
 }

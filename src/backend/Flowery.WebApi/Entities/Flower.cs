@@ -5,7 +5,7 @@ namespace Flowery.WebApi.Entities;
 public sealed class Flower : IDeletable
 {
     public Guid Id { get; init; }
-    public string Slug { get; set; } = null!;
+    public string? Slug { get; init; }
     public bool IsDeleted { get; init; }
     public DateTimeOffset? DeletedAtUtc { get; init; }
     public decimal Price { get; init; }
