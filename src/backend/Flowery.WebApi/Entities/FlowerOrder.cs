@@ -2,7 +2,7 @@
 
 public sealed class FlowerOrder
 {
-    public int FlowerId { get; set; }
-    public int OrderId { get; set; }
+    public Guid FlowerId { get; init; }
+    public Guid OrderId { get; init; }
     public int Quantity { get; set; }
 }

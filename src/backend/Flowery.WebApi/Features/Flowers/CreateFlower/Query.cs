@@ -10,8 +10,8 @@ public sealed class Query : IQuery
     private readonly IDbConnectionFactory _dbConnectionFactory;
 
     private const string InsertFlowerSql = """
-                                           INSERT INTO flowers (price, slug)
-                                           VALUES (@Price, @Slug)
+                                           INSERT INTO flowers (price, slug, description)
+                                           VALUES (@Price, @Slug, @Description)
                                            RETURNING id;
                                            """;
 
@@ -25,7 +25,7 @@ public sealed class Query : IQuery
         _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public async Task<int> CreateFlower(DatabaseModel model, CancellationToken cancellationToken)
+    public async Task<Guid> CreateFlower(DatabaseModel model, CancellationToken cancellationToken)
     {
         NpgsqlConnection npgsqlConnection =
             (NpgsqlConnection)await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
@@ -33,9 +33,9 @@ public sealed class Query : IQuery
         await using var transaction = await npgsqlConnection.BeginTransactionAsync(cancellationToken);
         try
         {
-            int newFlowerId = await npgsqlConnection.QuerySingleAsync<int>(
+            Guid newFlowerId = await npgsqlConnection.QuerySingleAsync<Guid>(
                 InsertFlowerSql,
-                new { model.Price, model.Slug },
+                new { model.Price, model.Slug, model.Description },
                 transaction);
 
             if (model.FlowerNames.Count > 0)
@@ -46,7 +46,7 @@ public sealed class Query : IQuery
                 {
                     await importer.StartRowAsync(cancellationToken);
 
-                    await importer.WriteAsync(newFlowerId, NpgsqlDbType.Integer, cancellationToken);
+                    await importer.WriteAsync(newFlowerId, NpgsqlDbType.Uuid, cancellationToken);
                     await importer.WriteAsync(flowerName.LanguageCode.ToString(), NpgsqlDbType.Text,
                         cancellationToken);
                     await importer.WriteAsync(flowerName.Name, NpgsqlDbType.Text, cancellationToken);

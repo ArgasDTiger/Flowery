@@ -20,7 +20,7 @@ public sealed class Handler : IHandler
         _translationSettings = translationSettings.Value;
     }
 
-    public async Task<OneOf<int, List<ValidationFailure>>> CreateFlower(Request request,
+    public async Task<OneOf<Guid, List<ValidationFailure>>> CreateFlower(Request request,
         CancellationToken cancellationToken)
     {
         ValidationResult validationResult = await _validator.ValidateAsync(request, cancellationToken);

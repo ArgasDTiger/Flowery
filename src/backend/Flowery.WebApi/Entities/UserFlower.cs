@@ -2,6 +2,6 @@
 
 public sealed class UserFlower
 {
-    public int FlowerId { get; set; }
-    public Guid UserId { get; set; }
+    public Guid FlowerId { get; init; }
+    public Guid UserId { get; init; }
 }

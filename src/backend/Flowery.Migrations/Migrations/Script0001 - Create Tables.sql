@@ -3,15 +3,16 @@
 CREATE TYPE LanguageCode AS ENUM ('UA', 'RO');
 
 CREATE TABLE Flowers (
-    Id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     Slug VARCHAR(255) UNIQUE NOT NULL,
     IsDeleted BOOLEAN DEFAULT FALSE,
     DeletedAtUtc TIMESTAMP,
-    Price DECIMAL CHECK ( Price > 0 ) NOT NULL
+    Price DECIMAL CHECK ( Price > 0 ) NOT NULL,
+    Description VARCHAR(500) NOT NULL
 );
 
 CREATE TABLE FlowerName (
-    FlowerId INT NOT NULL,
+    FlowerId UUID NOT NULL,
     LanguageCode LanguageCode NOT NULL,
     Name VARCHAR(255) NOT NULL,
     PRIMARY KEY (FlowerId, LanguageCode),
@@ -19,12 +20,12 @@ CREATE TABLE FlowerName (
 );
 
 CREATE TABLE Categories (
-    Id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     Name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE CategoryName (
-    CategoryId INT NOT NULL,
+    CategoryId UUID NOT NULL,
     LanguageCode LanguageCode NOT NULL,
     Name VARCHAR(255) NOT NULL,
     PRIMARY KEY (CategoryId, LanguageCode),
@@ -40,11 +41,13 @@ CREATE TABLE Users (
     PasswordSalt TEXT NOT NULL,
     PasswordHash TEXT NOT NULL,
     Role UserRole NOT NULL DEFAULT 'User',
-    IsEmailVerified BOOLEAN DEFAULT FALSE
+    IsEmailVerified BOOLEAN DEFAULT FALSE,
+    IsDeleted BOOLEAN DEFAULT FALSE,
+    DeletedAtUtc TIMESTAMP
 );
 
 CREATE TABLE UserFlower (
-    FlowerId INT NOT NULL,
+    FlowerId UUID NOT NULL,
     UserId UUID NOT NULL,
     PRIMARY KEY(FlowerId, UserId),
     CONSTRAINT fk_flower FOREIGN KEY (FlowerId) REFERENCES Flowers(Id) ON DELETE CASCADE,
@@ -52,15 +55,15 @@ CREATE TABLE UserFlower (
 );
 
 CREATE TABLE Orders (
-    Id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     TotalPrice DECIMAL NOT NULL,
     UserId UUID NOT NULL,
     CONSTRAINT fk_user FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE FlowerOrder (
-    FlowerId INT NOT NULL,
-    OrderId INT NOT NULL,
+    FlowerId UUID NOT NULL,
+    OrderId UUID NOT NULL,
     Quantity SMALLINT NOT NULL CHECK (Quantity > 0),
     PRIMARY KEY(FlowerId, OrderId),
     CONSTRAINT fk_flower FOREIGN KEY (FlowerId) REFERENCES Flowers(Id) ON DELETE CASCADE,

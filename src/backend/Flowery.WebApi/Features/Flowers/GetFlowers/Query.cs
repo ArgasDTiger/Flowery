@@ -15,7 +15,7 @@ public sealed class Query : IQuery
 
     public async Task<List<Response>> GetFlowers(Request paginationParams, CancellationToken cancellationToken)
     {
-        using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
+        await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
     
         var orderBy = paginationParams.SortField switch
         {

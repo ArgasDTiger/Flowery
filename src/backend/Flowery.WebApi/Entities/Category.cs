@@ -2,6 +2,6 @@
 
 public sealed class Category
 {
-    public int Id { get; set; }
+    public int Guid { get; init; }
     public string Name { get; set; } = null!;
 }
