@@ -16,12 +16,13 @@ public sealed class Feature : IFeature
 
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("api/v1/flowers", async ([FromServices] IHandler handler, [FromBody] Request request, CancellationToken cancellationToken) =>
-        {
-            var result = await handler.CreateFlower(request, cancellationToken);
-            return result.Match(
-                _ => Results.Created(),
-                errors => Results.ValidationProblem(errors.ToValidationProblemDictionary()));
-        });
+        endpoints.MapPost("api/v1/flowers",
+            async ([FromServices] IHandler handler, [FromBody] Request request, CancellationToken cancellationToken) =>
+            {
+                var result = await handler.CreateFlower(request, cancellationToken);
+                return result.Match(
+                    _ => Results.Created(),
+                    errors => Results.ValidationProblem(errors.ToValidationProblemDictionary()));
+            });
     }
 }

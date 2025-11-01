@@ -3,5 +3,5 @@
 public sealed class Category
 {
     public int Guid { get; init; }
-    public string Name { get; set; } = null!;
+    public string Name { get; init; } = null!;
 }

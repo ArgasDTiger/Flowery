@@ -1,13 +1,14 @@
-﻿using Flowery.WebApi.Entities;
+﻿using System.Collections.Immutable;
+using Flowery.WebApi.Entities;
 
 namespace Flowery.WebApi.Features.Flowers.CreateFlower;
 
-public sealed class DatabaseModel
+public sealed record DatabaseModel
 {
-    public decimal Price { get; init; }
-    public string Description { get; init; } = string.Empty;
+    public decimal Price { get; private init; }
+    public string Description { get; private init; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
-    public IReadOnlyList<FlowerName> FlowerNames { get; init; } = null!;
+    public ImmutableArray<FlowerName> FlowerNames { get; private init; }
 
     public static DatabaseModel FromRequest(Request request)
     {
@@ -15,12 +16,14 @@ public sealed class DatabaseModel
         {
             Price = request.Price,
             Description = request.Description,
-            FlowerNames = request.FlowerNames
-                .Select(fn => new FlowerName
-                {
-                    LanguageCode = fn.LanguageCode,
-                    Name = fn.Name,
-                }).ToArray()
+            FlowerNames = [
+                ..request.FlowerNames
+                    .Select(fn => new FlowerName
+                    {
+                        LanguageCode = fn.LanguageCode,
+                        Name = fn.Name,
+                    })
+            ]
         };
     }
 }

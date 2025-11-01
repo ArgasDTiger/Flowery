@@ -1,6 +1,6 @@
 ﻿namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
-public sealed class Response
+public sealed record Response
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; } = string.Empty;

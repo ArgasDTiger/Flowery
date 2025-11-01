@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
-public sealed class Request : OrderedPaginationParams
+public sealed record Request : OrderedPaginationParams
 {
     [FromQuery(Name = "sortBy")]
     [DefaultValue(nameof(SortField.Name))]
@@ -15,8 +15,8 @@ public sealed class Request : OrderedPaginationParams
     [BindNever]
     public SortField SortField => SortFieldString?.ToLowerInvariant() switch
     {
+        "name" or null => SortField.Name,
         "price" => SortField.Price,
-        "name" => SortField.Name,
         _ => throw new Exception($"Cannot sort by {SortFieldString}.")
     };
 }

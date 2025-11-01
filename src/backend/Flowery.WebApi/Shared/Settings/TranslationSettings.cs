@@ -3,10 +3,8 @@ using Flowery.WebApi.Shared.Enums;
 
 namespace Flowery.WebApi.Shared.Settings;
 
-public sealed class TranslationSettings
+public sealed record TranslationSettings
 {
-    public const string SectionName = "TranslationSettings";
-
     [Required]
     public LanguageCode SlugDefaultLanguage { get; init; }
 }

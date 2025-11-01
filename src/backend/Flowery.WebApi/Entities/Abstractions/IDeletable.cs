@@ -2,6 +2,6 @@
 
 public interface IDeletable
 {
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAtUtc { get; set; }
+    public bool IsDeleted { get; init; }
+    public DateTimeOffset? DeletedAtUtc { get; init; }
 }

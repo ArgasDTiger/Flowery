@@ -16,7 +16,7 @@ public static class SharedFeaturesDependencies
     public static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration config)
     {
         services.AddOptions<TranslationSettings>()
-            .Bind(config.GetSection(TranslationSettings.SectionName))
+            .Bind(config.GetSection(nameof(TranslationSettings)))
             .ValidateDataAnnotations();
         
         return services;

@@ -2,5 +2,5 @@
 
 public interface IQuery
 {
-    Task<List<Response>> GetFlowers(Request paginationParams, CancellationToken cancellationToken);
+    Task<ImmutableArray<Response>> GetFlowers(Request paginationParams, CancellationToken cancellationToken);
 }

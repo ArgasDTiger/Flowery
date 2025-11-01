@@ -6,9 +6,9 @@ public sealed class Flower : IDeletable
 {
     public Guid Id { get; init; }
     public string Slug { get; set; } = null!;
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAtUtc { get; set; }
-    public decimal Price { get; set; }
-    public FlowerName FlowerName { get; set; } = null!;
-    public string Description { get; set; } = null!;
+    public bool IsDeleted { get; init; }
+    public DateTimeOffset? DeletedAtUtc { get; init; }
+    public decimal Price { get; init; }
+    public FlowerName FlowerName { get; init; } = null!;
+    public string Description { get; init; } = null!;
 }

@@ -1,9 +1,9 @@
 ﻿namespace Flowery.WebApi.Shared.Pagination;
 
-public sealed class PaginatedResponse<T>
+public sealed record PaginatedResponse<T>
 {
     private readonly int _totalCount;
-    public required List<T> Items { get; init; }
+    public required ImmutableArray<T> Items { get; init; }
 
     public required int TotalCount
     {

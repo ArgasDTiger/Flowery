@@ -3,7 +3,7 @@
 public sealed class Order
 {
     public Guid Id { get; init; }
-    public decimal TotalPrice { get; set; }
-    public Guid UserId { get; set; }
-    public ICollection<Flower> Flowers { get; set; } = [];
+    public decimal TotalPrice { get; init; }
+    public Guid UserId { get; init; }
+    public ICollection<Flower> Flowers { get; init; } = [];
 }

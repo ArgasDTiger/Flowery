@@ -38,7 +38,7 @@ public sealed class Query : IQuery
                 new { model.Price, model.Slug, model.Description },
                 transaction);
 
-            if (model.FlowerNames.Count > 0)
+            if (model.FlowerNames.Length > 0)
             {
                 await using var importer =
                     await npgsqlConnection.BeginBinaryImportAsync(CopyCommand, cancellationToken);

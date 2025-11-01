@@ -17,7 +17,7 @@ public sealed class SortFieldConverter : JsonConverter<SortField>
         string? value = reader.GetString()?.ToLowerInvariant();
         return value switch
         {
-            "name" => SortField.Name,
+            "name" or null => SortField.Name,
             "price" => SortField.Price,
             _ => throw new JsonException($"Invalid SortField: {value}.")
         };

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Flowery.WebApi.Shared.Pagination;
 
-public abstract class PaginationParams
+public abstract record PaginationParams
 {
     [DefaultValue(1)]
     public int PageNumber { get; init; } = 1;

@@ -14,7 +14,8 @@ public sealed class Handler : IHandler
         _validator = validator;
     }
 
-    public async Task<OneOf<List<Response>, List<ValidationFailure>>> GetFlowers(Request request, CancellationToken cancellationToken)
+    public async Task<OneOf<ImmutableArray<Response>, IReadOnlyList<ValidationFailure>>> GetFlowers(Request request,
+        CancellationToken cancellationToken)
     {
         ValidationResult validationResult = await _validator.ValidateAsync(request, cancellationToken);
 

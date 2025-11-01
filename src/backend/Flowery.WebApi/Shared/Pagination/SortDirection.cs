@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Flowery.WebApi.Shared.Extensions;
 
 namespace Flowery.WebApi.Shared.Pagination;
 
@@ -14,17 +15,7 @@ public sealed class SortDirectionConverter : JsonConverter<SortDirection>
 {
     public override SortDirection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        string? value = reader.GetString()?.ToLowerInvariant();
-        return value switch
-        {
-            "asc" => SortDirection.Ascending,
-            "ascending" => SortDirection.Ascending,
-            "0" => SortDirection.Ascending,
-            "desc" => SortDirection.Descending,
-            "descending" => SortDirection.Descending,
-            "1" => SortDirection.Descending,
-            _ => throw new JsonException($"Invalid SortDirection: {value}.")
-        };
+        return reader.GetString().ToSortDirectionEnum();
     }
 
     public override void Write(Utf8JsonWriter writer, SortDirection value, JsonSerializerOptions options)

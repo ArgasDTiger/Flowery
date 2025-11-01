@@ -5,6 +5,6 @@ namespace Flowery.WebApi.Entities;
 public sealed class FlowerName
 {
     public Guid FlowerId { get; init; }
-    public LanguageCode LanguageCode { get; set; }
-    public string Name { get; set; } = null!;
+    public LanguageCode LanguageCode { get; init; }
+    public string Name { get; init; } = null!;
 }

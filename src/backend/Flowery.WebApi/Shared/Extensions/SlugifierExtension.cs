@@ -10,7 +10,7 @@ public static class SlugifierExtension
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return "";
+            return string.Empty;
         }
 
         var normalisedValue = value.Normalize(NormalizationForm.FormKD);

@@ -3,18 +3,9 @@ using FluentValidation;
 
 namespace Flowery.WebApi.Features.Flowers.CreateFlower;
 
-public sealed class Request
-{
-    public decimal Price { get; init; }
-    public IReadOnlyList<FlowerNameRequest> FlowerNames { get; init; } = null!;
-    public string Description { get; init; } = string.Empty;
-}
+public sealed record Request(decimal Price, ImmutableArray<FlowerNameRequest> FlowerNames, string Description);
 
-public sealed class FlowerNameRequest
-{
-    public LanguageCode LanguageCode { get; init; }
-    public string Name { get; init; } = string.Empty;
-}
+public sealed record FlowerNameRequest(LanguageCode LanguageCode, string Name);
 
 public sealed class RequestValidator : AbstractValidator<Request>
 {

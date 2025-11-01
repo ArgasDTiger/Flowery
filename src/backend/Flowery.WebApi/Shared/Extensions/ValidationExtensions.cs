@@ -11,7 +11,7 @@ public static class ValidationExtensions
         return !trimmedEmail.EndsWith('.') && MailAddress.TryCreate(email, out _);
     }
 
-    public static Dictionary<string, string[]> ToValidationProblemDictionary(this ICollection<ValidationFailure> errors)
+    public static Dictionary<string, string[]> ToValidationProblemDictionary(this IEnumerable<ValidationFailure> errors)
     {
         return errors
             .GroupBy(e => e.PropertyName)
