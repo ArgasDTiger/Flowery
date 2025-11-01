@@ -7,6 +7,6 @@ if (args.Contains("--migrations-run"))
     builder.AddProject<Projects.Flowery_Migrations>("migrations");
 }
 
-builder.AddProject<Projects.Flowery_WebApi_Tests>("web-api-tests");
+builder.AddProject<Projects.Flowery_WebApi_UnitTests>("web-api-tests");
 
 builder.Build().Run();

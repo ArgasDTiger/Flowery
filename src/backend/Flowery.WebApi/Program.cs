@@ -14,6 +14,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddFeatures();
 builder.Services.AddSharedFeatures();
+builder.Services.AddConfigurations(builder.Configuration);
 
 builder.Services.AddOpenApi();
 

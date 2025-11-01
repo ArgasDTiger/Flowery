@@ -1,5 +1,5 @@
-﻿using Flowery.WebApi.Shared.Pagination;
-using Flowery.WebApi.Shared.Settings;
+﻿using Flowery.WebApi.Shared.Configurations;
+using Flowery.WebApi.Shared.Pagination;
 using FluentValidation;
 
 namespace Flowery.WebApi.Shared;
@@ -13,10 +13,10 @@ public static class SharedFeaturesDependencies
         return services;
     }
 
-    public static IServiceCollection AddSettings(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration config)
     {
-        services.AddOptions<TranslationSettings>()
-            .Bind(config.GetSection(nameof(TranslationSettings)))
+        services.AddOptions<TranslationConfiguration>()
+            .Bind(config.GetSection(nameof(TranslationConfiguration)))
             .ValidateDataAnnotations();
         
         return services;

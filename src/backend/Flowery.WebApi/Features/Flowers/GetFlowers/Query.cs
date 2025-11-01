@@ -25,30 +25,29 @@ public sealed class Query : IQuery
             _ => "fn.Name"
         };
 
-        var orderDirections = paginationParams.SortDirection.ToSqlOrderDirection();
+        var orderDirection = paginationParams.SortDirection.ToSqlOrderDirection();
         var offset = paginationParams.GetSqlOffset();
-        var flowers = await dbConnection.QueryAsync<Response>(SelectFlowersSql, new
+
+        string sql = $"""
+                      SELECT
+                          f.id,
+                          fn.name,
+                          f.slug,
+                          f.price
+                      FROM flowers f
+                      JOIN flowername fn ON f.id = fn.flowerid
+                      WHERE f.isdeleted = false
+                      ORDER BY {orderBy} {orderDirection}
+                      OFFSET @Offset ROWS
+                      FETCH NEXT @PageSize ROWS ONLY
+                      """;
+
+        var flowers = await dbConnection.QueryAsync<Response>(sql, new
         {
             Offset = offset,
-            PageSize = paginationParams.PageSize,
-            OrderBy = orderBy,
-            SortDirection = orderDirections,
+            PageSize = paginationParams.PageSize
         });
 
         return [..flowers];
     }
-
-    private const string SelectFlowersSql = """
-                                            SELECT
-                                                f.id,
-                                                fn.name,
-                                                f.slug,
-                                                f.price
-                                            FROM flowers f
-                                            JOIN flowername fn ON f.id = fn.flowerid
-                                            WHERE f.isdeleted = false
-                                            ORDER BY @OrderBy @SortDirection
-                                            OFFSET @Offset ROWS
-                                            FETCH NEXT :PageSize ROWS ONLY
-                                            """;
 }

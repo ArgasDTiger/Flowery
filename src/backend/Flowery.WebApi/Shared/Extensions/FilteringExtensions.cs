@@ -2,7 +2,7 @@
 
 namespace Flowery.WebApi.Shared.Extensions;
 
-public static class PaginationExtensions
+public static class FilteringExtensions
 {
     public static SortDirection ToSortDirectionEnum(this string? sortDirection) => sortDirection?.ToLowerInvariant() switch
     {

@@ -1,8 +1,8 @@
 ﻿using Flowery.WebApi.Shared.Extensions;
 
-namespace Flowery.WebApi.Tests.Shared.Extensions;
+namespace Flowery.WebApi.UnitTests.Shared.Extensions;
 
-public class SlugifierExtensionTests
+public sealed class SlugifierExtensionTests
 {
     [Theory]
     [InlineData("Test   Rose", "test-rose")]

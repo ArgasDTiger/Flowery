@@ -1,6 +1,7 @@
 ﻿using Flowery.WebApi.Shared.Extensions;
 using Flowery.WebApi.Shared.Features;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowers;
@@ -17,16 +18,21 @@ public sealed class GetFlowersFeature : IFeature
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("api/v1/flowers",
-                async ([FromServices] IHandler handler, [AsParameters] Request request,
-                    CancellationToken cancellationToken) =>
-                {
-                    var result = await handler.GetFlowers(request, cancellationToken);
+            async ([FromServices] IHandler handler, [FromServices] IValidator<Request> validator,
+                [AsParameters] Request request,
+                CancellationToken cancellationToken) =>
+            {
+                ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-                    return result.Match(
-                        Results.Ok,
-                        errors => Results.ValidationProblem(errors.ToValidationProblemDictionary()));
-                })
-            // .RequireAuthorization()
-            ;
+                if (!validationResult.IsValid)
+                {
+                    return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
+                }
+
+                var responses = await handler.GetFlowers(request, cancellationToken);
+                return Results.Ok(responses);
+            });
+        // .RequireAuthorization()
+        ;
     }
 }

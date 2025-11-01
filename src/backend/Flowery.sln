@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowery.WebApi", "Flowery.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowery.Host", "Flowery.Host\Flowery.Host.csproj", "{39A97B0F-024A-4795-AA33-3490A34F2F6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowery.WebApi.Tests", "Flowery.WebApi.Tests\Flowery.WebApi.Tests.csproj", "{6524A263-4209-4ED2-9DC7-62FD3A8306BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowery.WebApi.UnitTests", "Flowery.WebApi.UnitTests\Flowery.WebApi.UnitTests.csproj", "{6524A263-4209-4ED2-9DC7-62FD3A8306BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flowery.Migrations", "Flowery.Migrations\Flowery.Migrations.csproj", "{F3333DEE-B0F1-4378-B0A0-198BF1709ED1}"
 EndProject

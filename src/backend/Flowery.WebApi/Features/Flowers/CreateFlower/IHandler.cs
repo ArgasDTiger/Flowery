@@ -1,8 +1,6 @@
-﻿using FluentValidation.Results;
-
-namespace Flowery.WebApi.Features.Flowers.CreateFlower;
+﻿namespace Flowery.WebApi.Features.Flowers.CreateFlower;
 
 public interface IHandler
 {
-    Task<OneOf<Guid, IReadOnlyList<ValidationFailure>>> CreateFlower(Request request, CancellationToken cancellationToken);
+    Task<Guid> CreateFlower(Request request, CancellationToken cancellationToken);
 }

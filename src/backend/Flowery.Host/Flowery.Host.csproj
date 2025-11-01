@@ -16,7 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Flowery.Migrations\Flowery.Migrations.csproj" />
-      <ProjectReference Include="..\Flowery.WebApi.Tests\Flowery.WebApi.Tests.csproj" />
+      <ProjectReference Include="..\Flowery.WebApi.UnitTests\Flowery.WebApi.UnitTests.csproj" />
       <ProjectReference Include="..\Flowery.WebApi\Flowery.WebApi.csproj" />
     </ItemGroup>
 
