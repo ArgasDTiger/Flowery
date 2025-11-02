@@ -12,7 +12,7 @@ public sealed class CreateFlowerFeature : IFeature
     {
         services.AddScoped<IQuery, Query>();
         services.AddScoped<IHandler, Handler>();
-        services.AddScoped<IValidator<Request>, RequestValidator>();
+        services.AddSingleton<IValidator<Request>, RequestValidator>();
     }
 
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
