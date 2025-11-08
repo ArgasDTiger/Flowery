@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Project Path="Flowery.Host\Flowery.Host.csproj" Type="Classic C#" />
+  <Project Path="Flowery.Migrations\Flowery.Migrations.csproj" Type="Classic C#" />
+  <Project Path="Flowery.SourceGenerators\Flowery.SourceGenerators.csproj" Type="Classic C#" />
+  <Project Path="Flowery.WebApi.UnitTests\Flowery.WebApi.UnitTests.csproj" Type="Classic C#" />
+  <Project Path="Flowery.WebApi\Flowery.WebApi.csproj" Type="Classic C#" />
+</Solution>

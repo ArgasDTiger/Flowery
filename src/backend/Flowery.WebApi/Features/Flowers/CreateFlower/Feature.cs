@@ -1,5 +1,4 @@
-﻿using Flowery.WebApi.Shared.Extensions;
-using Flowery.WebApi.Shared.Features;
+﻿using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +17,10 @@ public sealed class CreateFlowerFeature : IFeature
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("api/v1/flowers",
-            async ([FromServices] IHandler handler, [FromServices] IValidator<Request> validator,
-                [FromServices] ILogger<CreateFlowerFeature> logger, [FromBody] Request request,
+            async ([FromServices] IHandler handler, 
+                [FromServices] IValidator<Request> validator,
+                [FromServices] ILogger<CreateFlowerFeature> logger, 
+                [FromBody] Request request,
                 CancellationToken cancellationToken) =>
             {
                 try
@@ -28,7 +29,7 @@ public sealed class CreateFlowerFeature : IFeature
 
                     if (!validationResult.IsValid)
                     {
-                        return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
+                        return Results.ValidationProblem(validationResult.ToDictionary());
                     }
 
                     Guid createdFlowerId = await handler.CreateFlower(request, cancellationToken);

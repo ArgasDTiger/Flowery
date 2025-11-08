@@ -30,7 +30,7 @@ public sealed class UpdateFlowerFeature : IFeature
 
                 if (!validationResult.IsValid)
                 {
-                    return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
+                    return Results.ValidationProblem(validationResult.ToDictionary());
                 }
 
                 var result = await handler.UpdateFlower(flowerId, request, cancellationToken);

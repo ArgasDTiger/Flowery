@@ -1,4 +1,5 @@
-﻿using Flowery.WebApi.Shared.Extensions;
+﻿using Flowery.WebApi.Shared.ActionResults.Static;
+using Flowery.WebApi.Shared.Extensions;
 using Flowery.WebApi.Shared.Models;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
@@ -16,6 +17,6 @@ public sealed class Handler : IHandler
     {
         SlugOrId slugOrId = id.GetSlugOrId();
         Response? flower = await _query.GetFlowerById(slugOrId, cancellationToken);
-        return flower is null ? new NotFound() : flower;
+        return flower is null ? StaticResults.NotFound : flower;
     }
 }

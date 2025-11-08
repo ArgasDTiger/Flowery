@@ -30,7 +30,7 @@ public sealed class GetFlowersFeature : IFeature
 
                     if (!validationResult.IsValid)
                     {
-                        return Results.ValidationProblem(validationResult.Errors.ToValidationProblemDictionary());
+                        return Results.ValidationProblem(validationResult.ToDictionary());
                     }
 
                     var responses = await handler.GetFlowers(request, cancellationToken);
