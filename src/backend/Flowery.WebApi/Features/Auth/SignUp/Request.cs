@@ -1,0 +1,42 @@
+﻿using Flowery.WebApi.Shared.Extensions;
+using FluentValidation;
+using static Flowery.WebApi.Features.Users.Constants;
+
+namespace Flowery.WebApi.Features.Auth.SignUp;
+
+public sealed record Request(
+    string Email,
+    string Password,
+    string FirstName,
+    string LastName,
+    string? PhoneNumber);
+
+public sealed class RequestValidator : AbstractValidator<Request>
+{
+    public RequestValidator()
+    {
+        RuleFor(x => x.Email)
+            .Must(email => email.IsValidEmail())
+            .MaximumLength(MaxEmailLength)
+            .WithMessage("Email is not valid.");
+
+        RuleFor(x => x.Password)
+            .Must(password => password.IsValidPassword())
+            .WithMessage(
+                "Password must contain at least one uppercase letter, one lowercase letter, one digit and be at least 8 characters long.");
+        
+        RuleFor(x => x.FirstName)
+            .NotEmpty()
+            .MaximumLength(MaxFirstNameLength)
+            .WithMessage("First name must be provided.");
+        
+        RuleFor(x => x.LastName)
+            .NotEmpty()
+            .MaximumLength(MaxLastNameLength)
+            .WithMessage("Last name is not valid.");
+        
+        RuleFor(x => x.PhoneNumber)
+            .MaximumLength(MaxPhoneNumberLength)
+            .WithMessage("Phone number is not valid.");
+    }
+}
