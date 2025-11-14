@@ -2,12 +2,11 @@
 
 public sealed record PaginatedResponse<T>
 {
-    private readonly int _totalCount;
     public required ImmutableArray<T> Items { get; init; }
 
     public required int TotalCount
     {
-        get => _totalCount;
+        get;
         init
         {
             if (value < 0)
@@ -15,7 +14,7 @@ public sealed record PaginatedResponse<T>
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Value cannot be negative.");
             }
 
-            _totalCount = value;
+            field = value;
         }
     }
 }

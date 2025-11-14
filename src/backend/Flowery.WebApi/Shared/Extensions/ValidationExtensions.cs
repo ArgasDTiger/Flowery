@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-using System.Text.RegularExpressions;
-using FluentValidation.Results;
+﻿using System.Text.RegularExpressions;
 
 namespace Flowery.WebApi.Shared.Extensions;
 
@@ -21,16 +19,6 @@ public static partial class ValidationExtensions
     public static bool IsValidPassword(this string password)
     {
         return !string.IsNullOrWhiteSpace(password) && PasswordRegex().IsMatch(password);
-    }
-
-    public static Dictionary<string, string[]> ToValidationProblemDictionary(this IEnumerable<ValidationFailure> errors)
-    {
-        return errors
-            .GroupBy(e => e.PropertyName)
-            .ToDictionary(
-                g => g.Key,
-                g => g.Select(e => e.ErrorMessage).ToArray()
-            );
     }
 
     [GeneratedRegex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$", RegexOptions.Compiled)]
