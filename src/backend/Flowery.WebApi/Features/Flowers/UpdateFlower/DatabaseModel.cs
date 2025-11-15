@@ -13,7 +13,7 @@ public sealed record DatabaseModel
         FlowerNames =
         [
             ..request.FlowerNames
-                .Select(fn => new FlowerName
+                .AsValueEnumerable().Select(fn => new FlowerName
                 {
                     LanguageCode = fn.LanguageCode,
                     Name = fn.Name,

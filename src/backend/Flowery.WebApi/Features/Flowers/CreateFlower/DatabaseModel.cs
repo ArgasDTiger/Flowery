@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Flowery.WebApi.Entities;
+﻿using Flowery.WebApi.Entities;
 
 namespace Flowery.WebApi.Features.Flowers.CreateFlower;
 
@@ -16,9 +15,10 @@ public sealed record DatabaseModel
         {
             Price = request.Price,
             Description = request.Description,
-            FlowerNames = [
+            FlowerNames =
+            [
                 ..request.FlowerNames
-                    .Select(fn => new FlowerName
+                    .AsValueEnumerable().Select(fn => new FlowerName
                     {
                         LanguageCode = fn.LanguageCode,
                         Name = fn.Name,

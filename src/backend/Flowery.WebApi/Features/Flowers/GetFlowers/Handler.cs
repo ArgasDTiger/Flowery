@@ -1,4 +1,6 @@
-﻿namespace Flowery.WebApi.Features.Flowers.GetFlowers;
+﻿using Flowery.WebApi.Shared.Pagination;
+
+namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
 public sealed class Handler : IHandler
 {
@@ -9,7 +11,7 @@ public sealed class Handler : IHandler
         _query = query;
     }
 
-    public async Task<ImmutableArray<Response>> GetFlowers(Request request,
+    public async Task<PaginatedResponse<Response>> GetFlowers(Request request,
         CancellationToken cancellationToken)
     {
         return await _query.GetFlowers(request, cancellationToken);

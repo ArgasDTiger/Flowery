@@ -30,6 +30,7 @@ public sealed class Handler : IHandler
         LanguageCode defaultLanguageName = _translationConfiguration.SlugDefaultLanguage;
         string flowerName = request.FlowerNames
             .Where(fn => fn.LanguageCode == defaultLanguageName)
+            .AsValueEnumerable()
             .Select(fn => fn.Name)
             .FirstOrDefault() ?? request.FlowerNames[0].Name;
 

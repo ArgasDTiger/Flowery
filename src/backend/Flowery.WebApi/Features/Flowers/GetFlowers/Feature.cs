@@ -1,5 +1,4 @@
-﻿using Flowery.WebApi.Shared.Extensions;
-using Flowery.WebApi.Shared.Features;
+﻿using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,8 @@
-﻿namespace Flowery.WebApi.Features.Flowers.GetFlowers;
+﻿using Flowery.WebApi.Shared.Pagination;
+
+namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
 public interface IHandler
 {
-    Task<ImmutableArray<Response>> GetFlowers(Request request, CancellationToken cancellationToken);
+    Task<PaginatedResponse<Response>> GetFlowers(Request request, CancellationToken cancellationToken);
 }

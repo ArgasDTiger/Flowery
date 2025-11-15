@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Flowery.WebApi.Infrastructure.Data;
 using Flowery.WebApi.Shared.Extensions;
+using Flowery.WebApi.Shared.Pagination;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
@@ -13,7 +14,7 @@ public sealed class Query : IQuery
         _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public async Task<ImmutableArray<Response>> GetFlowers(Request paginationParams,
+    public async Task<PaginatedResponse<Response>> GetFlowers(Request paginationParams,
         CancellationToken cancellationToken)
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
@@ -28,26 +29,36 @@ public sealed class Query : IQuery
         var orderDirection = paginationParams.SortDirection.ToSqlOrderDirection();
         var offset = paginationParams.GetSqlOffset();
 
-        string sql = $"""
-                      SELECT
-                          f.id,
-                          fn.name,
-                          f.slug,
-                          f.price
-                      FROM flowers f
-                      JOIN flowername fn ON f.id = fn.flowerid
-                      WHERE f.isdeleted = false
-                      ORDER BY {orderBy} {orderDirection}
-                      OFFSET @Offset ROWS
-                      FETCH NEXT @PageSize ROWS ONLY
-                      """;
+        var queryResult = await dbConnection.QueryMultipleAsync(
+            $"{GetFlowersSql(orderBy, orderDirection)}; {GetFlowersCountSql}", new
+            {
+                Offset = offset,
+                PageSize = paginationParams.PageSize
+            });
 
-        var flowers = await dbConnection.QueryAsync<Response>(sql, new
+        var flowers = await queryResult.ReadAsync<Response>();
+        var count = await queryResult.ReadSingleAsync<int>();
+
+        return new PaginatedResponse<Response>
         {
-            Offset = offset,
-            PageSize = paginationParams.PageSize
-        });
-
-        return [..flowers];
+            Items = [..flowers],
+            TotalCount = count
+        };
     }
+
+    private static string GetFlowersSql(string orderBy, string orderDirection) => $"""
+         SELECT
+             f.id,
+             fn.name,
+             f.slug,
+             f.price
+         FROM flowers f
+         JOIN flowername fn ON f.id = fn.flowerid
+         WHERE f.isdeleted = false
+         ORDER BY {orderBy} {orderDirection}
+         OFFSET @Offset ROWS
+         FETCH NEXT @PageSize ROWS ONLY
+         """;
+
+    private const string GetFlowersCountSql = "SELECT COUNT(*) FROM flowers WHERE isdeleted = false";
 }
