@@ -28,6 +28,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\assemblies\Flowery.WebApi\Flowery.WebApi.csproj" />
+      <ProjectReference Include="..\..\tools\Flowery.Migrations\Flowery.Migrations.csproj" />
       <ProjectReference Include="..\Flowery.Migrations\Flowery.Migrations.csproj" />
       <ProjectReference Include="..\Flowery.WebApi\Flowery.WebApi.csproj" />
     </ItemGroup>

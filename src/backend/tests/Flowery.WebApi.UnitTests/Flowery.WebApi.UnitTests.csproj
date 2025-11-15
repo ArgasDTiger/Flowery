@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Flowery.WebApi\Flowery.WebApi.csproj" />
+      <ProjectReference Include="..\..\assemblies\Flowery.WebApi\Flowery.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>

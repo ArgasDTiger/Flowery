@@ -17,11 +17,7 @@ public sealed class ReadonlyFloweryApiFactory : BaseApiFactory, IAsyncLifetime
 
     private async ValueTask SeedData()
     {
-        var seedPath = Path.Combine(
-            AppContext.BaseDirectory,
-            "..", "..", "..",
-            "Seeding"
-        );
+        var seedPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Seeding");
 
         var scripts = Directory.GetFiles(seedPath, "*.sql")
             .OrderBy(Path.GetFileName)

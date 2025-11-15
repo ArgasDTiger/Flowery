@@ -44,13 +44,8 @@ public abstract class BaseApiFactory : WebApplicationFactory<Program>, IAsyncLif
 
     private async ValueTask RunMigrations()
     {
-        var migrationsPath = Path.Combine(
-            AppContext.BaseDirectory,
-            "..", "..", "..", "..",
-            "Flowery.Migrations",
-            "Migrations"
-        );
-
+        var migrationsPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "tools",
+            "Flowery.Migrations", "Migrations");
 
         var migrationResult = MigrationsRunner.Run(ConnectionString, migrationsPath);
         if (!migrationResult.Successful)

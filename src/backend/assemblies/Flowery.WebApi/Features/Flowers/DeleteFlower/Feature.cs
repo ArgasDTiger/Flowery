@@ -11,7 +11,6 @@ public sealed class DeleteFlowerFeature : IFeature
         services.AddScoped<IHandler, Handler>();
     }
 
-    // TODO: support deleting by slug
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapDelete("api/v1/flowers/{flowerId}",
@@ -32,7 +31,6 @@ public sealed class DeleteFlowerFeature : IFeature
                     logger.LogError("Error occured while deleting flower: {Message}", ex.Message);
                     return Results.InternalServerError();
                 }
-                
             });
     }
 }

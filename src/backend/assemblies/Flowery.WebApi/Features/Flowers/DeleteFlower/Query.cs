@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Flowery.WebApi.Infrastructure.Data;
+using Flowery.WebApi.Shared.ActionResults.Static;
 
 namespace Flowery.WebApi.Features.Flowers.DeleteFlower;
 
@@ -16,7 +17,7 @@ public sealed class Query : IQuery
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
         return await dbConnection.ExecuteAsync(DeleteFlowerByIdSql, new { id }) > 0
-            ? new Success()
+            ? StaticResults.Success
             : new Error("Flower is not found.");
     }
 
@@ -24,7 +25,7 @@ public sealed class Query : IQuery
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
         return await dbConnection.ExecuteAsync(DeleteFlowerBySlugSql, new { slug }) > 0
-            ? new Success()
+            ? StaticResults.Success
             : new Error("Flower is not found.");
     }
 
