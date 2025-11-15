@@ -9,6 +9,7 @@ public static class SharedFeaturesDependencies
     public static IServiceCollection AddSharedFeatures(this IServiceCollection services)
     {
         services.AddSingleton<IValidator<PaginationParams>, PaginationParamsValidator>();
+        services.AddSingleton<IValidator<OrderedPaginationParams>, OrderedPaginationParamsValidator>();
 
         return services;
     }

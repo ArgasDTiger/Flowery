@@ -1,11 +1,8 @@
 ﻿using System.Reflection;
 using DbUp;
-using DbUp.Engine.Output;
+using Flowery.Migrations;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using Npgsql;
-
-const string defaultSchema = "public";
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -48,29 +45,12 @@ try
     EnsureDatabase.For.PostgresqlDatabase(connectionString);
 
     var migrationsPath = Path.Combine(basePath, "..", "..", "..", "Migrations");
-    using (var connection = new NpgsqlConnection(connectionString))
+
+    var migrationResult = MigrationsRunner.Run(connectionString, migrationsPath);
+
+    if (!migrationResult.Successful)
     {
-        connection.Open();
-        using (var command = connection.CreateCommand())
-        {
-            var schema = config["schema"] ?? defaultSchema;
-            command.CommandText = $"CREATE SCHEMA IF NOT EXISTS {schema};";
-            command.ExecuteNonQuery();
-        }
-    }
-
-    var upgrader = DeployChanges.To
-        .PostgresqlDatabase(connectionString)
-        .WithScriptsFromFileSystem(migrationsPath)
-        .WithExecutionTimeout(TimeSpan.FromMinutes(5))
-        .LogTo(new ConsoleUpgradeLog())
-        .Build();
-
-    var result = upgrader.PerformUpgrade();
-
-    if (!result.Successful)
-    {
-        Log.Fatal(result.Error, "An error occurred while migrating the postgresql database.");
+        Log.Fatal(migrationResult.Error, "An error occurred while migrating the postgresql database.");
         return -1;
     }
     

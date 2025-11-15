@@ -13,7 +13,8 @@ public static partial class ValidationExtensions
 
     public static bool IsValidEmail(this string email)
     {
-        return !email.Contains('@') || email.TrimEnd().EndsWith('.');
+        if (string.IsNullOrEmpty(email)) return false;
+        return email.Contains('@') && !email.TrimEnd().EndsWith('.');
     }
     
     public static bool IsValidPassword(this string password)
