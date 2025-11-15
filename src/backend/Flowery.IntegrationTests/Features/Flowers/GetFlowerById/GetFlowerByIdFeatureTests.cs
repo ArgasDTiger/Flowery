@@ -1,10 +1,14 @@
-﻿namespace Flowery.IntegrationTests.Features.Flowers.GetFlowerById;
+﻿using Flowery.IntegrationTests.TestHelpers;
+using Flowery.IntegrationTests.TestHelpers.ApiFactories;
 
-public sealed class GetFlowerByIdFeatureTests : IClassFixture<FloweryApiFactory>
+namespace Flowery.IntegrationTests.Features.Flowers.GetFlowerById;
+
+[Collection(nameof(ReadonlyTestsCollection))]
+public sealed class GetFlowerByIdFeatureTests
 {
     private readonly HttpClient _httpClient;
 
-    public GetFlowerByIdFeatureTests(FloweryApiFactory factory)
+    public GetFlowerByIdFeatureTests(ReadonlyFloweryApiFactory factory)
     {
         _httpClient = factory.GetClientByPath("flowers");
     }
@@ -18,8 +22,7 @@ public sealed class GetFlowerByIdFeatureTests : IClassFixture<FloweryApiFactory>
         var response = await _httpClient.GetAsync($"{flowerId}", TestContext.Current.CancellationToken);
 
         // Assert
-        response.StatusCode.ShouldBe(HttpStatusCode.OK,
-            await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        response.ShouldBeOk();
     }
 
     [Theory]
@@ -31,7 +34,6 @@ public sealed class GetFlowerByIdFeatureTests : IClassFixture<FloweryApiFactory>
         var response = await _httpClient.GetAsync($"{flowerId}", TestContext.Current.CancellationToken);
 
         // Assert
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound,
-            await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        response.ShouldBeNotFound();
     }
 }

@@ -12,17 +12,35 @@ public sealed class Query : IQuery
         _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public async Task<int> DeleteFlower(Guid id, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, Error>> DeleteFlowerById(Guid id, CancellationToken cancellationToken)
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        return await dbConnection.ExecuteAsync(DeleteFlowerSql, new { Id = id });
+        return await dbConnection.ExecuteAsync(DeleteFlowerByIdSql, new { id }) > 0
+            ? new Success()
+            : new Error("Flower is not found.");
     }
 
-    private const string DeleteFlowerSql = """
-                                           UPDATE flowers
-                                           SET isdeleted = true,
-                                           deletedatutc = now() at time zone 'utc',
-                                           slug = null
-                                           WHERE id = @Id
-                                           """;
+    public async Task<OneOf<Success, Error>> DeleteFlowerBySlug(string slug, CancellationToken cancellationToken)
+    {
+        await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
+        return await dbConnection.ExecuteAsync(DeleteFlowerBySlugSql, new { slug }) > 0
+            ? new Success()
+            : new Error("Flower is not found.");
+    }
+
+    private const string DeleteFlowerByIdSql = """
+                                               UPDATE flowers
+                                               SET isdeleted = true,
+                                               deletedatutc = now() at time zone 'utc',
+                                               slug = null
+                                               WHERE id = @id
+                                               """;
+
+    private const string DeleteFlowerBySlugSql = """
+                                                 UPDATE flowers
+                                                 SET isdeleted = true,
+                                                 deletedatutc = now() at time zone 'utc',
+                                                 slug = null
+                                                 WHERE slug = @slug
+                                                 """;
 }

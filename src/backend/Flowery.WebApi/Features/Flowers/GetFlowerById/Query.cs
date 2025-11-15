@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Flowery.WebApi.Infrastructure.Data;
-using Flowery.WebApi.Shared.Models;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
 
@@ -13,14 +12,16 @@ public sealed class Query : IQuery
         _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public async Task<Response?> GetFlowerById(SlugOrId id, CancellationToken cancellationToken)
+    public async Task<Response?> GetFlowerById(Guid id, CancellationToken cancellationToken)
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        if (id.Slug is null)
-        {
-            return await dbConnection.QuerySingleOrDefaultAsync<Response>(GetFlowerByIdSql, new { Id = id.Id });
-        }
-        return await dbConnection.QuerySingleOrDefaultAsync<Response>(GetFlowerBySlugSql, new { Slug = id.Slug });
+        return await dbConnection.QuerySingleOrDefaultAsync<Response>(GetFlowerByIdSql, new { Id = id });
+    }
+
+    public async Task<Response?> GetFlowerBySlug(string slug, CancellationToken cancellationToken)
+    {
+        await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
+        return await dbConnection.QuerySingleOrDefaultAsync<Response>(GetFlowerBySlugSql, new { Slug = slug });
     }
 
     private const string GetFlowerByIdSql = """
@@ -32,10 +33,10 @@ public sealed class Query : IQuery
                                             """;
 
     private const string GetFlowerBySlugSql = """
-                                            SELECT f.id, fn.name, f.slug, f.price
-                                            FROM flowers f
-                                            JOIN flowername fn ON f.id = fn.flowerid
-                                            WHERE slug = @Slug AND isdeleted = false
-                                            LIMIT 1;
-                                            """;
+                                              SELECT f.id, fn.name, f.slug, f.price
+                                              FROM flowers f
+                                              JOIN flowername fn ON f.id = fn.flowerid
+                                              WHERE slug = @Slug AND isdeleted = false
+                                              LIMIT 1;
+                                              """;
 }

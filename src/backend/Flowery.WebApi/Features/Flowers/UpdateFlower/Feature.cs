@@ -10,7 +10,7 @@ public sealed class UpdateFlowerFeature : IFeature
 {
     public static void Register(IServiceCollection services)
     {
-        services.AddScoped<IQuery, Query>();
+        services.AddSingleton<IQuery, Query>();
         services.AddScoped<IHandler, Handler>();
         services.AddSingleton<IValidator<Request>, RequestValidator>();
     }

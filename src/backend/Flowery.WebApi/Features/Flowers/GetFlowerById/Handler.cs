@@ -1,6 +1,4 @@
 ﻿using Flowery.WebApi.Shared.ActionResults.Static;
-using Flowery.WebApi.Shared.Extensions;
-using Flowery.WebApi.Shared.Models;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
 
@@ -12,11 +10,15 @@ public sealed class Handler : IHandler
     {
         _query = query;
     }
-    
+
     public async Task<OneOf<Response, NotFound>> GetFlowerById(string id, CancellationToken cancellationToken)
     {
-        SlugOrId slugOrId = id.GetSlugOrId();
-        Response? flower = await _query.GetFlowerById(slugOrId, cancellationToken);
+        bool isIdGuid = Guid.TryParse(id, out Guid guidId);
+
+        Response? flower = isIdGuid
+            ? await _query.GetFlowerById(guidId, cancellationToken)
+            : await _query.GetFlowerBySlug(id, cancellationToken);
+
         return flower is null ? StaticResults.NotFound : flower;
     }
 }

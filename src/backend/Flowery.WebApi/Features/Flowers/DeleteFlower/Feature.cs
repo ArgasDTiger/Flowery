@@ -7,17 +7,17 @@ public sealed class DeleteFlowerFeature : IFeature
 {
     public static void Register(IServiceCollection services)
     {
-        services.AddScoped<IQuery, Query>();
+        services.AddSingleton<IQuery, Query>();
         services.AddScoped<IHandler, Handler>();
     }
 
     // TODO: support deleting by slug
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("api/v1/flowers/{flowerId:guid}",
+        endpoints.MapDelete("api/v1/flowers/{flowerId}",
             async ([FromServices] IHandler handler,
                 [FromServices] ILogger<DeleteFlowerFeature> logger,
-                [FromRoute] Guid flowerId, 
+                [FromRoute] string flowerId, 
                 CancellationToken cancellationToken) =>
             {
                 try

@@ -1,14 +1,17 @@
-﻿using Flowery.WebApi.Features.Flowers.GetFlowers;
+﻿using Flowery.IntegrationTests.TestHelpers;
+using Flowery.IntegrationTests.TestHelpers.ApiFactories;
+using Flowery.WebApi.Features.Flowers.GetFlowers;
 using Flowery.WebApi.Shared.Pagination;
 using SortDirection = Shouldly.SortDirection;
 
 namespace Flowery.IntegrationTests.Features.Flowers.GetFlowers;
 
-public sealed class GetFlowersFeatureTests : IClassFixture<FloweryApiFactory>
+[Collection(nameof(ReadonlyTestsCollection))]
+public sealed class GetFlowersFeatureTests
 {
     private readonly HttpClient _httpClient;
 
-    public GetFlowersFeatureTests(FloweryApiFactory factory)
+    public GetFlowersFeatureTests(ReadonlyFloweryApiFactory factory)
     {
         _httpClient = factory.GetClientByPath("flowers");
     }
@@ -35,8 +38,7 @@ public sealed class GetFlowersFeatureTests : IClassFixture<FloweryApiFactory>
         var response = await _httpClient.GetAsync(url, TestContext.Current.CancellationToken);
 
         // Assert
-        response.StatusCode.ShouldBe(HttpStatusCode.OK,
-            await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        response.ShouldBeOk();
 
         var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
         responseBody.ShouldNotBeNull();

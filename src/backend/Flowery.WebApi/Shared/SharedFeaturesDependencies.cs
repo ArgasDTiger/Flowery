@@ -18,7 +18,8 @@ public static class SharedFeaturesDependencies
     {
         services.AddOptions<TranslationConfiguration>()
             .Bind(config.GetSection(nameof(TranslationConfiguration)))
-            .ValidateDataAnnotations();
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         
         return services;
     }

@@ -1,26 +1,26 @@
-﻿namespace Flowery.WebApi.Features.Flowers.DeleteFlower;
+﻿using Flowery.WebApi.Shared.ActionResults.Static;
+
+namespace Flowery.WebApi.Features.Flowers.DeleteFlower;
 
 public sealed class Handler : IHandler
 {
     private readonly IQuery _query;
-    private readonly ILogger<Handler> _logger;
 
-    public Handler(IQuery query, ILogger<Handler> logger)
+    public Handler(IQuery query)
     {
         _query = query;
-        _logger = logger;
     }
 
-    public async Task<OneOf<Success, NotFound>> DeleteFlower(Guid id, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, NotFound>> DeleteFlower(string id, CancellationToken cancellationToken)
     {
-        int rowsAffected = await _query.DeleteFlower(id, cancellationToken);
-        if (rowsAffected == 0)
-        {
-            _logger.LogDebug(
-                "No rows were affected when trying to delete flower with id {flowerId}, returning an error", id);
-            return new NotFound();
-        }
+        bool isIdGuid = Guid.TryParse(id, out Guid guidId);
 
-        return new Success();
+        var result = isIdGuid
+            ? await _query.DeleteFlowerById(guidId, cancellationToken)
+            : await _query.DeleteFlowerBySlug(id, cancellationToken);
+
+        return result.Match<OneOf<Success, NotFound>>(
+            _ => StaticResults.Success,
+            _ => StaticResults.NotFound);
     }
 }

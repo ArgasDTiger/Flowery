@@ -2,5 +2,5 @@
 
 public interface IHandler
 {
-    Task<OneOf<Success, NotFound>> DeleteFlower(Guid id, CancellationToken cancellationToken);
+    Task<OneOf<Success, NotFound>> DeleteFlower(string id, CancellationToken cancellationToken);
 }
