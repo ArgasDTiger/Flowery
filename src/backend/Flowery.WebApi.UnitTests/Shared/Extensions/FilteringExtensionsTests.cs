@@ -1,5 +1,6 @@
 ﻿using Flowery.WebApi.Shared.Extensions;
 using Flowery.WebApi.Shared.Pagination;
+using SortDirection = Flowery.WebApi.Shared.Pagination.SortDirection;
 
 namespace Flowery.WebApi.UnitTests.Shared.Extensions;
 
@@ -9,18 +10,24 @@ public sealed class FilteringExtensionsTests
     [MemberData(nameof(ToSortDirectionEnumTestData))]
     public void ToSortDirectionEnum_ShouldReturnCorrectDirection(string? input, SortDirection expectedResult)
     {
+        // Arrange & Act
         var result = input.ToSortDirectionEnum();
-        Assert.Equal(expectedResult, result);
+
+        // Assert
+        result.ShouldBe(expectedResult);
     }
 
     [Theory]
     [InlineData("invalid")]
     [InlineData("123")]
     [InlineData("SOMETHING")]
-    public void ToSortDirectionEnum_ShouldThrowException_WhenInvalidInput(string input)
+    public void ToSortDirectionEnum_ShouldReturnDefault_WhenInvalidInput(string input)
     {
-        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => input.ToSortDirectionEnum());
-        Assert.Contains($"Invalid SortDirection: {input}", exception.Message);
+        // Arrange & Act
+        var result = input.ToSortDirectionEnum();
+
+        // Assert
+        result.ShouldBe(SortDirection.Ascending);
     }
 
     public static TheoryData<string?, SortDirection> ToSortDirectionEnumTestData()

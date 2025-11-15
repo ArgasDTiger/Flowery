@@ -12,7 +12,10 @@ public sealed class ValidationExtensionsTests
     [InlineData(null, false)]
     public void IsValidEmail_ShouldReturn_ExpectedResult(string? email, bool isValid)
     {
+        // Arrange & Act
         var result = email!.IsValidEmail();
-        Assert.Equal(isValid, result);
+
+        // Assert
+        result.ShouldBe(isValid);
     }
 }
