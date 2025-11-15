@@ -16,6 +16,7 @@ public sealed class HealthCheckTests : IClassFixture<WebApplicationFactory<Progr
         var response = await _httpClient.GetAsync("/health", TestContext.Current.CancellationToken);
 
         // Assert
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK,
+            await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Flowery.WebApi.Features.Flowers.GetFlowers;
+using Flowery.WebApi.Shared.Pagination;
+using SortDirection = Shouldly.SortDirection;
 
 namespace Flowery.IntegrationTests.Features.Flowers.GetFlowers;
 
@@ -36,8 +38,8 @@ public sealed class GetFlowersFeatureTests : IClassFixture<FloweryApiFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.OK,
             await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
 
-        var responseBody = await response.Content.ReadFromJsonAsync<Response[]>(TestContext.Current.CancellationToken);
+        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
         responseBody.ShouldNotBeNull();
-        responseBody.Length.ShouldBe(pageSize);
+        responseBody.Items.Length.ShouldBe(pageSize);
     }
 }
