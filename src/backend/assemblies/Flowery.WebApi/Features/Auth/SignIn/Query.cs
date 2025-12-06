@@ -1,6 +1,7 @@
 ﻿using Dapper;
-using Flowery.WebApi.Infrastructure.Data;
-using Flowery.WebApi.Shared.ActionResults.Static;
+using Flowery.Domain.ActionResults;
+using Flowery.Domain.ActionResults.Static;
+using Flowery.Infrastructure.Data;
 
 namespace Flowery.WebApi.Features.Auth.SignIn;
 

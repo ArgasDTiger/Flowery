@@ -1,4 +1,4 @@
-﻿using Flowery.WebApi.Infrastructure.Auth.Tokens;
+﻿using Flowery.Infrastructure.Auth.Tokens;
 using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;

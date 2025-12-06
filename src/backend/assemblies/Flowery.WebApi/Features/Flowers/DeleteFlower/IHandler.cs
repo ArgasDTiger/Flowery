@@ -1,4 +1,6 @@
-﻿namespace Flowery.WebApi.Features.Flowers.DeleteFlower;
+﻿using Flowery.Domain.ActionResults;
+
+namespace Flowery.WebApi.Features.Flowers.DeleteFlower;
 
 public interface IHandler
 {

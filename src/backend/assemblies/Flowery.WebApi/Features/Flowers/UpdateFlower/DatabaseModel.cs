@@ -1,4 +1,4 @@
-﻿using Flowery.WebApi.Entities;
+﻿using Flowery.Domain.Entities;
 
 namespace Flowery.WebApi.Features.Flowers.UpdateFlower;
 

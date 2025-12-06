@@ -1,4 +1,6 @@
-﻿namespace Flowery.WebApi.Features.Auth.SignUp;
+﻿using Flowery.Domain.ActionResults;
+
+namespace Flowery.WebApi.Features.Auth.SignUp;
 
 public interface IHandler
 {

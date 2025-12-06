@@ -1,6 +1,7 @@
-﻿using Flowery.WebApi.Shared.ActionResults.Static;
+﻿using Flowery.Domain.ActionResults;
+using Flowery.Domain.ActionResults.Static;
+using Flowery.Domain.Enums;
 using Flowery.WebApi.Shared.Configurations;
-using Flowery.WebApi.Shared.Enums;
 using Flowery.WebApi.Shared.Extensions;
 using Flowery.WebApi.Shared.Models;
 using Microsoft.Extensions.Options;

@@ -1,4 +1,5 @@
-﻿using Flowery.WebApi.Shared.ActionResults.Static;
+﻿using Flowery.Domain.ActionResults;
+using Flowery.Domain.ActionResults.Static;
 
 namespace Flowery.WebApi.Features.Flowers.DeleteFlower;
 

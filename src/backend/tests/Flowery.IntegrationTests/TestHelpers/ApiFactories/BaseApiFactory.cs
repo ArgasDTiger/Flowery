@@ -1,5 +1,5 @@
-﻿using Flowery.Migrations;
-using Flowery.WebApi.Infrastructure.Data;
+﻿using Flowery.Infrastructure.Data;
+using Flowery.Migrations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,4 +1,6 @@
-﻿namespace Flowery.WebApi.Features.Flowers.UpdateFlower;
+﻿using Flowery.Domain.ActionResults;
+
+namespace Flowery.WebApi.Features.Flowers.UpdateFlower;
 
 public interface IHandler
 {

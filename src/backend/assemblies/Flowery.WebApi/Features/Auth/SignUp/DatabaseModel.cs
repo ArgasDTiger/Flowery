@@ -1,4 +1,4 @@
-﻿using Flowery.WebApi.Features.Users;
+﻿using Flowery.Domain.Users;
 
 namespace Flowery.WebApi.Features.Auth.SignUp;
 

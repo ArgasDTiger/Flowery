@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Flowery.WebApi.Infrastructure.Data;
+using Flowery.Infrastructure.Data;
 
 namespace Flowery.WebApi.Features.Auth.SignUp;
 

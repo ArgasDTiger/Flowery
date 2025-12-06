@@ -38,4 +38,11 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 
 app.MapFeatures();
 
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("Scalar is available at: http://localhost:5200/scalar");
+}
+
 app.Run();

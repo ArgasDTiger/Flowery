@@ -1,6 +1,6 @@
-﻿using Flowery.WebApi.Shared.Extensions;
+﻿using Flowery.Domain.Users;
+using Flowery.WebApi.Shared.Extensions;
 using FluentValidation;
-using static Flowery.WebApi.Features.Users.Constants;
 
 namespace Flowery.WebApi.Features.Auth.SignIn;
 
@@ -14,7 +14,7 @@ public sealed class RequestValidator : AbstractValidator<Request>
     {
         RuleFor(x => x.Email)
             .Must(email => email.IsValidEmail())
-            .MaximumLength(MaxEmailLength)
+            .MaximumLength(UserConstants.MaxEmailLength)
             .WithMessage("Email is not valid.");
     }
 }

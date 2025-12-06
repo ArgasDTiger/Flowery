@@ -1,6 +1,6 @@
 ﻿using Flowery.WebApi.Shared.Extensions;
 using FluentValidation;
-using static Flowery.WebApi.Features.Users.Constants;
+using static Flowery.Domain.Users.UserConstants;
 
 namespace Flowery.WebApi.Features.Auth.SignUp;
 

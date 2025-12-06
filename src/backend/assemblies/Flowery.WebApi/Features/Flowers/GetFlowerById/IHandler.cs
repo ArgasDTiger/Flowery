@@ -1,4 +1,6 @@
-﻿namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
+﻿using Flowery.Domain.ActionResults;
+
+namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
 
 public interface IHandler
 {

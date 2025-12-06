@@ -1,10 +1,10 @@
 ﻿using Dapper;
+using Flowery.Infrastructure.Data;
 using Flowery.IntegrationTests.TestHelpers;
 using Flowery.IntegrationTests.TestHelpers.ApiFactories;
 using Flowery.IntegrationTests.TestHelpers.Seeds;
 using Microsoft.Extensions.DependencyInjection;
 using Flowery.WebApi.Features.Flowers.DeleteFlower;
-using Flowery.WebApi.Infrastructure.Data;
 
 namespace Flowery.IntegrationTests.Features.Flowers.DeleteFlower;
 

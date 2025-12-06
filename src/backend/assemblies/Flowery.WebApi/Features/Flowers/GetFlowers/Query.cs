@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Flowery.WebApi.Infrastructure.Data;
+using Flowery.Infrastructure.Data;
 using Flowery.WebApi.Shared.Extensions;
 using Flowery.WebApi.Shared.Pagination;
 

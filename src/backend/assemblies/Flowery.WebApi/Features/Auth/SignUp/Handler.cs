@@ -1,8 +1,8 @@
-﻿using Flowery.WebApi.Entities;
-using Flowery.WebApi.Features.Users;
-using Flowery.WebApi.Infrastructure.Auth;
-using Flowery.WebApi.Infrastructure.Auth.Passwords;
-using Flowery.WebApi.Infrastructure.Auth.Tokens;
+﻿using Flowery.Domain.ActionResults;
+using Flowery.Domain.Entities;
+using Flowery.Domain.Users;
+using Flowery.Infrastructure.Auth.Passwords;
+using Flowery.Infrastructure.Auth.Tokens;
 
 namespace Flowery.WebApi.Features.Auth.SignUp;
 

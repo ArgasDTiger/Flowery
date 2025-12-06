@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Flowery.WebApi.Infrastructure.Data;
+using Flowery.Infrastructure.Data;
 using Npgsql;
 using NpgsqlTypes;
 

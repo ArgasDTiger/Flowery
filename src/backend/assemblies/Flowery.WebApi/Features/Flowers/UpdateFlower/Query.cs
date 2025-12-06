@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using Flowery.WebApi.Infrastructure.Data;
-using Flowery.WebApi.Shared.ActionResults.Static;
+using Flowery.Domain.ActionResults;
+using Flowery.Infrastructure.Data;
 using Flowery.WebApi.Shared.Models;
 using Npgsql;
 using NpgsqlTypes;
