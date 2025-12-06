@@ -37,11 +37,8 @@ public sealed class Handler : IHandler
         // TODO: verify if slug exists
         string slug = flowerName.GenerateSlug();
 
-        var result = await _query.UpdateFlower(new DatabaseModel(request, slug, slugWithId.Value.Id),
+        return await _query.UpdateFlower(new DatabaseModel(request, slug, slugWithId.Value.Id),
             cancellationToken);
-        return result.Match<OneOf<Success, NotFound>>(
-            _ => StaticResults.Success,
-            _ => StaticResults.NotFound);
     }
 
     private async Task<SlugWithId?> GetFlowerSlugWithIdIfExists(SlugOrId slugOrId, CancellationToken cancellationToken)

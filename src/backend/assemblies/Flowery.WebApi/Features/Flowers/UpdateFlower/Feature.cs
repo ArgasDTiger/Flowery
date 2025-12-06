@@ -26,7 +26,7 @@ public sealed class UpdateFlowerFeature : IFeature
         {
             try
             {
-                ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
+                ValidationResult validationResult = validator.Validate(request);
 
                 if (!validationResult.IsValid)
                 {

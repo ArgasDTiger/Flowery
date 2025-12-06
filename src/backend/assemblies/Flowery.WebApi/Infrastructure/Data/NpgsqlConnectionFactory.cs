@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace Flowery.WebApi.Infrastructure.Data;
 
-public sealed class NpgsqlConnectionFactory : IDbConnectionFactory
+internal sealed class NpgsqlConnectionFactory : IDbConnectionFactory
 {
     private readonly string _connectionString;
 

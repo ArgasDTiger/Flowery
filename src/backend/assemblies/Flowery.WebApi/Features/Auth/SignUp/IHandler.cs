@@ -2,5 +2,5 @@
 
 public interface IHandler
 {
-    
+    Task<OneOf<Response, Error>> SignUpUser(Request request, CancellationToken cancellationToken);
 }

@@ -3,4 +3,5 @@
 public interface IQuery
 {
     Task<bool> UserWithEmailExists(string email, CancellationToken cancellationToken);
+    Task CreateUser(DatabaseModel model, CancellationToken cancellationToken);
 }
