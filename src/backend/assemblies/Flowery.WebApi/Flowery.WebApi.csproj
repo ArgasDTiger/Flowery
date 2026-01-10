@@ -15,7 +15,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\..\Flowery.Infrastructure\Flowery.Infrastructure.csproj" />
+        <ProjectReference Include="..\Flowery.Infrastructure\Flowery.Infrastructure.csproj" />
         <ProjectReference Include="..\..\tools\Flowery.SourceGenerators\Flowery.SourceGenerators.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false" />

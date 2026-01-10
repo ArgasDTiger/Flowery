@@ -1,8 +1,8 @@
 ﻿<Solution>
   <Folder Name="/assemblies/">
     <Project Path="assemblies\Flowery.WebApi\Flowery.WebApi.csproj" Type="Classic C#" />
-    <Project Path="Flowery.Domain\Flowery.Domain.csproj" Type="Classic C#" />
-    <Project Path="Flowery.Infrastructure\Flowery.Infrastructure.csproj" Type="Classic C#" />
+    <Project Path="assemblies\Flowery.Domain\Flowery.Domain.csproj" Type="Classic C#" />
+    <Project Path="assemblies\Flowery.Infrastructure\Flowery.Infrastructure.csproj" Type="Classic C#" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests\Flowery.IntegrationTests\Flowery.IntegrationTests.csproj" Type="Classic C#" />
