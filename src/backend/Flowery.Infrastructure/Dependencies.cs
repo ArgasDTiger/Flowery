@@ -11,38 +11,41 @@ namespace Flowery.Infrastructure;
 
 public static class Dependencies
 {
-    public static void AddInfrastructureDependencies(this IServiceCollection services, IConfiguration config)
+    extension(IServiceCollection services)
     {
-        services.AddSingleton<IDbConnectionFactory>(_ =>
-            new NpgsqlConnectionFactory(config.GetConnectionString("Postgres") ??
-                                        throw new Exception("Connection string is not configured.")));
-        services.AddHealthChecks()
-            .AddCheck<PostgresDatabaseHealthCheck>("Database");
-
-        services.AddAuthentication();
-        services.AddConfigurations(config);
-        services.AddHttpContextAccessor();
-    }
-
-    private static void AddAuthentication(this IServiceCollection services)
-    {
-        services.AddSingleton<IUserPasswordHasher, UserPasswordHasher>();
-        services.AddSingleton<ITokenService, TokenService>();
-        services.AddSingleton<IRefreshTokenRepository, RefreshTokenRepository>();
-        services.AddScoped<IAuthCookieService, AuthCookieService>();
-
-        services.Configure<PasswordHasherOptions>(options =>
+        public void AddInfrastructureDependencies(IConfiguration config)
         {
-            options.IterationCount = 600_000;
-            options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV3;
-        });
-    }
+            services.AddSingleton<IDbConnectionFactory>(_ =>
+                new NpgsqlConnectionFactory(config.GetConnectionString("Postgres") ??
+                                            throw new Exception("Connection string is not configured.")));
+            services.AddHealthChecks()
+                .AddCheck<PostgresDatabaseHealthCheck>("Database");
 
-    private static void AddConfigurations(this IServiceCollection services, IConfiguration config)
-    {
-        services.AddOptions<AuthConfiguration>()
-            .Bind(config.GetSection(nameof(AuthConfiguration)))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
+            services.AddAuthentication();
+            services.AddConfigurations(config);
+            services.AddHttpContextAccessor();
+        }
+
+        private void AddAuthentication()
+        {
+            services.AddSingleton<IUserPasswordHasher, UserPasswordHasher>();
+            services.AddSingleton<ITokenService, TokenService>();
+            services.AddSingleton<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IAuthCookieService, AuthCookieService>();
+
+            services.Configure<PasswordHasherOptions>(options =>
+            {
+                options.IterationCount = 600_000;
+                options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV3;
+            });
+        }
+
+        private void AddConfigurations(IConfiguration config)
+        {
+            services.AddOptions<AuthConfiguration>()
+                .Bind(config.GetSection(nameof(AuthConfiguration)))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+        }
     }
 }
