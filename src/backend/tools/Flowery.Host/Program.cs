@@ -1,6 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.Flowery_WebApi>("web-api");
+builder.AddProject<Projects.Flowery_WebApi>("web-api")
+    .WithHttpEndpoint(port: 5200, name: "api-http"); 
 
 if (args.Contains("--migrations-run"))
 {
@@ -8,5 +9,10 @@ if (args.Contains("--migrations-run"))
 }
 
 builder.AddProject<Projects.Flowery_WebApi_UnitTests>("web-api-tests");
+
+builder.AddViteApp("frontend", "../../frontend", "dev")
+    .WithPnpm()
+    .WithHttpEndpoint(port: 5147, name: "vite-http")
+    .WithExternalHttpEndpoints();
 
 builder.Build().Run();
