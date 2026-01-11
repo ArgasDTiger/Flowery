@@ -1,13 +1,39 @@
-﻿using Flowery.Domain;
+﻿using System.IO.Compression;
+using Flowery.Domain;
 using Flowery.Infrastructure;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Flowery.WebApi;
 
 public static class Dependencies
 {
-    public static void AddServices(this IServiceCollection services, IConfiguration config)
+    extension(IServiceCollection services)
     {
-        services.AddInfrastructureDependencies(config);
-        services.AddDomainDependencies();
+        public void AddServices(IConfiguration config)
+        {
+            services.AddInfrastructureDependencies(config);
+            services.AddDomainDependencies();
+            services.AddCompression();
+        }
+
+        private void AddCompression()
+        {
+            services.AddResponseCompression(opt =>
+            {
+                opt.EnableForHttps = true;
+                opt.Providers.Add<BrotliCompressionProvider>();
+                opt.Providers.Add<GzipCompressionProvider>();
+            });
+
+            services.Configure<GzipCompressionProviderOptions>(opt =>
+            {
+                opt.Level = CompressionLevel.Fastest;
+            });
+
+            services.Configure<BrotliCompressionProviderOptions>(opt =>
+            {
+                opt.Level = CompressionLevel.Fastest;
+            });
+        }
     }
 }
