@@ -1,0 +1,7 @@
+@use '@styles/dependencies' as *;
+
+.error {
+    color: $red;
+    font-size: $text-sm;
+    width: $form-default-width;
+}

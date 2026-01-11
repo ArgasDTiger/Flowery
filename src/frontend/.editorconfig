@@ -1,0 +1,29 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{js,jsx,ts,tsx}]
+typescript_spaces_within_object_literal_braces = true
+javascript_spaces_within_object_literal_braces = true
+
+typescript_spaces_within_import_export_braces = true
+javascript_spaces_within_import_export_braces = true
+
+quote_type = single
+jsx_quote_type = double
+
+[*.{css,scss,less}]
+indent_size = 4
+
+[*.{html,md}]
+indent_size = 2
+trim_trailing_whitespace = false
+
+[{package.json,*.json}]
+indent_size = 2

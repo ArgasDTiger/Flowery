@@ -1,0 +1,10 @@
+@use '@styles/dependencies' as *;
+
+label {
+    margin-top: 0.5rem;
+}
+
+input {
+    padding: 0.3rem;
+    width: $form-default-width;
+}

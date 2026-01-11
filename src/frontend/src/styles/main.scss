@@ -53,25 +53,9 @@ form {
     font-size: $text-md;
   }
 
-  label {
-    margin-top: 0.5rem;
-  }
-
   button {
     margin-top: 0.6rem;
-    width: 30rem;
+    width: $form-default-width;
     padding: 0.5rem;
-  }
-
-  input {
-    padding: 0.3rem;
-    width: 30rem;
-    margin-top: 0.2rem;
-  }
-
-  span.error {
-    color: $red;
-    font-size: $text-sm;
-    width: 30rem;
   }
 }

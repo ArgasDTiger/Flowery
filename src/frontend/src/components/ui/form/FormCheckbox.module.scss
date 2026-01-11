@@ -1,0 +1,16 @@
+@use '@styles/dependencies' as *;
+
+.checkboxGroup {
+    display: flex;
+    justify-content: end;
+
+    label {
+        margin-top: 0.5rem;
+    }
+
+    input {
+        width: auto;
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
+    }
+}
