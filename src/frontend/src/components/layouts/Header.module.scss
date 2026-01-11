@@ -1,0 +1,36 @@
+@use '@styles/dependencies' as *;
+
+header {
+  background: linear-gradient(180deg, #3a3a3a 0%, #2b2b2b 100%);
+  display: flex;
+  font-size: 1.1rem;
+  justify-content: space-between;
+  padding: 1rem .8rem;
+}
+
+@mixin headerButtons {
+  display: flex;
+  flex-direction: row;
+  gap: .8rem;
+
+  button {
+    color: $primary-btn-text-color;
+  }
+
+  button:hover {
+    color: $primary-btn-text-hover-color;
+    transform: scale(1.01);
+  }
+}
+
+.pageNames {
+  @include headerButtons;
+  justify-content: flex-start;
+  width: 60%;
+}
+
+.authButtons {
+  @include headerButtons;
+  justify-content: flex-end;
+  width: 40%;
+}

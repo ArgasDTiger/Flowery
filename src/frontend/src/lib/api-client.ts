@@ -1,3 +1,4 @@
+/*
 import { Axios } from "axios";
 import { env } from "../config/env.ts";
 
@@ -7,4 +8,4 @@ export const authApi = Axios.create({
 
 export const recipesApi = Axios.create({
 
-})
+})*/
