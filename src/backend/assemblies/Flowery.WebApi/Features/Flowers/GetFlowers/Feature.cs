@@ -40,7 +40,11 @@ public sealed class GetFlowersFeature : IFeature
                     logger.LogError("Error occured while getting flowers: {Message}", e.Message);
                     return Results.InternalServerError();
                 }
-            });
-        // .RequireAuthorization()
+            })
+            .Produces<Response[]>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Gets all flowers.")
+            .WithTags("Flowers");
     }
 }

@@ -40,6 +40,11 @@ public sealed class CreateFlowerFeature : IFeature
                     logger.LogError("Error occured while creating flower: {Message}", ex.Message);
                     return Results.InternalServerError();
                 }
-            });
+            })
+            .Produces(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Creates a new flower.")
+            .WithTags("Flowers");
     }
 }

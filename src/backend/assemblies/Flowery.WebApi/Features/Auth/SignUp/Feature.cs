@@ -49,6 +49,11 @@ public sealed class SignUpFeature : IFeature
                     logger.LogError("Error occured while signing up: {Message}", ex.Message);
                     return Results.InternalServerError();
                 }
-            });
+            })
+            .Produces(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Signs up a new user.")
+            .WithTags("Auth");
     }
 }

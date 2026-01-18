@@ -1,11 +1,9 @@
-/*
-import { Axios } from "axios";
-import { env } from "../config/env.ts";
+import axios from "axios";
+import { env } from "@config/env";
 
-export const authApi = Axios.create({
+export const apiClient = axios.create({
   baseURL: env.API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
-
-export const recipesApi = Axios.create({
-
-})*/

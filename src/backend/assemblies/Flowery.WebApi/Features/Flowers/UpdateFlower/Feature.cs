@@ -1,5 +1,4 @@
-﻿using Flowery.WebApi.Shared.Extensions;
-using Flowery.WebApi.Shared.Features;
+﻿using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +42,11 @@ public sealed class UpdateFlowerFeature : IFeature
                 logger.LogError("Error occured while updating flower: {Message}", ex.Message);
                 return Results.InternalServerError();
             }
-        });
+        })
+        .Produces(StatusCodes.Status204NoContent)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status500InternalServerError)
+        .WithSummary("Updates an existing flower.")
+        .WithTags("Flowers");
     }
 }

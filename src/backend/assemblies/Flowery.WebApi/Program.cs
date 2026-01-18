@@ -6,6 +6,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 
+const string solutionName = "Flowery";
 var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -18,7 +19,20 @@ builder.Services.AddFeatures();
 builder.Services.AddSharedFeatures();
 builder.Services.AddConfigurations(builder.Configuration);
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(opt =>
+{
+    opt.CreateSchemaReferenceId = ctx =>
+    {
+        var type = ctx.Type;
+        string[] targetNames = ["Request", "Response"];
+        if (type.Namespace is not null && type.Namespace.StartsWith(solutionName) && targetNames.Contains(type.Name))
+        {
+            string folderName = type.Namespace.Split('.').Last();
+            return $"{folderName}{type.Name}";
+        }
+        return null; 
+    };
+});
 
 var app = builder.Build();
 

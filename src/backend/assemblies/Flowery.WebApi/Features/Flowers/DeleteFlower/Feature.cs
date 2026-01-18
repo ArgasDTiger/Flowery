@@ -31,6 +31,11 @@ public sealed class DeleteFlowerFeature : IFeature
                     logger.LogError("Error occured while deleting flower: {Message}", ex.Message);
                     return Results.InternalServerError();
                 }
-            });
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Deletes an existing flower.")
+            .WithTags("Flowers");
     }
 }

@@ -10,6 +10,7 @@ public enum SortField : byte
     Price = 1
 }
 
+// TODO: just use enum description attribute?
 public sealed class SortFieldConverter : JsonConverter<SortField>
 {
     public override SortField Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

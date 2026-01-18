@@ -30,6 +30,11 @@ public sealed class GetFlowerByIdFeature : IFeature
                 logger.LogError("Error occured while getting flower: {Message}", ex.Message);
                 return Results.InternalServerError();
             }
-        });
+        })
+        .Produces<Response>()
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status500InternalServerError)
+        .WithSummary("Gets a flower by its Id or Slug.")
+        .WithTags("Flowers");
     }
 }
