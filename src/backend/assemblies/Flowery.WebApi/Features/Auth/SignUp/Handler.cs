@@ -42,7 +42,7 @@ public sealed class Handler : IHandler
             FirstName: request.FirstName,
             LastName: request.LastName,
             PhoneNumber: request.PhoneNumber,
-            Role: UserRole.User
+            Role: nameof(UserRole.User)
         );
 
         await _query.CreateUser(dbModel, cancellationToken);

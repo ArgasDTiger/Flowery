@@ -15,19 +15,20 @@ public sealed class Query : IQuery
     public async Task<bool> UserWithEmailExists(string email, CancellationToken cancellationToken)
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        return await dbConnection.ExecuteAsync(EmailExistsSql, new { email }) > 0;
+        return await dbConnection.ExecuteScalarAsync<bool>(EmailExistsSql, new { Email = email });
     }
 
     public async Task CreateUser(DatabaseModel model, CancellationToken cancellationToken)
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        await dbConnection.ExecuteAsync(InsertUserSql, model);
+        var rowsAffected = await dbConnection.ExecuteAsync(InsertUserSql, model);
+        if (rowsAffected == 0) throw new Exception($"Failed to create a new user with email {model.Email}.");
     }
 
-    private const string EmailExistsSql = "SELECT 1 FROM Users WHERE Email = @Email";
+    private const string EmailExistsSql = "SELECT EXISTS (SELECT 1 FROM Users WHERE Email = @Email)";
 
     private const string InsertUserSql = """
                                          INSERT INTO Users (id, email, passwordhash, firstname, lastname, phonenumber, role)
-                                         VALUES (@Id, @Email, @PasswordHash, @FirstName, @LastName, @PhoneNumber, @Role)
+                                         VALUES (@Id, @Email, @PasswordHash, @FirstName, @LastName, @PhoneNumber, @Role::userrole)
                                          """;
 }

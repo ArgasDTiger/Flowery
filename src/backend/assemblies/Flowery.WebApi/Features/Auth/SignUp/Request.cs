@@ -17,23 +17,20 @@ public sealed class RequestValidator : AbstractValidator<Request>
     {
         RuleFor(x => x.Email)
             .Must(email => email.IsValidEmail())
-            .MaximumLength(MaxEmailLength)
             .WithMessage("Email is not valid.");
 
         RuleFor(x => x.Password)
             .Must(password => password.IsValidPassword())
             .WithMessage(
                 "Password must contain at least one uppercase letter, one lowercase letter, one digit and be at least 8 characters long.");
-        
+
         RuleFor(x => x.FirstName)
-            .NotEmpty()
-            .MaximumLength(MaxFirstNameLength)
-            .WithMessage("First name must be provided.");
-        
+            .NotEmpty().WithMessage("First name must be provided.")
+            .MaximumLength(MaxFirstNameLength).WithMessage("First name is too long.");
+
         RuleFor(x => x.LastName)
-            .NotEmpty()
-            .MaximumLength(MaxLastNameLength)
-            .WithMessage("Last name is not valid.");
+            .NotEmpty().WithMessage("Last name must be provided.")
+            .MaximumLength(MaxLastNameLength).WithMessage("Last name is too long.");
         
         RuleFor(x => x.PhoneNumber)
             .MaximumLength(MaxPhoneNumberLength)

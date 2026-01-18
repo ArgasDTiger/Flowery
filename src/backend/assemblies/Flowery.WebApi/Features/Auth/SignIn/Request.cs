@@ -14,7 +14,6 @@ public sealed class RequestValidator : AbstractValidator<Request>
     {
         RuleFor(x => x.Email)
             .Must(email => email.IsValidEmail())
-            .MaximumLength(UserConstants.MaxEmailLength)
             .WithMessage("Email is not valid.");
     }
 }

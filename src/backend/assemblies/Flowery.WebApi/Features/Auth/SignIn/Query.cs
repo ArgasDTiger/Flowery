@@ -19,7 +19,7 @@ public sealed class Query : IQuery
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
         string? passwordHash =
-            await dbConnection.QuerySingleOrDefaultAsync<string>(GetUserPasswordHashByEmailSql, email);
+            await dbConnection.QuerySingleOrDefaultAsync<string>(GetUserPasswordHashByEmailSql, new { Email = email });
         return passwordHash is null ? StaticResults.NotFound : passwordHash;
     }
 

@@ -1,6 +1,4 @@
-﻿using Flowery.Domain.Users;
-
-namespace Flowery.WebApi.Features.Auth.SignUp;
+﻿namespace Flowery.WebApi.Features.Auth.SignUp;
 
 public sealed record DatabaseModel(Guid Id,
     string Email,
@@ -8,4 +6,4 @@ public sealed record DatabaseModel(Guid Id,
     string FirstName,
     string LastName,
     string? PhoneNumber,
-    UserRole Role);
+    string Role);
