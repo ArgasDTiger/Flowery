@@ -14,7 +14,7 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>;
 
-export const Route = createLazyFileRoute('/auth/login/')({
+export const Route = createLazyFileRoute('/auth/signIn/')({
   component: RouteComponent,
 });
 

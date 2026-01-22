@@ -34,6 +34,18 @@ builder.Services.AddOpenApi(opt =>
     };
 });
 
+// TODO: add more restrictions
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", b =>
+    {
+        b.WithOrigins("http://localhost:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -42,6 +54,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseCors("CorsPolicy");
 // app.UseHttpsRedirection();
 
 // TODO: Add authentication

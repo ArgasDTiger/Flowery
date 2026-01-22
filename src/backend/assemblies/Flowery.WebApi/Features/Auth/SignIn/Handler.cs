@@ -15,17 +15,17 @@ public sealed class Handler : IHandler
         _query = query;
     }
 
-    public async Task<OneOf<Success, InvalidCredentials, NotFound>> SignInUser(Request request,
+    public async Task<OneOf<Response, InvalidCredentials, NotFound>> SignInUser(Request request,
         CancellationToken cancellationToken)
     {
-        var queryResult = await _query.GetUserPasswordHashByEmail(request.Email, cancellationToken);
-        return queryResult.Match<OneOf<Success, InvalidCredentials, NotFound>>(
-            passwordHash =>
+        var dbResponse = await _query.GetUserDataByEmail(request.Email, cancellationToken);
+        return dbResponse.Match<OneOf<Response, InvalidCredentials, NotFound>>(
+            userData =>
             {
-                var passwordsMatch = _passwordHasher.VerifyPassword(passwordHash, request.Password);
+                var passwordsMatch = _passwordHasher.VerifyPassword(userData.PasswordHash, request.Password);
                 if (passwordsMatch)
                 {
-                    return StaticResults.Success;
+                    return new Response(Email: userData.Email, Role: userData.Role);
                 }
 
                 return StaticResults.InvalidCredentials;

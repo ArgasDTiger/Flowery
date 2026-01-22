@@ -34,7 +34,7 @@ public sealed class SignInFeature : IFeature
 
                         var result = await handler.SignInUser(request, cancellationToken);
                         return result.Match(
-                            _ => Results.NoContent(),
+                            userData => Results.Ok(userData),
                             _ => Results.Unauthorized(),
                             _ => Results.NotFound());
                     }
@@ -44,7 +44,7 @@ public sealed class SignInFeature : IFeature
                         return Results.InternalServerError();
                     }
                 })
-            .Produces(StatusCodes.Status204NoContent)
+            .Produces<Response>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .WithSummary("Signs in an existing user.")

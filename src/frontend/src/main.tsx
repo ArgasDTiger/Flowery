@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '@styles/main.scss';
 import { routeTree } from './routeTree.gen';
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { AppProvider } from "./provider.tsx";
 
 const router = createRouter({ routeTree });
 
@@ -11,6 +12,8 @@ if (!root) throw new Error('No root element found');
 
 createRoot(root).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AppProvider>
+      <RouterProvider router={router} />
+    </AppProvider>
   </StrictMode>
 );

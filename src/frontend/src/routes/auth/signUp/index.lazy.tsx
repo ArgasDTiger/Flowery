@@ -1,9 +1,10 @@
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Error } from "@components/ui/form";
 import { useState } from "react";
+import { type SignUpRequest, useSignUp } from "@features/auth/signUp";
 
 const schema = z.object({
   firstName: z.string().nonempty({ message: "First name is required." }),
@@ -20,11 +21,21 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>;
 
-export const Route = createLazyFileRoute('/auth/register/')({
+export const Route = createLazyFileRoute('/auth/signUp/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
+  const signUpMutation = useSignUp({
+    mutationConfig: {
+      onSuccess: () => {
+        navigate({ to: '/signIn'});
+      },
+    },
+  });
+
   const [responseErrorMessage, setResponseErrorMessage] = useState<string | null>(null);
 
   const {
@@ -36,10 +47,9 @@ function RouteComponent() {
     mode: "onChange"
   });
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+  const onSubmit: SubmitHandler<FormFields> = async (data: SignUpRequest) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log(data);
+      signUpMutation.mutate(data);
     } catch (e) {
       console.error(e);
       setResponseErrorMessage("Invalid credentials");
@@ -91,7 +101,7 @@ function RouteComponent() {
         error={errors.passwordConfirm}
         type="password"
       />
-      <button className="black" disabled={!isValid || isSubmitting} type="submit">Register</button>
+      <button className="black" disabled={!isValid || isSubmitting || signUpMutation.isPending} type="submit">Register</button>
       {responseErrorMessage && <Error/>}
     </form>
   );

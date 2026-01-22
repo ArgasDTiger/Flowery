@@ -14,14 +14,13 @@ public sealed class Query : IQuery
         _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public async Task<OneOf<string, NotFound>> GetUserPasswordHashByEmail(string email,
-        CancellationToken cancellationToken)
+    public async Task<OneOf<DatabaseResponse, NotFound>> GetUserDataByEmail(string email, CancellationToken cancellationToken)
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        string? passwordHash =
-            await dbConnection.QuerySingleOrDefaultAsync<string>(GetUserPasswordHashByEmailSql, new { Email = email });
-        return passwordHash is null ? StaticResults.NotFound : passwordHash;
+        var response =
+            await dbConnection.QuerySingleOrDefaultAsync<DatabaseResponse>(GetUserDataByEmailSql, new { Email = email });
+        return response is null ? StaticResults.NotFound : response;
     }
 
-    private const string GetUserPasswordHashByEmailSql = "SELECT passwordhash FROM Users WHERE Email = @Email LIMIT 1;";
+    private const string GetUserDataByEmailSql = "SELECT email, role, passwordhash FROM Users WHERE Email = @Email LIMIT 1;";
 }

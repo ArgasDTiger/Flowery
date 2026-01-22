@@ -17,10 +17,10 @@ export const Header = () => {
       </div>
       <div className={styles.authButtons}>
         <button>
-          <Link to='/auth/login'>Login</Link>
+          <Link to='/auth/signIn'>Login</Link>
         </button>
         <button>
-          <Link to='/auth/register'>Register</Link>
+          <Link to='/auth/signUp'>Register</Link>
         </button>
       </div>
     </header>
