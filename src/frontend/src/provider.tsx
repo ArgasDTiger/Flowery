@@ -2,6 +2,7 @@ import { type ReactNode, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { queryConfig } from "@lib/react-query.ts";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "@components/ui/toasts";
 
 type AppProviderProps = {
   children: ReactNode;
@@ -13,6 +14,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       {import.meta.env.DEV && <ReactQueryDevtools />}
+      <Toaster/>
       {children}
     </QueryClientProvider>
   );

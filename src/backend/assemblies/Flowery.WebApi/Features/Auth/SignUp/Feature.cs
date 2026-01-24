@@ -1,5 +1,4 @@
-﻿using Flowery.Infrastructure.Auth.Tokens;
-using Flowery.WebApi.Shared.Features;
+﻿using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +20,6 @@ public sealed class SignUpFeature : IFeature
             async ([FromServices] IHandler handler,
                 [FromServices] IValidator<Request> validator,
                 [FromServices] ILogger<SignUpFeature> logger,
-                [FromServices] IAuthCookieService cookieService,
                 [FromBody] Request request,
                 CancellationToken cancellationToken) =>
             {
@@ -36,12 +34,7 @@ public sealed class SignUpFeature : IFeature
 
                     var result = await handler.SignUpUser(request, cancellationToken);
                     return result.Match(
-                        success =>
-                        {
-                            cookieService.SetAccessToken(success.AccessToken);
-                            cookieService.SetRefreshToken(success.RefreshToken);
-                            return Results.Created();
-                        },
+                        _ => Results.Created(),
                         error => Results.BadRequest(error.Message));
                 }
                 catch (Exception ex)

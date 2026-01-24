@@ -12,15 +12,10 @@ type UseSignUpOptions = {
 };
 
 export const useSignUp = ({ mutationConfig, }: UseSignUpOptions = {}) => {
-  // const queryClient = useQueryClient();
-
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
     onSuccess: (...args) => {
-      // queryClient.invalidateQueries({
-      //   queryKey: getDiscussionsQueryOptions().queryKey,
-      // });
       onSuccess?.(...args);
     },
     ...restConfig,

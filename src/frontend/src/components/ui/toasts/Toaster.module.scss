@@ -1,0 +1,77 @@
+.icon-size {
+    height: 1rem;
+    width: 1rem;
+}
+
+.icon-color {
+    color: #FFFFFF;
+}
+
+.spinner-icon-color {
+    color: #6b7280;
+}
+
+.success-bg {
+    background-color: #10b981;
+}
+
+.success-color {
+    color: #10b981;
+}
+
+.success-icon {
+    color: #ffffff;
+}
+
+.error-bg {
+    background-color: #ef4444;
+}
+
+.error-color {
+    color: #ef4444;
+}
+
+.error-icon {
+    color: #ffffff;
+}
+
+.info-bg {
+    background-color: #3b82f6;
+}
+
+.info-color {
+    color: #3b82f6;
+}
+
+.info-icon {
+    color: #ffffff;
+}
+
+.warning-bg {
+    background-color: #f59e0b;
+}
+
+.warning-color {
+    color: #f59e0b;
+}
+
+.warning-icon {
+    color: #ffffff;
+}
+
+.loading-color {
+    color: #6b7280;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

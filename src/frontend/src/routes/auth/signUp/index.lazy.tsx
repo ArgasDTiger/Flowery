@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Error } from "@components/ui/form";
 import { useState } from "react";
 import { type SignUpRequest, useSignUp } from "@features/auth/signUp";
+import { toast } from "sonner";
 
 const schema = z.object({
   firstName: z.string().nonempty({ message: "First name is required." }),
@@ -31,7 +32,8 @@ function RouteComponent() {
   const signUpMutation = useSignUp({
     mutationConfig: {
       onSuccess: () => {
-        navigate({ to: '/signIn'});
+        toast.success("Registration was successful! Please proceed with login.");
+        navigate({ to: 'auth/signIn'});
       },
     },
   });
@@ -48,12 +50,8 @@ function RouteComponent() {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data: SignUpRequest) => {
-    try {
-      signUpMutation.mutate(data);
-    } catch (e) {
-      console.error(e);
-      setResponseErrorMessage("Invalid credentials");
-    }
+    signUpMutation.mutate(data);
+    setResponseErrorMessage("Invalid credentials");
   };
 
   return (

@@ -29,7 +29,7 @@ internal sealed class AuthCookieService : IAuthCookieService
             Expires = _timeService.UtcNow.AddMinutes(_configuration.AccessTokenLifetimeInMinutes),
             // TODO: Make secure
             // Secure = true
-            SameSite = SameSiteMode.None,
+            SameSite = SameSiteMode.Lax,
             IsEssential = true
         });
     }
@@ -42,7 +42,7 @@ internal sealed class AuthCookieService : IAuthCookieService
             Expires = token.ExpiresAt,
             // TODO: Make secure
             // Secure = true
-            SameSite = SameSiteMode.None,
+            SameSite = SameSiteMode.Lax,
             IsEssential = true
         });
     }

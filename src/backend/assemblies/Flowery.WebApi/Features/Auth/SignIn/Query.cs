@@ -22,5 +22,5 @@ public sealed class Query : IQuery
         return response is null ? StaticResults.NotFound : response;
     }
 
-    private const string GetUserDataByEmailSql = "SELECT email, role, passwordhash FROM Users WHERE Email = @Email LIMIT 1;";
+    private const string GetUserDataByEmailSql = "SELECT id as UserId, email, role, passwordhash FROM Users WHERE Email = @Email LIMIT 1;";
 }

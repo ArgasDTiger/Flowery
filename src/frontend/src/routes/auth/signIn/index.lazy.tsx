@@ -1,10 +1,10 @@
-import { createLazyFileRoute } from '@tanstack/react-router';
+import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormField, Error, FormCheckbox } from "@components/ui/form";
 import { useState } from "react";
-
+import { type SignInRequest, useSignIn } from "@features/auth/signIn";
 
 const schema = z.object({
   email: z.email({ message: "Invalid email." }),
@@ -18,7 +18,28 @@ export const Route = createLazyFileRoute('/auth/signIn/')({
   component: RouteComponent,
 });
 
+const invalidCredentials = "Invalid credentials";
+const errorOccurred = "An error occurred. Please try again.";
+
 function RouteComponent() {
+  const navigate = useNavigate();
+
+  const signInMutation = useSignIn({
+    mutationConfig: {
+      onSuccess: () => {
+        navigate({ to: 'flowers'});
+      },
+      onError: (error) => {
+        if (error.response?.status === 401) {
+          setResponseErrorMessage(invalidCredentials);
+        } else {
+          setResponseErrorMessage(errorOccurred);
+        }
+        setResponseErrorMessage(invalidCredentials);
+      }
+    },
+  });
+
   const [responseErrorMessage, setResponseErrorMessage] = useState<string | null>(null);
 
   const {
@@ -31,13 +52,9 @@ function RouteComponent() {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log(data);
-    } catch (e) {
-      console.error(e);
-      setResponseErrorMessage("Invalid credentials");
-    }
+    setResponseErrorMessage(null);
+    const request: SignInRequest = { ...data, rememberMe: data.rememberMe ?? false };
+    signInMutation.mutate(request);
   };
 
   return (

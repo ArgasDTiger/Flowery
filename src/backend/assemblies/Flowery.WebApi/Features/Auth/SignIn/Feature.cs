@@ -1,4 +1,5 @@
-﻿using Flowery.WebApi.Shared.Features;
+﻿using Flowery.Infrastructure.Auth.Tokens;
+using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ public sealed class SignInFeature : IFeature
         endpoints.MapPost("api/v1/auth/signin",
                 async ([FromServices] IValidator<Request> validator,
                     [FromServices] IHandler handler,
+                    [FromServices] IAuthCookieService cookieService,
                     [FromServices] ILogger<SignInFeature> logger,
                     [FromBody] Request request,
                     CancellationToken cancellationToken) =>
@@ -34,7 +36,12 @@ public sealed class SignInFeature : IFeature
 
                         var result = await handler.SignInUser(request, cancellationToken);
                         return result.Match(
-                            userData => Results.Ok(userData),
+                            userData =>
+                            {
+                                cookieService.SetAccessToken(userData.AccessToken);
+                                cookieService.SetRefreshToken(userData.RefreshToken);
+                                return Results.Ok(new Response(userData.Email, userData.Role));
+                            },
                             _ => Results.Unauthorized(),
                             _ => Results.NotFound());
                     }

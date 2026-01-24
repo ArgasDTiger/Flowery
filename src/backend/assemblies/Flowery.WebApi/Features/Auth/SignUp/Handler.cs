@@ -1,5 +1,5 @@
 ﻿using Flowery.Domain.ActionResults;
-using Flowery.Domain.Entities;
+using Flowery.Domain.ActionResults.Static;
 using Flowery.Domain.Users;
 using Flowery.Infrastructure.Auth.Passwords;
 using Flowery.Infrastructure.Auth.Tokens;
@@ -25,7 +25,7 @@ public sealed class Handler : IHandler
         _tokenService = tokenService;
     }
 
-    public async Task<OneOf<Response, Error>> SignUpUser(Request request, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, Error>> SignUpUser(Request request, CancellationToken cancellationToken)
     {
         if (await _query.UserWithEmailExists(request.Email, cancellationToken))
         {
@@ -46,18 +46,8 @@ public sealed class Handler : IHandler
         );
 
         await _query.CreateUser(dbModel, cancellationToken);
-        var refreshToken = await GenerateAndSaveRefreshToken(userId, cancellationToken);
-        var accessToken = _tokenService.GenerateJwtToken(new JwtUser(request.Email, UserRole.User));
-
-        return new Response(
-            RefreshToken: refreshToken,
-            AccessToken: accessToken);
+        return StaticResults.Success;
     }
 
-    private async Task<RefreshToken> GenerateAndSaveRefreshToken(Guid userId, CancellationToken cancellationToken)
-    {
-        RefreshToken refreshToken = _tokenService.GenerateRefreshToken(userId);
-        await _refreshTokenRepository.InsertRefreshToken(refreshToken, cancellationToken);
-        return refreshToken;
-    }
+   
 }
