@@ -16,7 +16,7 @@ public sealed class Query : IQuery
 
     public async Task<Guid> CreateFlower(DatabaseModel model, CancellationToken cancellationToken)
     {
-        NpgsqlConnection connection =
+        await using NpgsqlConnection connection =
             (NpgsqlConnection)await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
         try

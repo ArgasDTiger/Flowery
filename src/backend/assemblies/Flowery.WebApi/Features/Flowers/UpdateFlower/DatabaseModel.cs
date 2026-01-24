@@ -4,13 +4,43 @@ namespace Flowery.WebApi.Features.Flowers.UpdateFlower;
 
 public sealed record DatabaseModel
 {
-    public DatabaseModel(Request request, string slug, Guid id)
+    public static DatabaseModel CreateWithSlugId(Request request, string oldSlug, string newSlug)
     {
-        Id = id;
-        Slug = slug;
-        Price = request.Price;
-        Description = request.Description;
-        FlowerNames =
+        ArgumentNullException.ThrowIfNull(oldSlug);
+        return new DatabaseModel
+        {
+            Price = request.Price,
+            Description = request.Description,
+            FlowerNames = GetFlowerNames(request),
+            OriginalSlug = oldSlug,
+            NewSlug = newSlug
+        };
+    }
+
+    public static DatabaseModel CreateWithGuidId(Request request, string newSlug, Guid id)
+    {
+        return new DatabaseModel
+        {
+            Id = id,
+            Price = request.Price,
+            Description = request.Description,
+            FlowerNames = GetFlowerNames(request),
+            NewSlug = newSlug
+        };
+    }
+
+    public Guid? Id { get; private init; }
+    public string? OriginalSlug { get; private init; }
+    public decimal Price { get; private init; }
+    public string Description { get; private init; } = null!;
+    public string NewSlug { get; private init; } = null!;
+    public ImmutableArray<FlowerName> FlowerNames { get; private init; }
+    public bool IsIdGuid => Id is not null;
+    public bool IsSlugChanged => !string.Equals(OriginalSlug, NewSlug, StringComparison.OrdinalIgnoreCase);
+
+    private static ImmutableArray<FlowerName> GetFlowerNames(Request request)
+    {
+        return
         [
             ..request.FlowerNames
                 .AsValueEnumerable().Select(fn => new FlowerName
@@ -20,9 +50,4 @@ public sealed record DatabaseModel
                 })
         ];
     }
-    public Guid? Id { get; }
-    public decimal Price { get; }
-    public string Description { get; }
-    public string Slug { get; }
-    public ImmutableArray<FlowerName> FlowerNames { get; }
 }

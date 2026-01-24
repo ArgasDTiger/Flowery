@@ -1,17 +1,10 @@
 ﻿using System.Globalization;
 using System.Text;
-using Flowery.WebApi.Shared.Models;
 
 namespace Flowery.WebApi.Shared.Extensions;
 
 public static class SlugifierExtension
 {
-    public static SlugOrId GetSlugOrId(this string value)
-    {
-        bool parsed = Guid.TryParse(value, out var result);
-        return parsed ? new SlugOrId(null, result) : new SlugOrId(value, null);
-    }
-    
     // TODO: pass LanguageCode to use proper remapping
     public static string GenerateSlug(this string value, int currentCount = 0)
     {

@@ -3,7 +3,6 @@ using Flowery.Domain.ActionResults.Static;
 using Flowery.Domain.Enums;
 using Flowery.WebApi.Shared.Configurations;
 using Flowery.WebApi.Shared.Extensions;
-using Flowery.WebApi.Shared.Models;
 using Microsoft.Extensions.Options;
 
 namespace Flowery.WebApi.Features.Flowers.UpdateFlower;
@@ -22,11 +21,8 @@ public sealed class Handler : IHandler
     public async Task<OneOf<Success, NotFound>> UpdateFlower(string flowerId, Request request,
         CancellationToken cancellationToken)
     {
-        SlugOrId slugOrId = flowerId.GetSlugOrId();
-        // TODO: dont need slug with id, just id, because slug will be generated from name anyways
-        SlugWithId? slugWithId = await GetFlowerSlugWithIdIfExists(slugOrId, cancellationToken);
-
-        if (slugWithId is null) return StaticResults.NotFound;
+        var flowerExistResult = await DoesFlowerExist(flowerId, cancellationToken);
+        if (!flowerExistResult.flowerExists) return StaticResults.NotFound;
 
         LanguageCode defaultLanguageName = _translationConfiguration.SlugDefaultLanguage;
         string flowerName = request.FlowerNames
@@ -38,17 +34,25 @@ public sealed class Handler : IHandler
         // TODO: verify if slug exists
         string slug = flowerName.GenerateSlug();
 
-        return await _query.UpdateFlower(new DatabaseModel(request, slug, slugWithId.Value.Id),
-            cancellationToken);
+        var dbModel = flowerExistResult.flowerId.IsT0
+            ? DatabaseModel.CreateWithSlugId(request, slug, flowerExistResult.flowerId.AsT0)
+            : DatabaseModel.CreateWithGuidId(request, slug, flowerExistResult.flowerId.AsT1);
+        
+        return await _query.UpdateFlower(dbModel, cancellationToken);
+        
     }
 
-    private async Task<SlugWithId?> GetFlowerSlugWithIdIfExists(SlugOrId slugOrId, CancellationToken cancellationToken)
+    private async Task<(bool flowerExists, OneOf<string, Guid> flowerId)> DoesFlowerExist(string flowerId,
+        CancellationToken cancellationToken)
     {
-        if (slugOrId.Id is not null)
+        bool isIdGuid = Guid.TryParse(flowerId, out Guid guidId);
+        if (isIdGuid)
         {
-            return await _query.GetFlowerById(slugOrId.Id.Value, cancellationToken);
+            bool flowerExist = await _query.DoesFlowerExist(guidId, cancellationToken);
+            return (flowerExist, guidId);
         }
 
-        return await _query.GetFlowerBySlug(slugOrId.Slug!, cancellationToken);
+        bool flowerExists = await _query.DoesFlowerExist(flowerId, cancellationToken);
+        return (flowerExists, flowerId);
     }
 }
