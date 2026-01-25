@@ -19,7 +19,8 @@ const createEnv = () => {
   const parsedEnv = envSchema.safeParse(envVars);
 
   if (!parsedEnv.success) {
-    const errorMessage = Object.entries(parsedEnv.error.flatten().fieldErrors)
+    const flattenedError = z.flattenError(parsedEnv.error);
+    const errorMessage = Object.entries(flattenedError.fieldErrors)
       .map(([k, v]) => `- ${k}: ${v}`)
       .join('\n');
     throw new Error(`Invalid env provided. The following variables are missing or invalid: ${errorMessage}`,);
