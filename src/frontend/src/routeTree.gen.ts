@@ -12,6 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FlowersIndexRouteImport } from './routes/flowers/index'
 
 const HomeIndexLazyRouteImport = createFileRoute('/home/')()
 const AuthSignUpIndexLazyRouteImport = createFileRoute('/auth/signUp/')()
@@ -27,6 +28,11 @@ const HomeIndexLazyRoute = HomeIndexLazyRouteImport.update({
   path: '/home/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/home/index.lazy').then((d) => d.Route))
+const FlowersIndexRoute = FlowersIndexRouteImport.update({
+  id: '/flowers/',
+  path: '/flowers/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/flowers/index.lazy').then((d) => d.Route))
 const AuthSignUpIndexLazyRoute = AuthSignUpIndexLazyRouteImport.update({
   id: '/auth/signUp/',
   path: '/auth/signUp/',
@@ -44,12 +50,14 @@ const AuthSignInIndexLazyRoute = AuthSignInIndexLazyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/flowers': typeof FlowersIndexRoute
   '/home': typeof HomeIndexLazyRoute
   '/auth/signIn': typeof AuthSignInIndexLazyRoute
   '/auth/signUp': typeof AuthSignUpIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/flowers': typeof FlowersIndexRoute
   '/home': typeof HomeIndexLazyRoute
   '/auth/signIn': typeof AuthSignInIndexLazyRoute
   '/auth/signUp': typeof AuthSignUpIndexLazyRoute
@@ -57,20 +65,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/flowers/': typeof FlowersIndexRoute
   '/home/': typeof HomeIndexLazyRoute
   '/auth/signIn/': typeof AuthSignInIndexLazyRoute
   '/auth/signUp/': typeof AuthSignUpIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home' | '/auth/signIn' | '/auth/signUp'
+  fullPaths: '/' | '/flowers' | '/home' | '/auth/signIn' | '/auth/signUp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home' | '/auth/signIn' | '/auth/signUp'
-  id: '__root__' | '/' | '/home/' | '/auth/signIn/' | '/auth/signUp/'
+  to: '/' | '/flowers' | '/home' | '/auth/signIn' | '/auth/signUp'
+  id:
+    | '__root__'
+    | '/'
+    | '/flowers/'
+    | '/home/'
+    | '/auth/signIn/'
+    | '/auth/signUp/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FlowersIndexRoute: typeof FlowersIndexRoute
   HomeIndexLazyRoute: typeof HomeIndexLazyRoute
   AuthSignInIndexLazyRoute: typeof AuthSignInIndexLazyRoute
   AuthSignUpIndexLazyRoute: typeof AuthSignUpIndexLazyRoute
@@ -92,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeIndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/flowers/': {
+      id: '/flowers/'
+      path: '/flowers'
+      fullPath: '/flowers'
+      preLoaderRoute: typeof FlowersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/signUp/': {
       id: '/auth/signUp/'
       path: '/auth/signUp'
@@ -111,6 +134,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FlowersIndexRoute: FlowersIndexRoute,
   HomeIndexLazyRoute: HomeIndexLazyRoute,
   AuthSignInIndexLazyRoute: AuthSignInIndexLazyRoute,
   AuthSignUpIndexLazyRoute: AuthSignUpIndexLazyRoute,

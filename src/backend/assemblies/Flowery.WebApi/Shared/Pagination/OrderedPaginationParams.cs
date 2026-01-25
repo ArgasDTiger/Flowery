@@ -10,7 +10,7 @@ public abstract record OrderedPaginationParams : PaginationParams
 {
     [FromQuery(Name = "sortDirection")]
     [DefaultValue(nameof(SortDirection.Ascending))]
-    public string? SortDirectionString { get; init; } = nameof(SortDirection.Ascending);
+    public string? SortDirectionString { get; init; } = nameof(SortDirection.Ascending); // TODO: change to "asc"
 
     [BindNever]
     public SortDirection SortDirection => SortDirectionString.ToSortDirectionEnum();

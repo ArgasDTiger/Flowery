@@ -9,7 +9,7 @@ export const Header = () => {
           <Link to='/home'>Home</Link>
         </button>
         <button className={styles.pageName}>
-          Flowers
+          <Link to='/flowers'>Flowers</Link>
         </button>
         <button className={styles.pageName}>
           About Us
