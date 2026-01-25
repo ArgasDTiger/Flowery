@@ -3,15 +3,12 @@ import type { GetFlowersRequest, PaginatedFlowersResponse } from "@features/flow
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import type { QueryConfig } from "@lib/react-query";
 
-export const getFlowers = async (request: GetFlowersRequest): Promise<PaginatedFlowersResponse> => {
-  const response = api.get("/flowers", {
+export const getFlowers = (request: GetFlowersRequest): Promise<PaginatedFlowersResponse> => {
+  return api.get("/flowers", {
     params: {
       ...request
     },
   });
-
-  const res = await response;
-  return res.data;
 };
 
 export const getFlowersQueryOptions = (request: GetFlowersRequest) => {
