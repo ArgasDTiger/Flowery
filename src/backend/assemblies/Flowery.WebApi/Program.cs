@@ -46,6 +46,14 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddProblemDetails(opt =>
+{
+    opt.CustomizeProblemDetails = (ctx) =>
+    {
+        ctx.ProblemDetails.Instance = $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}";
+    };
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -56,6 +64,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("CorsPolicy");
 // app.UseHttpsRedirection();
+
+app.UseStatusCodePages();
 
 // TODO: Add authentication
 app.MapHealthChecks("/health", new HealthCheckOptions

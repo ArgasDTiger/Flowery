@@ -42,7 +42,7 @@ public sealed class CreateFlowerFeature : IFeature
                 }
             })
             .Produces(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status400BadRequest)
+            .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Creates a new flower.")
             .WithTags("Flowers");

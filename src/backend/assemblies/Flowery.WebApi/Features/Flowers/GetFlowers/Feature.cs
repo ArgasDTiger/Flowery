@@ -42,7 +42,7 @@ public sealed class GetFlowersFeature : IFeature
                 }
             })
             .Produces<Response[]>()
-            .Produces(StatusCodes.Status400BadRequest)
+            .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Gets all flowers.")
             .WithTags("Flowers");

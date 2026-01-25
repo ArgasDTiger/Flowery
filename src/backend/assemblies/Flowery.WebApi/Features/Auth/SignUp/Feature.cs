@@ -44,7 +44,7 @@ public sealed class SignUpFeature : IFeature
                 }
             })
             .Produces(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status400BadRequest)
+            .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Signs up a new user.")
             .WithTags("Auth");

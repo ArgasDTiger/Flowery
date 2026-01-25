@@ -52,6 +52,7 @@ public sealed class SignInFeature : IFeature
                     }
                 })
             .Produces<Response>(StatusCodes.Status200OK)
+            .ProducesValidationProblem()
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .WithSummary("Signs in an existing user.")
