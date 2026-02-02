@@ -13,6 +13,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FlowersIndexRouteImport } from './routes/flowers/index'
+import { Route as FlowersCreateIndexRouteImport } from './routes/flowers/create/index'
+import { Route as FlowersFlowerIdIndexRouteImport } from './routes/flowers/$flowerId/index'
 
 const HomeIndexLazyRouteImport = createFileRoute('/home/')()
 const AuthSignUpIndexLazyRouteImport = createFileRoute('/auth/signUp/')()
@@ -47,11 +49,27 @@ const AuthSignInIndexLazyRoute = AuthSignInIndexLazyRouteImport.update({
 } as any).lazy(() =>
   import('./routes/auth/signIn/index.lazy').then((d) => d.Route),
 )
+const FlowersCreateIndexRoute = FlowersCreateIndexRouteImport.update({
+  id: '/flowers/create/',
+  path: '/flowers/create/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/flowers/create/index.lazy').then((d) => d.Route),
+)
+const FlowersFlowerIdIndexRoute = FlowersFlowerIdIndexRouteImport.update({
+  id: '/flowers/$flowerId/',
+  path: '/flowers/$flowerId/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/flowers/$flowerId/index.lazy').then((d) => d.Route),
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/flowers': typeof FlowersIndexRoute
   '/home': typeof HomeIndexLazyRoute
+  '/flowers/$flowerId': typeof FlowersFlowerIdIndexRoute
+  '/flowers/create': typeof FlowersCreateIndexRoute
   '/auth/signIn': typeof AuthSignInIndexLazyRoute
   '/auth/signUp': typeof AuthSignUpIndexLazyRoute
 }
@@ -59,6 +77,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/flowers': typeof FlowersIndexRoute
   '/home': typeof HomeIndexLazyRoute
+  '/flowers/$flowerId': typeof FlowersFlowerIdIndexRoute
+  '/flowers/create': typeof FlowersCreateIndexRoute
   '/auth/signIn': typeof AuthSignInIndexLazyRoute
   '/auth/signUp': typeof AuthSignUpIndexLazyRoute
 }
@@ -67,19 +87,37 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/flowers/': typeof FlowersIndexRoute
   '/home/': typeof HomeIndexLazyRoute
+  '/flowers/$flowerId/': typeof FlowersFlowerIdIndexRoute
+  '/flowers/create/': typeof FlowersCreateIndexRoute
   '/auth/signIn/': typeof AuthSignInIndexLazyRoute
   '/auth/signUp/': typeof AuthSignUpIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/flowers' | '/home' | '/auth/signIn' | '/auth/signUp'
+  fullPaths:
+    | '/'
+    | '/flowers'
+    | '/home'
+    | '/flowers/$flowerId'
+    | '/flowers/create'
+    | '/auth/signIn'
+    | '/auth/signUp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/flowers' | '/home' | '/auth/signIn' | '/auth/signUp'
+  to:
+    | '/'
+    | '/flowers'
+    | '/home'
+    | '/flowers/$flowerId'
+    | '/flowers/create'
+    | '/auth/signIn'
+    | '/auth/signUp'
   id:
     | '__root__'
     | '/'
     | '/flowers/'
     | '/home/'
+    | '/flowers/$flowerId/'
+    | '/flowers/create/'
     | '/auth/signIn/'
     | '/auth/signUp/'
   fileRoutesById: FileRoutesById
@@ -88,6 +126,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FlowersIndexRoute: typeof FlowersIndexRoute
   HomeIndexLazyRoute: typeof HomeIndexLazyRoute
+  FlowersFlowerIdIndexRoute: typeof FlowersFlowerIdIndexRoute
+  FlowersCreateIndexRoute: typeof FlowersCreateIndexRoute
   AuthSignInIndexLazyRoute: typeof AuthSignInIndexLazyRoute
   AuthSignUpIndexLazyRoute: typeof AuthSignUpIndexLazyRoute
 }
@@ -129,6 +169,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInIndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/flowers/create/': {
+      id: '/flowers/create/'
+      path: '/flowers/create'
+      fullPath: '/flowers/create'
+      preLoaderRoute: typeof FlowersCreateIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flowers/$flowerId/': {
+      id: '/flowers/$flowerId/'
+      path: '/flowers/$flowerId'
+      fullPath: '/flowers/$flowerId'
+      preLoaderRoute: typeof FlowersFlowerIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -136,6 +190,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FlowersIndexRoute: FlowersIndexRoute,
   HomeIndexLazyRoute: HomeIndexLazyRoute,
+  FlowersFlowerIdIndexRoute: FlowersFlowerIdIndexRoute,
+  FlowersCreateIndexRoute: FlowersCreateIndexRoute,
   AuthSignInIndexLazyRoute: AuthSignInIndexLazyRoute,
   AuthSignUpIndexLazyRoute: AuthSignUpIndexLazyRoute,
 }

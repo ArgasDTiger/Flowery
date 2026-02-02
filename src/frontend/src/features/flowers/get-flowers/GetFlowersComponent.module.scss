@@ -1,0 +1,106 @@
+@use '@styles/dependencies' as *;
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+        font-size: $text-xxl;
+        font-weight: $weight-bold;
+        color: $black;
+    }
+}
+
+.filtersSection {
+    margin-bottom: 2rem;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.searchWrapper {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+        flex-shrink: 0;
+    }
+}
+
+.searchInput {
+    flex: 1;
+}
+
+.categoryFilter,
+.sortSelect {
+    min-width: 150px;
+}
+
+.flowersSection {
+    margin-bottom: 2rem;
+}
+
+.flowersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.flowerCard {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.imagePlaceholder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.noImage {
+    color: #999;
+    font-size: $text-sm;
+    text-align: center;
+}
+
+.flowerLink {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover h2 {
+        color: $primary-btn-hover-color;
+        transition: color 0.2s ease-in-out;
+    }
+}
+
+.noResults {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 0;
+    color: #999;
+}
+
+.paginationNav {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}

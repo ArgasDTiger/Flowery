@@ -1,5 +1,6 @@
 @use 'scss-reset/reset';
 @use 'dependencies' as *;
+@import '@mantine/core/styles.css';
 
 a {
   text-decoration: none;

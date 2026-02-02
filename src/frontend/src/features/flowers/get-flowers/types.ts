@@ -6,6 +6,7 @@ export interface GetFlowersResponse {
   slug: string;
   // description: string;
   price: number;
+  categories: string[];
   // Category: string;
 }
 
@@ -13,4 +14,11 @@ export type PaginatedFlowersResponse = PaginatedResponse<GetFlowersResponse>;
 
 export interface GetFlowersRequest extends OrderedPaginationParams {
   sortBy?: string | null;
+  search?: string | null;
+  category?: string | null;
+}
+
+export enum GetFlowersSortField {
+  Date = 'date',
+  Price = 'price',
 }
