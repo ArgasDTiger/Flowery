@@ -1,19 +1,12 @@
 ﻿using System.ComponentModel;
-using Flowery.WebApi.Shared.Extensions;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Flowery.WebApi.Shared.Pagination;
 
 public abstract record OrderedPaginationParams : PaginationParams
 {
-    [FromQuery(Name = "sortDirection")]
-    [DefaultValue(nameof(SortDirection.Ascending))]
-    public string? SortDirectionString { get; init; } = nameof(SortDirection.Ascending); // TODO: change to "asc"
-
-    [BindNever]
-    public SortDirection SortDirection => SortDirectionString.ToSortDirectionEnum();
+    [DefaultValue(Pagination.SortDirection.Asc)]
+    public SortDirection? SortDirection { get; init; } = Pagination.SortDirection.Asc;
 }
 
 public sealed class OrderedPaginationParamsValidator : AbstractValidator<OrderedPaginationParams>
@@ -22,8 +15,8 @@ public sealed class OrderedPaginationParamsValidator : AbstractValidator<Ordered
     {
         Include(paginationValidator);
         
-        RuleFor(x => x.SortDirectionString)
-            .Must(x => x.IsValidSortDirection())
+        RuleFor(x => x.SortDirection)
+            .IsInEnum()
             .WithMessage("Sort direction is invalid.");
     }
 }

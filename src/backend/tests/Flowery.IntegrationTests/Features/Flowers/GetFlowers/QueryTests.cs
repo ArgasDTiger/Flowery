@@ -2,6 +2,7 @@
 using Flowery.IntegrationTests.TestHelpers.ApiFactories;
 using Flowery.WebApi.Features.Flowers.GetFlowers;
 using Microsoft.Extensions.DependencyInjection;
+using SortDirection = Flowery.WebApi.Shared.Pagination.SortDirection;
 
 namespace Flowery.IntegrationTests.Features.Flowers.GetFlowers;
 
@@ -26,8 +27,8 @@ public sealed class QueryTests
         {
             PageNumber = 1,
             PageSize = 3,
-            SortDirectionString = "asc",
-            SortFieldString = "Name"
+            SortDirection = SortDirection.Asc,
+            SortBy = SortField.Name
         };
 
         // Act

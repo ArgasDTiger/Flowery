@@ -19,7 +19,7 @@ public sealed class Query : IQuery
     {
         await using var dbConnection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
 
-        var orderBy = paginationParams.SortField switch
+        var orderBy = paginationParams.SortBy switch
         {
             SortField.Name => "fn.Name",
             SortField.Price => "f.Price",

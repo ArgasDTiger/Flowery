@@ -2,23 +2,14 @@
 using Flowery.WebApi.Shared.Pagination;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
 public sealed record Request : OrderedPaginationParams
 {
     [FromQuery(Name = "sortBy")]
-    [DefaultValue(nameof(SortField.Name))]
-    public string? SortFieldString { get; init; } = nameof(SortField.Name);
-
-    [BindNever]
-    public SortField SortField => SortFieldString?.ToLowerInvariant() switch
-    {
-        "name" or null => SortField.Name,
-        "price" => SortField.Price,
-        _ => SortField.Name
-    };
+    [DefaultValue(SortField.Name)]
+    public SortField? SortBy { get; init; } = SortField.Name;
 }
 
 public sealed class RequestValidator : AbstractValidator<Request>
@@ -27,8 +18,8 @@ public sealed class RequestValidator : AbstractValidator<Request>
     {
         Include(paginationValidator);
         
-        RuleFor(x => x.SortFieldString)
-            .Must(x => x?.ToLowerInvariant() is "name" or "price" or null)
+        RuleFor(x => x.SortBy)
+            .IsInEnum()
             .WithMessage("Invalid sort field.");
     }
 }

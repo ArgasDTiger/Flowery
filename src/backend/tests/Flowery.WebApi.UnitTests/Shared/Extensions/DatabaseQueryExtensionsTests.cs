@@ -7,8 +7,8 @@ namespace Flowery.WebApi.UnitTests.Shared.Extensions;
 public sealed class DatabaseQueryExtensionsTests
 {
     [Theory]
-    [InlineData(SortDirection.Ascending, "ASC")]
-    [InlineData(SortDirection.Descending, "DESC")]
+    [InlineData(SortDirection.Asc, "ASC")]
+    [InlineData(SortDirection.Desc, "DESC")]
     public void ToSqlOrderDirection_ShouldReturnCorrectDirection(SortDirection sortDirection, string expectedResult)
     {
         // Arrange & Act

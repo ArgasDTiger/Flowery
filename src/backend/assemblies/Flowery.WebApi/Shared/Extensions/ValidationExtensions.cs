@@ -4,13 +4,6 @@ namespace Flowery.WebApi.Shared.Extensions;
 
 public static partial class ValidationExtensions
 {
-    /*public static bool IsValidEmail(this string email)
-    {
-        if (string.IsNullOrEmpty(email)) return false;
-        var trimmedEmail = email.Trim();
-        return !trimmedEmail.EndsWith('.') && MailAddress.TryCreate(email, out _);
-    }*/
-
     public static bool IsValidEmail(this string email)
     {
         if (string.IsNullOrEmpty(email)) return false;
