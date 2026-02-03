@@ -1,4 +1,4 @@
-﻿using Flowery.Domain.Entities;
+﻿using Flowery.Shared.Entities;
 
 namespace Flowery.Infrastructure.Auth.Tokens;
 

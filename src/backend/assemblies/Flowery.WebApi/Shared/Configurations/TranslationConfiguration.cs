@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Flowery.Domain.Enums;
+using Flowery.Shared.Enums;
 
 namespace Flowery.WebApi.Shared.Configurations;
 

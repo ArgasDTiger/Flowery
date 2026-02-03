@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Flowery.Domain\Flowery.Domain.csproj"/>
+        <ProjectReference Include="..\Flowery.Shared\Flowery.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

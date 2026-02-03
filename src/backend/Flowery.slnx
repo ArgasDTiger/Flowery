@@ -1,16 +1,16 @@
 ﻿<Solution>
   <Folder Name="/assemblies/">
-    <Project Path="assemblies\Flowery.WebApi\Flowery.WebApi.csproj" Type="Classic C#" />
-    <Project Path="assemblies\Flowery.Domain\Flowery.Domain.csproj" Type="Classic C#" />
-    <Project Path="assemblies\Flowery.Infrastructure\Flowery.Infrastructure.csproj" Type="Classic C#" />
+    <Project Path="assemblies\Flowery.Shared\Flowery.Shared.csproj" Type="C#" />
+    <Project Path="assemblies\Flowery.WebApi\Flowery.WebApi.csproj" Type="C#" />
+    <Project Path="assemblies\Flowery.Infrastructure\Flowery.Infrastructure.csproj" Type="C#" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests\Flowery.IntegrationTests\Flowery.IntegrationTests.csproj" Type="Classic C#" />
-    <Project Path="tests\Flowery.WebApi.UnitTests\Flowery.WebApi.UnitTests.csproj" Type="Classic C#" />
+    <Project Path="tests\Flowery.IntegrationTests\Flowery.IntegrationTests.csproj" Type="C#" />
+    <Project Path="tests\Flowery.WebApi.UnitTests\Flowery.WebApi.UnitTests.csproj" Type="C#" />
   </Folder>
   <Folder Name="/tools/">
-    <Project Path="tools\Flowery.Host\Flowery.Host.csproj" Type="Classic C#" />
-    <Project Path="tools\Flowery.Migrations\Flowery.Migrations.csproj" Type="Classic C#" />
-    <Project Path="tools\Flowery.SourceGenerators\Flowery.SourceGenerators.csproj" Type="Classic C#" />
+    <Project Path="tools\Flowery.Host\Flowery.Host.csproj" Type="C#" />
+    <Project Path="tools\Flowery.Migrations\Flowery.Migrations.csproj" Type="C#" />
+    <Project Path="tools\Flowery.SourceGenerators\Flowery.SourceGenerators.csproj" Type="C#" />
   </Folder>
 </Solution>

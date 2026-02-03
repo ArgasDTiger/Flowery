@@ -1,4 +1,4 @@
-﻿using Flowery.Domain.Users;
+﻿using Flowery.Shared.Users;
 
 namespace Flowery.Infrastructure.Auth.Tokens;
 

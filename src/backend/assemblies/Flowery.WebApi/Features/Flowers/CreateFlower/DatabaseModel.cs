@@ -1,5 +1,4 @@
-﻿using Flowery.Domain.Entities;
-using Flowery.WebApi.Entities;
+﻿using Flowery.Shared.Entities;
 
 namespace Flowery.WebApi.Features.Flowers.CreateFlower;
 

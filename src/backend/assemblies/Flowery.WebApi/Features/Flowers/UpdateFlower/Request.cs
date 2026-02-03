@@ -1,4 +1,4 @@
-﻿using Flowery.Domain.Enums;
+﻿using Flowery.Shared.Enums;
 using FluentValidation;
 
 namespace Flowery.WebApi.Features.Flowers.UpdateFlower;

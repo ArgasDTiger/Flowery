@@ -2,8 +2,8 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Flowery.Domain.Entities;
-using Flowery.Domain.Services;
+using Flowery.Shared.Entities;
+using Flowery.Shared.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

@@ -1,4 +1,4 @@
-﻿using Flowery.Domain.Enums;
+﻿using Flowery.Shared.Enums;
 using Flowery.WebApi.Shared.Configurations;
 using Flowery.WebApi.Shared.Extensions;
 using Microsoft.Extensions.Options;

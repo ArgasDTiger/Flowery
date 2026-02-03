@@ -1,8 +1,8 @@
-﻿using Flowery.Domain.ActionResults;
-using Flowery.Domain.ActionResults.Static;
-using Flowery.Domain.Users;
-using Flowery.Infrastructure.Auth.Passwords;
+﻿using Flowery.Infrastructure.Auth.Passwords;
 using Flowery.Infrastructure.Auth.Tokens;
+using Flowery.Shared.ActionResults;
+using Flowery.Shared.ActionResults.Static;
+using Flowery.Shared.Users;
 
 namespace Flowery.WebApi.Features.Auth.SignUp;
 

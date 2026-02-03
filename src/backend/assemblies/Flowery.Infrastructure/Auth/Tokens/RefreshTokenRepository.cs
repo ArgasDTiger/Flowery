@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using Flowery.Domain.Entities;
 using Flowery.Infrastructure.Data;
+using Flowery.Shared.Entities;
 
 namespace Flowery.Infrastructure.Auth.Tokens;
 

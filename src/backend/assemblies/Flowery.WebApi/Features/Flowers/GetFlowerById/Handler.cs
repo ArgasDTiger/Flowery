@@ -1,5 +1,5 @@
-﻿using Flowery.Domain.ActionResults;
-using Flowery.Domain.ActionResults.Static;
+﻿using Flowery.Shared.ActionResults;
+using Flowery.Shared.ActionResults.Static;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
 

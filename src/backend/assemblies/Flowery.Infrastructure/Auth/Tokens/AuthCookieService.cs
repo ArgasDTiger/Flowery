@@ -1,5 +1,5 @@
-﻿using Flowery.Domain.Entities;
-using Flowery.Domain.Services;
+﻿using Flowery.Shared.Entities;
+using Flowery.Shared.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 

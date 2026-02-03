@@ -1,9 +1,9 @@
-﻿using Flowery.Domain.ActionResults;
-using Flowery.Domain.ActionResults.Static;
-using Flowery.Domain.Entities;
-using Flowery.Domain.Exceptions;
-using Flowery.Infrastructure.Auth.Passwords;
+﻿using Flowery.Infrastructure.Auth.Passwords;
 using Flowery.Infrastructure.Auth.Tokens;
+using Flowery.Shared.ActionResults;
+using Flowery.Shared.ActionResults.Static;
+using Flowery.Shared.Entities;
+using Flowery.Shared.Exceptions;
 using Flowery.WebApi.Features.Auth.SignUp;
 
 namespace Flowery.WebApi.Features.Auth.SignIn;

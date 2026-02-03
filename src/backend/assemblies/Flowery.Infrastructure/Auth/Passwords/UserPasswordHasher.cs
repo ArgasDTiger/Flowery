@@ -1,4 +1,4 @@
-﻿using Flowery.Domain.Entities;
+﻿using Flowery.Shared.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
