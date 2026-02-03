@@ -1,5 +1,6 @@
 ﻿using Flowery.Shared.ActionResults;
 using Flowery.Shared.ActionResults.Static;
+using Flowery.Shared.Exceptions;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
 
@@ -12,13 +13,14 @@ public sealed class Handler : IHandler
         _query = query;
     }
 
-    public async Task<OneOf<Response, NotFound>> GetFlowerById(string id, CancellationToken cancellationToken)
+    public async Task<OneOf<Response, NotFound>> GetFlower<T>(T identifier, CancellationToken cancellationToken)
     {
-        bool isIdGuid = Guid.TryParse(id, out Guid guidId);
-
-        Response? flower = isIdGuid
-            ? await _query.GetFlowerById(guidId, cancellationToken)
-            : await _query.GetFlowerBySlug(id, cancellationToken);
+        Response? flower = identifier switch
+        {
+            Guid id => await _query.GetFlowerById(id, cancellationToken),
+            string slug => await _query.GetFlowerBySlug(slug, cancellationToken),
+            _ => throw new InvalidIdentifierException<T>(nameof(String), nameof(Guid))
+        };
 
         return flower is null ? StaticResults.NotFound : flower;
     }

@@ -4,5 +4,5 @@ namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
 
 public interface IHandler
 {
-    Task<OneOf<Response, NotFound>> GetFlowerById(string id, CancellationToken cancellationToken);
+    Task<OneOf<Response, NotFound>> GetFlower<T>(T id, CancellationToken cancellationToken);
 }

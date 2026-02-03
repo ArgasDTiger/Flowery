@@ -13,28 +13,45 @@ public sealed class GetFlowerByIdFeature : IFeature
 
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("api/v1/flowers/{flowerId}", async ([FromServices] IHandler handler,
-            [FromServices] ILogger<GetFlowerByIdFeature> logger,
-            [FromRoute] string flowerId,
-            CancellationToken cancellationToken) =>
+        endpoints.MapGet("api/v1/flowers/id/{flowerId:guid}", async ([FromServices] IHandler handler,
+                [FromServices] ILogger<GetFlowerByIdFeature> logger,
+                [FromRoute] Guid flowerId,
+                CancellationToken cancellationToken) =>
+            {
+                await HandleGetFlower(flowerId, logger, handler, cancellationToken);
+            })
+            .Produces<Response>()
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Gets a flower by Id.")
+            .WithTags("Flowers");
+
+        endpoints.MapGet("api/v1/flowers/id/{flowerId}", async ([FromServices] IHandler handler,
+                    [FromServices] ILogger<GetFlowerByIdFeature> logger,
+                    [FromRoute] string flowerId,
+                    CancellationToken cancellationToken) =>
+                await HandleGetFlower(flowerId, logger, handler, cancellationToken))
+            .Produces<Response>()
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Gets a flower by slug.")
+            .WithTags("Flowers");
+    }
+
+    private static async Task<IResult> HandleGetFlower<T>(T flowerId, ILogger<GetFlowerByIdFeature> logger,
+        IHandler handler, CancellationToken cancellationToken)
+    {
+        try
         {
-            try
-            {
-                var result = await handler.GetFlowerById(flowerId, cancellationToken);
-                return result.Match(
-                    Results.Ok,
-                    _ => Results.NotFound());
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("Error occured while getting flower: {Message}", ex.Message);
-                return Results.InternalServerError();
-            }
-        })
-        .Produces<Response>()
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithSummary("Gets a flower by its Id or Slug.")
-        .WithTags("Flowers");
+            var result = await handler.GetFlower(flowerId, cancellationToken);
+            return result.Match(
+                Results.Ok,
+                _ => Results.NotFound());
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error occured while getting flower: {Message}", ex.Message);
+            return Results.InternalServerError();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Flowery.Shared.ActionResults;
 using Flowery.Shared.ActionResults.Static;
+using Flowery.Shared.Exceptions;
 
 namespace Flowery.WebApi.Features.Flowers.DeleteFlower;
 
@@ -12,13 +13,14 @@ public sealed class Handler : IHandler
         _query = query;
     }
 
-    public async Task<OneOf<Success, NotFound>> DeleteFlower(string id, CancellationToken cancellationToken)
+    public async Task<OneOf<Success, NotFound>> DeleteFlower<T>(T identifier, CancellationToken cancellationToken)
     {
-        bool isIdGuid = Guid.TryParse(id, out Guid guidId);
-
-        var result = isIdGuid
-            ? await _query.DeleteFlowerById(guidId, cancellationToken)
-            : await _query.DeleteFlowerBySlug(id, cancellationToken);
+        var result = identifier switch
+        {
+            Guid id => await _query.DeleteFlowerById(id, cancellationToken),
+            string slug => await _query.DeleteFlowerBySlug(slug, cancellationToken),
+            _ => throw new InvalidIdentifierException<T>(nameof(String), nameof(Guid))
+        };
 
         return result.Match<OneOf<Success, NotFound>>(
             _ => StaticResults.Success,
