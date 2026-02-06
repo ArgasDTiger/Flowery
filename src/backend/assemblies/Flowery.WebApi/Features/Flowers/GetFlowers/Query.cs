@@ -48,7 +48,6 @@ public sealed class Query : IQuery
 
     private static string GetFlowersSql(string orderBy, string orderDirection) => $"""
          SELECT
-             f.id,
              fn.name,
              f.slug,
              f.price

@@ -27,7 +27,7 @@ public sealed class Handler : IHandler
             .Select(fn => fn.Name)
             .FirstOrDefault() ?? dbModel.FlowerNames[0].Name;
 
-        string slug = flowerName.GenerateSlug();
+        string slug = flowerName.GenerateSlug(_translationConfiguration.SlugDefaultLanguage);
 
         // TODO: verify if slug exists
         dbModel.Slug = slug;

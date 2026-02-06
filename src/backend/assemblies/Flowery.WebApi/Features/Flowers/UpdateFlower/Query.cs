@@ -2,6 +2,8 @@
 using Flowery.Infrastructure.Data;
 using Flowery.Shared.ActionResults;
 using Flowery.Shared.ActionResults.Static;
+using Flowery.WebApi.Shared.Configurations;
+using Microsoft.Extensions.Options;
 using Npgsql;
 using NpgsqlTypes;
 
@@ -10,34 +12,29 @@ namespace Flowery.WebApi.Features.Flowers.UpdateFlower;
 public sealed class Query : IQuery
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
-    private const string Slug = "Slug";
-    private const string NewSlug = "NewSlug";
-    private const string OldSlug = "OldSlug";
-    
-    public Query(IDbConnectionFactory dbConnectionFactory)
+    private readonly TranslationConfiguration _translationSettings;
+
+    public Query(IDbConnectionFactory dbConnectionFactory, IOptions<TranslationConfiguration> translationSettings)
     {
         _dbConnectionFactory = dbConnectionFactory;
+        _translationSettings = translationSettings.Value;
     }
 
-    public async Task<bool> DoesFlowerExist(Guid id, CancellationToken cancellationToken)
+    public async Task<FlowerBySlugModel?> GetFlowerIdBySlug(string slug, CancellationToken cancellationToken)
     {
         await using NpgsqlConnection connection =
             (NpgsqlConnection)await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        return await connection.ExecuteScalarAsync<bool>(FlowerByIdExistsSql, new { Id = id });
-    }
-
-    public async Task<bool> DoesFlowerExist(string slug, CancellationToken cancellationToken)
-    {
-        await using NpgsqlConnection connection =
-            (NpgsqlConnection)await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-        return await connection.ExecuteScalarAsync<bool>(FLowerBySlugExistsSql, new { Slug = slug });
+        return await connection.QuerySingleOrDefaultAsync<FlowerBySlugModel?>(GetFlowerIdBySlugSql, new
+        {
+            Slug = slug,
+            NameLanguage = _translationSettings.SlugDefaultLanguage
+        });
     }
 
     public async Task<OneOf<Success, NotFound>> UpdateFlower(DatabaseModel model, CancellationToken cancellationToken)
     {
         await using NpgsqlConnection connection =
             (NpgsqlConnection)await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
-
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
 
         try
@@ -70,75 +67,63 @@ public sealed class Query : IQuery
         }
     }
 
-    private static async Task UpdateFlower(DatabaseModel model, NpgsqlConnection connection, NpgsqlTransaction transaction)
+    private static async Task UpdateFlower(DatabaseModel model, NpgsqlConnection connection,
+        NpgsqlTransaction transaction)
     {
         var parameters = new DynamicParameters();
         parameters.Add(nameof(model.Price), model.Price);
         parameters.Add(nameof(model.Description), model.Description);
-    
-        string sql;
-        if (model.IsIdGuid)
+        parameters.Add(nameof(model.OldSlug), model.OldSlug);
+
+        string sqlQuery;
+        if (model.NameChanged)
         {
-            sql = model.IsSlugChanged 
-                ? UpdateFlowerWithSlugByIdSql 
-                : UpdateFlowerWithoutSlugByIdSql;
-            parameters.Add(nameof(model.Id), model.Id);
-            if (model.IsSlugChanged)
-            {
-                parameters.Add(Slug, model.NewSlug);
-            }
+            parameters.Add(nameof(model.NewSlug), model.NewSlug);
+            sqlQuery = UpdateFlowerWithSlugSql;
         }
         else
         {
-            sql = model.IsSlugChanged 
-                ? UpdateFlowerWithSlugBySlugSql 
-                : UpdateFlowerWithoutSlugBySlugSql;
-            parameters.Add(model.IsSlugChanged ? NewSlug : OldSlug, model.IsSlugChanged ? model.NewSlug : model.OriginalSlug);
-            parameters.Add(OldSlug, model.OriginalSlug);
+            sqlQuery = UpdateFlowerWithoutSlugSql;
         }
-    
-        await connection.ExecuteAsync(sql, parameters, transaction: transaction);
+
+        await connection.ExecuteAsync(sqlQuery, model, transaction: transaction);
     }
 
-    private const string FlowerByIdExistsSql = "SELECT EXISTS (SELECT 1 FROM Flowers WHERE id = @Id)";
+    private const string GetFlowerIdBySlugSql =
+        """
+        SELECT f.Id, fn.Name FROM Flowers f 
+        JOIN FlowerName fn ON fn.FlowerId = f.Id 
+        WHERE f.Slug = @Slug 
+          AND fn.LanguageCode = @NameLanguage 
+          AND f.IsDeleted = false
+        LIMIT 1
+        """;
 
-    private const string FLowerBySlugExistsSql = "SELECT EXISTS (SELECT 1 FROM Flowers WHERE slug = @Slug)";
+    private const string UpdateFlowerWithSlugSql =
+        """
+        UPDATE Flowers
+        SET Price = @Price, 
+            Slug = @NewSlug,
+            Description = @Description
+        WHERE Id = @Id AND IsDeleted = false;
+        """;
 
-    private const string UpdateFlowerWithSlugByIdSql = """
-                                                   UPDATE flowers
-                                                   SET price = @Price, 
-                                                       slug = @Slug,
-                                                       description = @Description
-                                                   WHERE id = @Id AND isdeleted = false;
-                                                   """;
+    private const string UpdateFlowerWithoutSlugSql =
+        """
+        UPDATE Flowers
+        SET Price = @Price, Description = @Description
+        WHERE Id = @Id AND IsDeleted = false;
+        """;
 
-    private const string UpdateFlowerWithoutSlugByIdSql = """
-                                                      UPDATE flowers
-                                                      SET price = @Price, description = @Description
-                                                      WHERE id = @Id AND isdeleted = false;
-                                                      """;
+    private const string DeleteFlowerNamesSql =
+        """
+        DELETE FROM FlowerName
+        WHERE FlowerId = @FlowerId;
+        """;
 
-    private const string UpdateFlowerWithSlugBySlugSql = """
-                                                   UPDATE flowers
-                                                   SET price = @Price, 
-                                                       slug = @NewSlug,
-                                                       description = @Description
-                                                   WHERE slug = @OldSlug AND isdeleted = false;
-                                                   """;
-
-    private const string UpdateFlowerWithoutSlugBySlugSql = """
-                                                      UPDATE flowers
-                                                      SET price = @Price, description = @Description
-                                                      WHERE slug = @NewSlug AND isdeleted = false;
-                                                      """;
-
-    private const string DeleteFlowerNamesSql = """
-                                                DELETE FROM flowername
-                                                WHERE flowerid = @FlowerId;
-                                                """;
-
-    private const string CopyCommand = """
-                                       COPY flowername (flowerid, languagecode, name) 
-                                       FROM STDIN (FORMAT BINARY)
-                                       """;
+    private const string CopyCommand =
+        """
+        COPY flowername (flowerid, languagecode, name) 
+        FROM STDIN (FORMAT BINARY)
+        """;
 }

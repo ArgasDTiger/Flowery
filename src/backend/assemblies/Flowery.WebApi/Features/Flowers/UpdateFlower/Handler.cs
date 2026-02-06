@@ -1,6 +1,7 @@
 ﻿using Flowery.Shared.ActionResults;
 using Flowery.Shared.ActionResults.Static;
 using Flowery.Shared.Enums;
+using Flowery.Shared.Exceptions;
 using Flowery.WebApi.Shared.Configurations;
 using Flowery.WebApi.Shared.Extensions;
 using Microsoft.Extensions.Options;
@@ -21,38 +22,26 @@ public sealed class Handler : IHandler
     public async Task<OneOf<Success, NotFound>> UpdateFlower(string flowerId, Request request,
         CancellationToken cancellationToken)
     {
-        var flowerExistResult = await DoesFlowerExist(flowerId, cancellationToken);
-        if (!flowerExistResult.flowerExists) return StaticResults.NotFound;
+        var flowerById = await _query.GetFlowerIdBySlug(flowerId, cancellationToken);
+        if (flowerById is null) return StaticResults.NotFound;
 
         LanguageCode defaultLanguageName = _translationConfiguration.SlugDefaultLanguage;
         string flowerName = request.FlowerNames
-            .Where(fn => fn.LanguageCode == defaultLanguageName)
-            .AsValueEnumerable()
-            .Select(fn => fn.Name)
-            .FirstOrDefault() ?? request.FlowerNames[0].Name;
+                                .AsValueEnumerable()
+                                .Where(fn => fn.LanguageCode == defaultLanguageName)
+                                .Select(fn => fn.Name)
+                                .FirstOrDefault() ?? throw new DefaultLanguageTranslationMissingException(_translationConfiguration.SlugDefaultLanguage);
 
-        // TODO: verify if slug exists
-        string slug = flowerName.GenerateSlug();
+        bool nameChanged = string.Equals(flowerName, flowerById.Name, StringComparison.OrdinalIgnoreCase);
+        DatabaseModel dbModel = new(
+            Id: flowerById.Id,
+            OldSlug: flowerId,
+            NewSlug: nameChanged ? flowerName.GenerateSlug(_translationConfiguration.SlugDefaultLanguage) : null,
+            Price: request.Price,
+            Description: request.Description,
+            FlowerNames: request.FlowerNames,
+            NameChanged: nameChanged);
 
-        var dbModel = flowerExistResult.flowerId.IsT0
-            ? DatabaseModel.CreateWithSlugId(request, slug, flowerExistResult.flowerId.AsT0)
-            : DatabaseModel.CreateWithGuidId(request, slug, flowerExistResult.flowerId.AsT1);
-        
         return await _query.UpdateFlower(dbModel, cancellationToken);
-        
-    }
-
-    private async Task<(bool flowerExists, OneOf<string, Guid> flowerId)> DoesFlowerExist(string flowerId,
-        CancellationToken cancellationToken)
-    {
-        bool isIdGuid = Guid.TryParse(flowerId, out Guid guidId);
-        if (isIdGuid)
-        {
-            bool flowerExist = await _query.DoesFlowerExist(guidId, cancellationToken);
-            return (flowerExist, guidId);
-        }
-
-        bool flowerExists = await _query.DoesFlowerExist(flowerId, cancellationToken);
-        return (flowerExists, flowerId);
     }
 }
