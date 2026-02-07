@@ -13,7 +13,7 @@ public sealed class DeleteFlowerFeature : IFeature
 
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("api/v1/flowers/{flowerId}",
+        endpoints.MapDelete("api/v1/flowers/{slug}",
                 async ([FromServices] IHandler handler,
                     [FromServices] ILogger<DeleteFlowerFeature> logger,
                     [FromRoute] string slug, 

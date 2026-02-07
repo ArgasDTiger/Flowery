@@ -2,7 +2,7 @@
 using Flowery.IntegrationTests.TestHelpers.ApiFactories;
 using Flowery.WebApi.Features.Flowers.GetFlowers;
 using Flowery.WebApi.Shared.Pagination;
-using SortDirection = Shouldly.SortDirection;
+using SortDirection = Flowery.WebApi.Shared.Pagination.SortDirection;
 
 namespace Flowery.IntegrationTests.Features.Flowers.GetFlowers;
 
@@ -18,7 +18,7 @@ public sealed class GetFlowersFeatureTests
 
     [Theory]
     [InlineData(1, 2, null, null)]
-    [InlineData(1, 2, "Name", nameof(SortDirection.Ascending))]
+    [InlineData(1, 2, "Name", nameof(SortDirection.Asc))]
     [InlineData(1, 2, null, "1")]
     public async Task GetFlowers_WithValidParameters_ReturnsOk(int pageNumber, int pageSize, string? sortBy,
         string? sortDirection)

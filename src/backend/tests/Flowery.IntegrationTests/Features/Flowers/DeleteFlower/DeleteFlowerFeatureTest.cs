@@ -30,7 +30,6 @@ public sealed class DeleteFlowerFeatureTest : IAsyncLifetime
     }
 
     [Theory]
-    [InlineData("7c77c1b8-0889-4685-9d84-6eb4500f8926")]
     [InlineData("rose")]
     public async ValueTask DeleteFlower_ShouldReturnNoContent_WhenFlowerExists(string flowerId)
     {
@@ -42,7 +41,6 @@ public sealed class DeleteFlowerFeatureTest : IAsyncLifetime
     }
     
     [Theory]
-    [InlineData("8c77c1b8-0889-4685-9d84-6eb4500f8926")]
     [InlineData("32321")]
     public async ValueTask DeleteFlower_ShouldReturnNotFound_WhenFlowerDoesNotExist(string flowerId)
     {

@@ -5,7 +5,6 @@ using Flowery.Shared.ActionResults.Static;
 using Flowery.WebApi.Shared.Configurations;
 using Microsoft.Extensions.Options;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace Flowery.WebApi.Features.Flowers.UpdateFlower;
 
@@ -40,23 +39,7 @@ public sealed class Query : IQuery
         try
         {
             await UpdateFlower(model, connection, transaction);
-
-            await connection.ExecuteAsync(DeleteFlowerNamesSql, new { FlowerId = model.Id },
-                transaction: transaction);
-
-            await using var importer =
-                await connection.BeginBinaryImportAsync(CopyCommand, cancellationToken);
-
-            foreach (var flowerName in model.FlowerNames)
-            {
-                await importer.StartRowAsync(cancellationToken);
-                await importer.WriteAsync(model.Id, NpgsqlDbType.Uuid, cancellationToken);
-                await importer.WriteAsync(flowerName.LanguageCode.ToString(), NpgsqlDbType.Text, cancellationToken);
-                await importer.WriteAsync(flowerName.Name, NpgsqlDbType.Text, cancellationToken);
-            }
-
-            await importer.CompleteAsync(cancellationToken);
-
+            await SaveFlowerNames(model, connection, transaction);
             await transaction.CommitAsync(cancellationToken);
             return StaticResults.Success;
         }
@@ -89,6 +72,33 @@ public sealed class Query : IQuery
         await connection.ExecuteAsync(sqlQuery, model, transaction: transaction);
     }
 
+    private static async Task SaveFlowerNames(DatabaseModel model, NpgsqlConnection connection,
+        NpgsqlTransaction transaction)
+    {
+        var flowersToUpsert = model.FlowerNames.Select(n => new
+        {
+            FlowerId = model.Id,
+            LanguageCode = n.LanguageCode.ToString(),
+            n.Name
+        });
+
+        await connection.ExecuteAsync(
+            UpsertFlowerNamesSql,
+            flowersToUpsert,
+            transaction: transaction);
+
+        var notUsedFlowerLanguages = new
+        {
+            FlowerId = model.Id,
+            LanguageCodes = model.FlowerNames.AsValueEnumerable().Select(n => n.LanguageCode.ToString()).ToArray()
+        };
+
+        await connection.ExecuteAsync(
+            DeleteRemovedFlowerNamesSql,
+            notUsedFlowerLanguages,
+            transaction: transaction);
+    }
+
     private const string GetFlowerIdBySlugSql =
         """
         SELECT f.Id, fn.Name FROM Flowers f 
@@ -115,15 +125,18 @@ public sealed class Query : IQuery
         WHERE Id = @Id AND IsDeleted = false;
         """;
 
-    private const string DeleteFlowerNamesSql =
+    private const string UpsertFlowerNamesSql =
         """
-        DELETE FROM FlowerName
-        WHERE FlowerId = @FlowerId;
+        INSERT INTO FlowerName (FlowerId, LanguageCode, Name)
+        VALUES (@FlowerId, @LanguageCode, @Name)
+        ON CONFLICT (FlowerId, LanguageCode) 
+        DO UPDATE SET Name = EXCLUDED.Name;
         """;
 
-    private const string CopyCommand =
+    private const string DeleteRemovedFlowerNamesSql =
         """
-        COPY flowername (flowerid, languagecode, name) 
-        FROM STDIN (FORMAT BINARY)
+        DELETE FROM FlowerName
+        WHERE FlowerId = @FlowerId 
+          AND LanguageCode != ALL(@LanguageCodes);
         """;
 }
