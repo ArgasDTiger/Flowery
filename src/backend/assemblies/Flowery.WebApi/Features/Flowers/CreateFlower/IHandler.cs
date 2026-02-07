@@ -2,5 +2,5 @@
 
 public interface IHandler
 {
-    Task<Guid> CreateFlower(Request request, CancellationToken cancellationToken);
+    Task<string> CreateFlower(Request request, CancellationToken cancellationToken);
 }

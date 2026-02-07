@@ -32,8 +32,8 @@ public sealed class CreateFlowerFeature : IFeature
                         return Results.ValidationProblem(validationResult.ToDictionary());
                     }
 
-                    Guid createdFlowerId = await handler.CreateFlower(request, cancellationToken);
-                    return Results.Created(new Uri($"api/v1/flowers/{createdFlowerId}", UriKind.Relative), createdFlowerId);
+                    string createdFlowerSlug = await handler.CreateFlower(request, cancellationToken);
+                    return Results.Created(new Uri($"api/v1/flowers/{createdFlowerSlug}", UriKind.Relative), createdFlowerSlug);
                 }
                 catch (Exception ex)
                 {

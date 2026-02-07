@@ -14,16 +14,22 @@ public sealed class Query : IQuery
         _dbConnectionFactory = dbConnectionFactory;
     }
 
-    public async Task<Guid> CreateFlower(DatabaseModel model, CancellationToken cancellationToken)
+    public async Task CreateFlower(DatabaseModel model, CancellationToken cancellationToken)
     {
         await using NpgsqlConnection connection =
             (NpgsqlConnection)await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
         try
         {
+            object flowerToCreate = new
+            {
+                model.Price,
+                model.Slug,
+                model.Description
+            };
             Guid newFlowerId = await connection.QuerySingleAsync<Guid>(
                 InsertFlowerSql,
-                model,
+                flowerToCreate,
                 transaction);
 
             if (model.FlowerNames.Length > 0)
@@ -44,8 +50,6 @@ public sealed class Query : IQuery
             }
 
             await transaction.CommitAsync(cancellationToken);
-
-            return newFlowerId;
         }
         catch (Exception)
         {
@@ -53,7 +57,7 @@ public sealed class Query : IQuery
             throw;
         }
     }
-    
+
     private const string InsertFlowerSql = """
                                            INSERT INTO flowers (price, slug, description)
                                            VALUES (@Price, @Slug, @Description)

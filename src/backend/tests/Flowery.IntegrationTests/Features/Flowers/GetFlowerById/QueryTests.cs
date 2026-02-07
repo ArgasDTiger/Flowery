@@ -16,40 +16,6 @@ public sealed class QueryTests
     }
 
     [Fact]
-    public async Task GetFlowerById_ShouldReturnFlower_WhenFlowerExists()
-    {
-        // Arrange
-        using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
-        var guid = Guid.Parse("7c77c1b8-0889-4685-9d84-6eb4500f8926");
-
-        // Act
-        var result =
-            await query.GetFlowerById(guid, CancellationToken.None);
-
-        // Assert
-        result.ShouldNotBeNull();
-        result.Id.ShouldBe(guid);
-        result.Name.ShouldBe("Роза");
-    }
-
-    [Fact]
-    public async Task GetFlowerById_ShouldReturnNull_WhenFlowerDoesNotExists()
-    {
-        // Arrange
-        using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
-        var guid = Guid.Parse("8c77c1b8-0889-4685-9d84-6eb4500f8926");
-
-        // Act
-        var result =
-            await query.GetFlowerById(guid, CancellationToken.None);
-
-        // Assert
-        result.ShouldBeNull();
-    }
-
-    [Fact]
     public async Task GetFlowerBySlug_ShouldReturnFlower_WhenFlowerExists()
     {
         // Arrange

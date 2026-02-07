@@ -2,5 +2,5 @@
 
 public interface IQuery
 {
-    Task<Guid> CreateFlower(DatabaseModel model, CancellationToken cancellationToken);
+    Task CreateFlower(DatabaseModel model, CancellationToken cancellationToken);
 }

@@ -22,8 +22,8 @@ public sealed class Handler : IHandler
     public async Task<OneOf<Success, NotFound>> UpdateFlower(string flowerId, Request request,
         CancellationToken cancellationToken)
     {
-        var flowerById = await _query.GetFlowerIdBySlug(flowerId, cancellationToken);
-        if (flowerById is null) return StaticResults.NotFound;
+        var flower = await _query.GetFlowerIdBySlug(flowerId, cancellationToken);
+        if (flower is null) return StaticResults.NotFound;
 
         LanguageCode defaultLanguageName = _translationConfiguration.SlugDefaultLanguage;
         string flowerName = request.FlowerNames
@@ -32,9 +32,9 @@ public sealed class Handler : IHandler
                                 .Select(fn => fn.Name)
                                 .FirstOrDefault() ?? throw new DefaultLanguageTranslationMissingException(_translationConfiguration.SlugDefaultLanguage);
 
-        bool nameChanged = string.Equals(flowerName, flowerById.Name, StringComparison.OrdinalIgnoreCase);
+        bool nameChanged = string.Equals(flowerName, flower.Name, StringComparison.OrdinalIgnoreCase);
         DatabaseModel dbModel = new(
-            Id: flowerById.Id,
+            Id: flower.Id,
             OldSlug: flowerId,
             NewSlug: nameChanged ? flowerName.GenerateSlug(_translationConfiguration.SlugDefaultLanguage) : null,
             Price: request.Price,

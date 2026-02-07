@@ -29,23 +29,6 @@ public sealed class QueryTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task DeleteFlowerById_ShouldReturnSuccess_WhenFlowerExists()
-    {
-        // Arrange
-        using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
-        var guid = Guid.Parse("7c77c1b8-0889-4685-9d84-6eb4500f8926");
-
-        // Act
-        var result = await query.DeleteFlowerById(guid, CancellationToken.None);
-
-        // Assert
-        result.IsT0.ShouldBeTrue();
-        var flower = await GetFlowerById(scope, guid);
-        flower!.ShouldBeNull();
-    }
-
-    [Fact]
     public async Task DeleteFlowerBySlug_ShouldReturnSuccess_WhenFlowerExists()
     {
         // Arrange
