@@ -26,7 +26,7 @@ public sealed class Query : IQuery
         return await connection.QuerySingleOrDefaultAsync<FlowerBySlugModel?>(GetFlowerIdBySlugSql, new
         {
             Slug = slug,
-            NameLanguage = _translationSettings.SlugDefaultLanguage
+            NameLanguage = _translationSettings.SlugDefaultLanguageString
         });
     }
 

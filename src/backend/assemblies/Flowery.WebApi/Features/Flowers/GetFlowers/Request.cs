@@ -10,6 +10,8 @@ public sealed record Request : OrderedPaginationParams
     [FromQuery(Name = "sortBy")]
     [DefaultValue(SortField.Name)]
     public SortField? SortBy { get; init; } = SortField.Name;
+
+    public string? Category { get; init; }
 }
 
 public sealed class RequestValidator : AbstractValidator<Request>
