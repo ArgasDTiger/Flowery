@@ -1,0 +1,17 @@
+﻿ALTER TABLE Flowers
+ADD COLUMN PrimaryImageId VARCHAR(50);
+
+CREATE TABLE Image(
+    Id UUID PRIMARY KEY DEFAULT uuidv7(),
+    PathToSource VARCHAR(50) NOT NULL,
+    CompressedPath VARCHAR(50) NOT NULL,
+    ThumbnailPath VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE FlowerImage(
+    FlowerId UUID NOT NULL,
+    ImageId UUID NOT NULL,
+    PRIMARY KEY (FlowerId, ImageId),
+    CONSTRAINT fk_flower FOREIGN KEY (FlowerId) REFERENCES Flowers(Id) ON DELETE RESTRICT,
+    CONSTRAINT fk_image FOREIGN KEY (ImageId) REFERENCES Image(Id) ON DELETE RESTRICT
+);

@@ -230,7 +230,7 @@ public sealed class GetFlowersFeatureTests
         response.ShouldBeOk();
         var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
         responseBody.ShouldNotBeNull();
-        responseBody.TotalCount.ShouldBe(12); // Excluding 3 deleted flowers
+        responseBody.TotalCount.ShouldBe(12);
         responseBody.Items.ShouldAllBe(f => f.Slug != "lily" && f.Slug != "violet" && f.Slug != "lotus");
     }
 

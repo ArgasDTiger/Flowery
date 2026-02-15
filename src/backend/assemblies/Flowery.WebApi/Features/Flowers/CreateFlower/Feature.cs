@@ -20,7 +20,7 @@ public sealed class CreateFlowerFeature : IFeature
             async ([FromServices] IHandler handler, 
                 [FromServices] IValidator<Request> validator,
                 [FromServices] ILogger<CreateFlowerFeature> logger, 
-                [FromBody] Request request,
+                [FromForm] Request request,
                 CancellationToken cancellationToken) =>
             {
                 try

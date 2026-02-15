@@ -145,7 +145,7 @@ export const GetFlowersComponent = ({
             </li>
           ) : (
             flowers.map((flower) => (
-              <li key={flower.id}>
+              <li key={flower.slug}>
                 <article className={styles.flowerCard}>
                   <Link to="/flowers/$flowerId" params={{ flowerId: flower.slug }} className={styles.flowerLink}>
                     <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -178,7 +178,7 @@ export const GetFlowersComponent = ({
                         <Button
                           className="black"
                           leftSection={<ShoppingCart size={16} />}
-                          onClick={(e) => handleAddToBasket(e, flower.id)}
+                          onClick={(e) => handleAddToBasket(e, flower.slug)}
                         >
                           Add to Basket
                         </Button>

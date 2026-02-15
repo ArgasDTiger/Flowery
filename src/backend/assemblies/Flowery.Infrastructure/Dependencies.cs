@@ -3,6 +3,7 @@ using Flowery.Infrastructure.Auth.Passwords;
 using Flowery.Infrastructure.Auth.Tokens;
 using Flowery.Infrastructure.Data;
 using Flowery.Infrastructure.Health;
+using Flowery.Infrastructure.Images;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ public static class Dependencies
             services.AddAuthentication();
             services.AddConfigurations(config);
             services.AddHttpContextAccessor();
+
+            services.AddSingleton<IImageProcessor, ImageProcessor>();
         }
 
         private void AddAuthentication()

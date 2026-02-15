@@ -1,6 +1,7 @@
 ﻿using System.IO.Compression;
 using Flowery.Infrastructure;
 using Flowery.Shared;
+using Flowery.WebApi.Features.Flowers;
 using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Flowery.WebApi;
@@ -14,6 +15,7 @@ public static class Dependencies
             services.AddInfrastructureDependencies(config);
             services.AddDomainDependencies();
             services.AddCompression();
+            services.AddFlowersDependencies();
         }
 
         private void AddCompression()
