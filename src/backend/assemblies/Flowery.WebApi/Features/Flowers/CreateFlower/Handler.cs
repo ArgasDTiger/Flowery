@@ -1,4 +1,5 @@
-﻿using Flowery.Shared.Enums;
+﻿using Flowery.Shared.Entities;
+using Flowery.Shared.Enums;
 using Flowery.Shared.Exceptions;
 using Flowery.WebApi.Features.Flowers.Helpers;
 using Flowery.WebApi.Shared.Configurations;
@@ -20,22 +21,17 @@ public sealed class Handler : IHandler
         _translationConfiguration = translationSettings.Value;
     }
 
-    public async Task<string> CreateFlower(Request request,
-        CancellationToken cancellationToken)
+    public async Task<string> CreateFlower(HandlerModel request, CancellationToken cancellationToken)
     {
-        // TODO: Handler should NOT acceess IFormFile, move to endpoint
-        Stream stream = request.PrimaryImage.OpenReadStream();
-        await _imageProcessor.ProcessImage(stream, request.PrimaryImage.FileName, request.PrimaryImage.ContentType,
-            cancellationToken);
-        // DatabaseModel dbModel = DatabaseModel.FromRequest(request);
+        var primaryImage = await ProcessImage(request.PrimaryImage, cancellationToken);
+        var galleryImages = await ProcessGalleryImages(request.GalleryImages, cancellationToken);
+
         LanguageCode defaultLanguageName = _translationConfiguration.SlugDefaultLanguage;
         string flowerName = request.FlowerNames
-                                .Where(fn => fn.LanguageCode == defaultLanguageName)
                                 .AsValueEnumerable()
+                                .Where(fn => fn.LanguageCode == defaultLanguageName)
                                 .Select(fn => fn.Name)
-                                .FirstOrDefault() ??
-                            throw new DefaultLanguageTranslationMissingException(_translationConfiguration
-                                .SlugDefaultLanguage);
+                                .FirstOrDefault() ?? throw new DefaultLanguageTranslationMissingException(_translationConfiguration.SlugDefaultLanguage);
 
         string slug = flowerName.GenerateSlug(_translationConfiguration.SlugDefaultLanguage);
 
@@ -47,5 +43,26 @@ public sealed class Handler : IHandler
         await _query.CreateFlower(dbModel, cancellationToken);
 
         return slug;
+    }
+
+    private async ValueTask<ImmutableArray<Image>> ProcessGalleryImages(ImmutableArray<ImageModel> images,
+        CancellationToken cancellationToken)
+    {
+        if (images.IsDefaultOrEmpty) return ImmutableArray<Image>.Empty;
+        if (images.Length == 1) return [ await ProcessImage(images[0], cancellationToken) ];
+        var tasks = images.Select(async image => await ProcessImage(image, cancellationToken));
+        Image[] results = await Task.WhenAll(tasks);
+        return [.. results];
+    }
+
+    private async Task<Image> ProcessImage(ImageModel image, CancellationToken cancellationToken)
+    {
+        Guid imageId = Guid.CreateVersion7();
+        string extension = Path.GetExtension(image.Extension);
+        var processorResponse = await _imageProcessor.ProcessImage(image.ImageStream, imageId.ToString(), extension, cancellationToken);
+        return new Image(Id: imageId,
+            PathToSource: processorResponse.PrimaryImagePath,
+            CompressedPath: processorResponse.CompressedImagePath,
+            ThumbnailPath: processorResponse.ThumbnailImagePath);
     }
 }

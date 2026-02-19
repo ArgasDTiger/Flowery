@@ -1,6 +1,6 @@
 ﻿namespace Flowery.Shared.Entities;
 
-public sealed class Image
+public sealed record Image(Guid Id, string PathToSource, string CompressedPath, string ThumbnailPath)
 {
     public Guid Id { get; init; }
     public string PathToSource { get; init; } = null!;

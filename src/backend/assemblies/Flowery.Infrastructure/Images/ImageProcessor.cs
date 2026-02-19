@@ -13,6 +13,7 @@ internal sealed class ImageProcessor : IImageProcessor
     {
         const string originalsFolder = "originals";
 
+        extension = TrimDotFromExtension(extension);
         string fileName = $"{name}.{extension}";
         string fullPath = Path.Combine(BaseDir, path, originalsFolder, fileName);
 
@@ -60,9 +61,20 @@ internal sealed class ImageProcessor : IImageProcessor
         using var image = await Image.LoadAsync(stream, cancellationToken);
         string pathToSave = Path.Combine(compressedDirectory, compressedFileName);
         await image.SaveAsWebpAsync(pathToSave,
-            new WebpEncoder { Quality = 90 }, cancellationToken);
+            new WebpEncoder { Quality = 75 }, cancellationToken);
         return $"/images/{path}/{compressedFolder}/{compressedFileName}";
     }
 
     private static string CreateWebpFile(string fileName) => $"{fileName}.webp";
+    
+    private static string TrimDotFromExtension(string extension)
+    {
+        ReadOnlySpan<char> extenstionSpan = extension.AsSpan();
+        if (extenstionSpan.Length > 0 && extenstionSpan[0] == '.')
+        {
+            extenstionSpan = extenstionSpan[1..]; 
+            return extenstionSpan.ToString();
+        }
+        return extension;
+    }
 }

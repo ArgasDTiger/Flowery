@@ -19,6 +19,9 @@ builder.Services.AddFeatures();
 builder.Services.AddSharedFeatures();
 builder.Services.AddConfigurations(builder.Configuration);
 
+// TODO: investigate need for this in Web APi
+builder.Services.AddAntiforgery();
+
 builder.Services.AddOpenApi(opt =>
 {
     opt.CreateSchemaReferenceId = ctx =>
@@ -65,6 +68,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("CorsPolicy");
 // app.UseHttpsRedirection();
 
+app.UseAntiforgery();
 app.UseStatusCodePages();
 
 // TODO: Add authentication
