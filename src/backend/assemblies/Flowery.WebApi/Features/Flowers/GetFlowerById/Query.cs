@@ -25,7 +25,7 @@ public sealed class Query : IQuery
             new
             {
                 Slug = slug,
-                LanguageCode = languageCode,
+                LanguageCode = languageCode.ToString(),
                 DefaultLanguageCode = _translationSettings.SlugDefaultLanguageString
             });
     }
@@ -34,8 +34,8 @@ public sealed class Query : IQuery
         """
         SELECT COALESCE(fn_requested.Name, fn_default.Name) AS Name, f.Slug, f.Price
         FROM Flowers f
-        LEFT JOIN FlowerName fn_requested ON f.Id = fn_requested.FlowerId AND fn_requested.LanguageCode = @LanguageCode
-        LEFT JOIN FlowerName fn_default ON f.Id = fn_default.FlowerId AND fn_default.LanguageCode = @DefaultLanguageCode
+        LEFT JOIN FlowerName fn_requested ON f.Id = fn_requested.FlowerId AND fn_requested.LanguageCode = @LanguageCode::LanguageCode
+        LEFT JOIN FlowerName fn_default ON f.Id = fn_default.FlowerId AND fn_default.LanguageCode = @DefaultLanguageCode::LanguageCode
         WHERE f.Slug = @Slug AND f.IsDeleted = false
         LIMIT 1;
         """;

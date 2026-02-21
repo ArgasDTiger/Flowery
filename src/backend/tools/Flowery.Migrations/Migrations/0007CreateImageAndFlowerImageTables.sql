@@ -1,8 +1,8 @@
 ﻿ALTER TABLE Flowers
-ADD COLUMN PrimaryImageId VARCHAR(50);
+ADD COLUMN PrimaryImagePath VARCHAR(50);
 
 CREATE TABLE Image(
-    Id UUID PRIMARY KEY DEFAULT uuidv7(),
+    Id UUID PRIMARY KEY,
     PathToSource VARCHAR(50) NOT NULL,
     CompressedPath VARCHAR(50) NOT NULL,
     ThumbnailPath VARCHAR(50) NOT NULL

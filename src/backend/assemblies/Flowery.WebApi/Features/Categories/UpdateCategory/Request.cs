@@ -1,4 +1,4 @@
-﻿using Flowery.WebApi.Features.Categories.CreateCategory;
+﻿using Flowery.Shared.Enums;
 using Flowery.WebApi.Shared.Configurations;
 using FluentValidation;
 using Microsoft.Extensions.Options;
@@ -6,6 +6,8 @@ using Microsoft.Extensions.Options;
 namespace Flowery.WebApi.Features.Categories.UpdateCategory;
 
 public sealed record Request(ImmutableArray<CategoryNameRequest> CategoryNames);
+
+public sealed record CategoryNameRequest(string Name, LanguageCode LanguageCode);
 
 public sealed class RequestValidator : AbstractValidator<Request>
 {

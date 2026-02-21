@@ -30,5 +30,6 @@ public sealed class Query : IQuery
         FROM Categories c
         JOIN CategoryName cn ON cn.CategoryId = c.Id
         WHERE c.Slug = @Slug
+        LIMIT 1
         """;
 }
