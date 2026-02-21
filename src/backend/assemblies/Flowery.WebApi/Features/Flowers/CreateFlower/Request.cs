@@ -10,10 +10,14 @@ public sealed record Request(
     decimal Price,
     ImmutableArray<FlowerNameRequest> FlowerNames,
     string Description,
-    IFormFile PrimaryImage)
+    IFormFile PrimaryImage,
+    IFormFileCollection? SubmittedFiles)
 {
-    public ImmutableArray<IFormFile>? GalleryImages { get; init; } = null;
-};
+    private ImmutableArray<IFormFile>? _galleryImages;
+    public ImmutableArray<IFormFile> GalleryImages => _galleryImages ??= SubmittedFiles?
+        .Where(f => f.Name == nameof(GalleryImages))
+        .ToImmutableArray() ?? [];
+}
 
 public sealed record FlowerNameRequest(LanguageCode LanguageCode, string Name);
 
@@ -49,7 +53,7 @@ public sealed class RequestValidator : AbstractValidator<Request>
             .WithMessage("Primary image must be provided.")
             .MustBeValidFlowerImage();
 
-        RuleForEach<IFormFile>(x => x.GalleryImages)
+        RuleForEach(x => x.SubmittedFiles)
             .ChildRules(image =>
             {
                 image.RuleFor(x => x)

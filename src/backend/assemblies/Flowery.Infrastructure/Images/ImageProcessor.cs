@@ -12,9 +12,7 @@ internal sealed class ImageProcessor : IImageProcessor
         CancellationToken cancellationToken)
     {
         const string originalsFolder = "originals";
-
-        extension = TrimDotFromExtension(extension);
-        string fileName = $"{name}.{extension}";
+        string fileName = extension[0] == '.' ? $"{name}{extension}" : $"{name}.{extension}";
         string fullPath = Path.Combine(BaseDir, path, originalsFolder, fileName);
 
         string directoryName = Path.GetDirectoryName(fullPath) ??
@@ -66,15 +64,4 @@ internal sealed class ImageProcessor : IImageProcessor
     }
 
     private static string CreateWebpFile(string fileName) => $"{fileName}.webp";
-    
-    private static string TrimDotFromExtension(string extension)
-    {
-        ReadOnlySpan<char> extenstionSpan = extension.AsSpan();
-        if (extenstionSpan.Length > 0 && extenstionSpan[0] == '.')
-        {
-            extenstionSpan = extenstionSpan[1..]; 
-            return extenstionSpan.ToString();
-        }
-        return extension;
-    }
 }

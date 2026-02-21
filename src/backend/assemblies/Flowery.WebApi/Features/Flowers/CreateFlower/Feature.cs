@@ -33,19 +33,7 @@ public sealed class CreateFlowerFeature : IFeature
                             return Results.ValidationProblem(validationResult.ToDictionary());
                         }
 
-                        HandlerModel handlerModel = new HandlerModel(
-                            Price: request.Price,
-                            Description: request.Description,
-                            FlowerNames: request.FlowerNames,
-                            PrimaryImage: new ImageModel(
-                                ImageStream: request.PrimaryImage.OpenReadStream(),
-                                Extension: Path.GetExtension(request.PrimaryImage.FileName)),
-                            GalleryImages: request.GalleryImages is null
-                                ? ImmutableArray<ImageModel>.Empty
-                                : request.GalleryImages.AsValueEnumerable<IFormFile>().Select(file =>
-                                        new ImageModel(ImageStream: file.OpenReadStream(),
-                                            Extension: Path.GetExtension(file.FileName)))
-                                    .ToImmutableArray());
+                        var handlerModel = RequestToHandlerModel(request);
                         string createdFlowerSlug = await handler.CreateFlower(handlerModel, cancellationToken);
                         return Results.Created(new Uri($"api/v1/flowers/{createdFlowerSlug}", UriKind.Relative),
                             createdFlowerSlug);
@@ -63,4 +51,18 @@ public sealed class CreateFlowerFeature : IFeature
             .WithSummary("Creates a new flower.")
             .WithTags("Flowers");
     }
+
+    private static HandlerModel RequestToHandlerModel(Request request) => new HandlerModel(
+        Price: request.Price,
+        Description: request.Description,
+        FlowerNames: request.FlowerNames,
+        PrimaryImage: new ImageModel(
+            ImageStream: request.PrimaryImage.OpenReadStream(),
+            Extension: Path.GetExtension(request.PrimaryImage.FileName)),
+        GalleryImages:
+        [
+            ..request.GalleryImages.Select(file =>
+                new ImageModel(ImageStream: file.OpenReadStream(),
+                    Extension: Path.GetExtension(file.FileName)))
+        ]);
 }
