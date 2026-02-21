@@ -2,5 +2,5 @@
 
 public interface IFlowerImageProcessor
 {
-    Task<FlowerImageProcessorResponse> ProcessImage(Stream stream, string imageName, string extension, CancellationToken cancellationToken);
+    Task<FlowerImageProcessorResponse> ProcessImage(Stream stream, string imageName, string extension, bool includeThumbnail, CancellationToken cancellationToken);
 }

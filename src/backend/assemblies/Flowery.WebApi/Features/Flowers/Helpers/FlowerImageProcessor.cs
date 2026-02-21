@@ -16,19 +16,21 @@ public sealed class FlowerImageProcessor : IFlowerImageProcessor
     }
 
     public async Task<FlowerImageProcessorResponse> ProcessImage(Stream stream, string imageName, string extension,
-        CancellationToken cancellationToken)
+        bool includeThumbnail, CancellationToken cancellationToken)
     {
-        stream.Position = 0;
-        string originalPath =
-            await _imageProcessor.SaveOriginal(stream, imageName, extension, ImagesDir, cancellationToken);
+        using var image = await Image.LoadAsync(stream, cancellationToken);
 
-        stream.Position = 0;
-        string thumbnailPath =
-            await _imageProcessor.SaveThumbnail(stream, imageName, ImagesDir, ThumbnailDimensions, cancellationToken);
+        var saveOriginal = _imageProcessor.SaveOriginal(image, imageName, extension, ImagesDir, cancellationToken);
+        var saveCompressed = _imageProcessor.SaveCompressed(image, imageName, ImagesDir, cancellationToken);
 
-        stream.Position = 0;
-        string compressedPath = await _imageProcessor.SaveCompressed(stream, imageName, ImagesDir, cancellationToken);
+        if (includeThumbnail)
+        {
+            var saveThumbnail = _imageProcessor.SaveThumbnail(image, imageName, ImagesDir, ThumbnailDimensions, cancellationToken);
+            var results = await Task.WhenAll(saveOriginal, saveCompressed, saveThumbnail);
+            return new FlowerImageProcessorResponse(results[0], results[2], results[1]);
+        }
 
-        return new FlowerImageProcessorResponse(originalPath, thumbnailPath, compressedPath);
+        var paths = await Task.WhenAll(saveOriginal, saveCompressed);
+        return new FlowerImageProcessorResponse(paths[0], null, paths[1]);
     }
 }

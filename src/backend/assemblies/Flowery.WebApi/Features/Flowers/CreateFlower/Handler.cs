@@ -23,7 +23,7 @@ public sealed class Handler : IHandler
 
     public async Task<string> CreateFlower(HandlerModel request, CancellationToken cancellationToken)
     {
-        var primaryImage = await ProcessImage(request.PrimaryImage, cancellationToken);
+        var primaryImage = await ProcessImage(request.PrimaryImage, includeThumbnail: true, cancellationToken);
         var galleryImages = await ProcessGalleryImages(request.GalleryImages, cancellationToken);
 
         LanguageCode defaultLanguageName = _translationConfiguration.SlugDefaultLanguage;
@@ -34,12 +34,16 @@ public sealed class Handler : IHandler
                                 .FirstOrDefault() ?? throw new DefaultLanguageTranslationMissingException(_translationConfiguration.SlugDefaultLanguage);
 
         string slug = flowerName.GenerateSlug(_translationConfiguration.SlugDefaultLanguage);
-
+        Guid flowerId = Guid.CreateVersion7();
+        
         DatabaseModel dbModel = new DatabaseModel(
+            Id: flowerId,
             Price: request.Price,
             Description: request.Description,
             Slug: slug,
-            FlowerNames: request.FlowerNames);
+            FlowerNames: request.FlowerNames,
+            PrimaryImage: primaryImage,
+            GalleryImages: galleryImages);
         await _query.CreateFlower(dbModel, cancellationToken);
 
         return slug;
@@ -49,17 +53,17 @@ public sealed class Handler : IHandler
         CancellationToken cancellationToken)
     {
         if (images.IsDefaultOrEmpty) return ImmutableArray<Image>.Empty;
-        if (images.Length == 1) return [ await ProcessImage(images[0], cancellationToken) ];
-        var tasks = images.Select(async image => await ProcessImage(image, cancellationToken));
+        if (images.Length == 1) return [ await ProcessImage(images[0], includeThumbnail: false, cancellationToken) ];
+        var tasks = images.Select(async image => await ProcessImage(image, includeThumbnail: false, cancellationToken));
         Image[] results = await Task.WhenAll(tasks);
         return [.. results];
     }
 
-    private async Task<Image> ProcessImage(ImageModel image, CancellationToken cancellationToken)
+    private async Task<Image> ProcessImage(ImageModel image, bool includeThumbnail, CancellationToken cancellationToken)
     {
         Guid imageId = Guid.CreateVersion7();
         string extension = Path.GetExtension(image.Extension);
-        var processorResponse = await _imageProcessor.ProcessImage(image.ImageStream, imageId.ToString(), extension, cancellationToken);
+        var processorResponse = await _imageProcessor.ProcessImage(image.ImageStream, imageId.ToString(), extension, includeThumbnail: includeThumbnail, cancellationToken);
         return new Image(Id: imageId,
             PathToSource: processorResponse.PrimaryImagePath,
             CompressedPath: processorResponse.CompressedImagePath,

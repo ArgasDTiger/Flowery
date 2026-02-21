@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Flowery.Infrastructure.Data;
 using Npgsql;
-using NpgsqlTypes;
 
 namespace Flowery.WebApi.Features.Flowers.CreateFlower;
 
@@ -21,31 +20,23 @@ public sealed class Query : IQuery
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
         try
         {
-            object flowerToCreate = new
+            await connection.ExecuteAsync(InsertFlowerSql, new
             {
+                FlowerId = model.Id,
                 model.Price,
                 model.Slug,
-                model.Description
-            };
-            Guid newFlowerId = await connection.QuerySingleAsync<Guid>(
-                InsertFlowerSql,
-                flowerToCreate,
-                transaction);
-
-            await using (var importer = await connection.BeginBinaryImportAsync(CopyCommand, cancellationToken))
-            {
-                foreach (var flowerName in model.FlowerNames)
-                {
-                    await importer.StartRowAsync(cancellationToken);
-
-                    await importer.WriteAsync(newFlowerId, NpgsqlDbType.Uuid, cancellationToken);
-                    await importer.WriteAsync(flowerName.LanguageCode.ToString(), NpgsqlDbType.Text,
-                        cancellationToken);
-                    await importer.WriteAsync(flowerName.Name, NpgsqlDbType.Text, cancellationToken);
-                }
-
-                await importer.CompleteAsync(cancellationToken);
-            }
+                model.Description,
+                PrimaryImageId = model.PrimaryImage.Id,
+                PrimaryImagePathToSource = model.PrimaryImage.PathToSource,
+                PrimaryImageCompressedPath = model.PrimaryImage.CompressedPath,
+                PrimaryImageThumbnailPath = model.PrimaryImage.ThumbnailPath,
+                FlowerNames = model.FlowerNames.Select(fn => fn.Name).ToArray(),
+                FlowerNameLanguageCodes = model.FlowerNames.Select(fn => fn.LanguageCode.ToString()).ToArray(),
+                GalleryImageIds = model.GalleryImages.Select(i => i.Id).ToArray(),
+                GalleryImagePathsToSource = model.GalleryImages.Select(i => i.PathToSource).ToArray(),
+                GalleryImageCompressedPaths = model.GalleryImages.Select(i => i.CompressedPath).ToArray(),
+                GalleryImageThumbnailPaths = model.GalleryImages.Select(i => i.ThumbnailPath).ToArray(),
+            }, transaction);
 
             await transaction.CommitAsync(cancellationToken);
         }
@@ -56,14 +47,30 @@ public sealed class Query : IQuery
         }
     }
 
-    private const string InsertFlowerSql = """
-                                           INSERT INTO flowers (price, slug, description)
-                                           VALUES (@Price, @Slug, @Description)
-                                           RETURNING id;
-                                           """;
-
-    private const string CopyCommand = """
-                                       COPY flowername (flowerid, languagecode, name) 
-                                       FROM STDIN (FORMAT BINARY)
-                                       """;
+    private const string InsertFlowerSql =
+        """
+        WITH insert_primary_image AS (
+            INSERT INTO image (Id, PathToSource, CompressedPath, ThumbnailPath)
+            VALUES (@PrimaryImageId, @PrimaryImagePathToSource, @PrimaryImageCompressedPath, @PrimaryImageThumbnailPath)
+        ),
+        insert_flower AS (
+            INSERT INTO flowers (Id, Price, Slug, Description, PrimaryImageId)
+            VALUES (@FlowerId, @Price, @Slug, @Description, @PrimaryImageId)
+        ),
+        insert_flower_names AS (
+            INSERT INTO flowername (FlowerId, LanguageCode, Name)
+            SELECT @FlowerId, UNNEST(@FlowerNameLanguageCodes::LanguageCode[]), UNNEST(@FlowerNames)
+        ),
+        insert_gallery_images AS (
+            INSERT INTO image (Id, PathToSource, CompressedPath, ThumbnailPath)
+            SELECT UNNEST(@GalleryImageIds::uuid[]),
+                   UNNEST(@GalleryImagePathsToSource::varchar(255)[]),
+                   UNNEST(@GalleryImageCompressedPaths::varchar(255)[]),
+                   UNNEST(@GalleryImageThumbnailPaths::varchar(255)[])
+            WHERE array_length(@GalleryImageIds::uuid[], 1) IS NOT NULL
+        )
+        INSERT INTO FlowerImage (FlowerId, ImageId)
+        SELECT @FlowerId, UNNEST(@GalleryImageIds::uuid[])
+        WHERE array_length(@GalleryImageIds::uuid[], 1) IS NOT NULL;
+        """;
 }

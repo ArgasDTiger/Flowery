@@ -24,7 +24,29 @@ internal sealed class ImageProcessor : IImageProcessor
         return $"/images/{path}/{originalsFolder}/{fileName}";
     }
 
+    public async Task<string> SaveOriginal(Image image, string name, string extension, string path,
+        CancellationToken cancellationToken)
+    {
+        const string originalsFolder = "originals";
+        string fileName = extension[0] == '.' ? $"{name}{extension}" : $"{name}.{extension}";
+        string fullPath = Path.Combine(BaseDir, path, originalsFolder, fileName);
+
+        string directoryName = Path.GetDirectoryName(fullPath) ??
+                               throw new InvalidOperationException("Could not create directory for image.");
+        Directory.CreateDirectory(directoryName);
+
+        await image.SaveAsync(fullPath, cancellationToken);
+        return $"/images/{path}/{originalsFolder}/{fileName}";
+    }
+
     public async Task<string> SaveThumbnail(Stream stream, string name, string path, Size dimensions,
+        CancellationToken cancellationToken)
+    {
+        using var image = await Image.LoadAsync(stream, cancellationToken);
+        return await SaveThumbnail(image, name, path, dimensions, cancellationToken);
+    }
+
+    public async Task<string> SaveThumbnail(Image image, string name, string path, Size dimensions,
         CancellationToken cancellationToken)
     {
         const string thumbFolder = "thumbnails";
@@ -34,19 +56,25 @@ internal sealed class ImageProcessor : IImageProcessor
 
         Directory.CreateDirectory(thumbDirectory);
 
-        using var image = await Image.LoadAsync(stream, cancellationToken);
-        image.Mutate(x => x.Resize(new ResizeOptions
+        using var clone = image.Clone(x => x.Resize(new ResizeOptions
         {
             Size = dimensions,
             Mode = ResizeMode.Crop
         }));
+
         string pathToSave = Path.Combine(thumbDirectory, thumbName);
-        await image.SaveAsWebpAsync(pathToSave,
-            new WebpEncoder { Quality = 75 }, cancellationToken);
+        await clone.SaveAsWebpAsync(pathToSave, new WebpEncoder { Quality = 75 }, cancellationToken);
         return $"/images/{path}/{thumbFolder}/{thumbName}";
     }
 
     public async Task<string> SaveCompressed(Stream stream, string name, string path,
+        CancellationToken cancellationToken)
+    {
+        using var image = await Image.LoadAsync(stream, cancellationToken);
+        return await SaveCompressed(image, name, path, cancellationToken);
+    }
+
+    public async Task<string> SaveCompressed(Image image, string name, string path,
         CancellationToken cancellationToken)
     {
         const string compressedFolder = "compressed";
@@ -56,10 +84,8 @@ internal sealed class ImageProcessor : IImageProcessor
 
         Directory.CreateDirectory(compressedDirectory);
 
-        using var image = await Image.LoadAsync(stream, cancellationToken);
         string pathToSave = Path.Combine(compressedDirectory, compressedFileName);
-        await image.SaveAsWebpAsync(pathToSave,
-            new WebpEncoder { Quality = 75 }, cancellationToken);
+        await image.SaveAsWebpAsync(pathToSave, new WebpEncoder { Quality = 75 }, cancellationToken);
         return $"/images/{path}/{compressedFolder}/{compressedFileName}";
     }
 

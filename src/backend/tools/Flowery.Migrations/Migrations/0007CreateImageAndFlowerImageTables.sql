@@ -1,12 +1,12 @@
-﻿ALTER TABLE Flowers
-ADD COLUMN PrimaryImagePath VARCHAR(50);
-
-CREATE TABLE Image(
+﻿CREATE TABLE Image(
     Id UUID PRIMARY KEY,
-    PathToSource VARCHAR(50) NOT NULL,
-    CompressedPath VARCHAR(50) NOT NULL,
-    ThumbnailPath VARCHAR(50) NOT NULL
+    PathToSource VARCHAR(255) NOT NULL,
+    CompressedPath VARCHAR(255) NOT NULL,
+    ThumbnailPath VARCHAR(255)
 );
+
+ALTER TABLE Flowers
+    ADD COLUMN PrimaryImageId UUID NOT NULL UNIQUE REFERENCES Image(Id);
 
 CREATE TABLE FlowerImage(
     FlowerId UUID NOT NULL,
