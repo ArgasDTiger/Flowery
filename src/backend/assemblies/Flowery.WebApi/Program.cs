@@ -70,13 +70,13 @@ app.UseCors("CorsPolicy");
 
 app.UseAntiforgery();
 app.UseStatusCodePages();
+app.UseStaticFiles();
 
 // TODO: Add authentication
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
-
 app.MapFeatures();
 
 if (app.Environment.IsDevelopment())

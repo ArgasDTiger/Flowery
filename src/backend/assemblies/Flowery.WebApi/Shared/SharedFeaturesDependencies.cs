@@ -18,5 +18,10 @@ public static class SharedFeaturesDependencies
             .Bind(config.GetSection(nameof(TranslationConfiguration)))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+
+        services.AddOptions<ImagePathConfiguration>()
+            .Bind(config.GetSection(nameof(ImagePathConfiguration)))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
     }
 }

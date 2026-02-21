@@ -12,12 +12,17 @@ namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 public sealed class Query : IQuery
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
-    private readonly TranslationConfiguration _translationSettings;
+    private readonly string _defaultLanguageCode;
+    private readonly string _imagePrefix;
 
-    public Query(IDbConnectionFactory dbConnectionFactory, IOptions<TranslationConfiguration> translationSettings)
+    public Query(
+        IDbConnectionFactory dbConnectionFactory, 
+        IOptions<TranslationConfiguration> translationSettings, 
+        IOptions<ImagePathConfiguration> imagePathSettings)
     {
         _dbConnectionFactory = dbConnectionFactory;
-        _translationSettings = translationSettings.Value;
+        _defaultLanguageCode = translationSettings.Value.SlugDefaultLanguageString;
+        _imagePrefix = imagePathSettings.Value.DefaultImagePath;
     }
 
     public async Task<PaginatedResponse<Response>> GetFlowers(Request request, LanguageCode languageCode,
@@ -32,7 +37,7 @@ public sealed class Query : IQuery
         var categories = (await dbConnection.QueryAsync<GetCategoriesResponse>(GetCategoriesForFlowerSql, new
         {
             FlowerIds = flowerIds,
-            DefaultLanguageCode = _translationSettings.SlugDefaultLanguageString,
+            DefaultLanguageCode = _defaultLanguageCode,
             LanguageCode = languageCode.ToString()
         })).ToArray();
 
@@ -43,7 +48,8 @@ public sealed class Query : IQuery
             Categories: categories.AsValueEnumerable()
                 .Where(c => c.FlowerId == f.Id)
                 .Select(c => new CategoryResponse(c.CategoryName, c.CategorySlug))
-                .ToImmutableArray())).ToImmutableArray();
+                .ToImmutableArray(),
+            ThumbnailUrl: _imagePrefix + f.ThumbnailPath)).ToImmutableArray();
 
         return new PaginatedResponse<Response>
         {
@@ -70,7 +76,7 @@ public sealed class Query : IQuery
             new
             {
                 LanguageCode = languageCode.ToString(),
-                DefaultLanguageCode = _translationSettings.SlugDefaultLanguageString,
+                DefaultLanguageCode = _defaultLanguageCode,
                 Category = request.Category,
                 Offset = offset,
                 PageSize = request.PageSize
@@ -81,17 +87,18 @@ public sealed class Query : IQuery
         return (flowers.ToArray(), count);
     }
 
-    private sealed record GetFlowersResponse(Guid Id, string Name, string Slug, decimal Price);
+    private sealed record GetFlowersResponse(Guid Id, string Name, string Slug, decimal Price, string ThumbnailPath);
 
     private sealed record GetCategoriesResponse(Guid FlowerId, string CategoryName, string CategorySlug);
 
     private static string GetFlowersSql(string orderBy, string orderDirection, bool searchByCategory) =>
         $"""
          SELECT
-             f.Id as Id,
-             COALESCE(fn.Name, fn_default.Name) as Name,
-             f.Slug,
-             f.Price
+             f.Id as {nameof(GetFlowersResponse.Id)},
+             COALESCE(fn.Name, fn_default.Name) as {nameof(GetFlowersResponse.Name)},
+             f.Slug as {nameof(GetFlowersResponse.Slug)},
+             f.Price as {nameof(GetFlowersResponse.Price)},
+             i.ThumbnailPath as {nameof(GetFlowersResponse.ThumbnailPath)}
          FROM Flowers f
          LEFT JOIN FlowerName fn ON fn.FlowerId = f.Id AND fn.LanguageCode = @LanguageCode::LanguageCode
          LEFT JOIN FlowerName fn_default ON f.Id = fn_default.FlowerId AND fn_default.LanguageCode = @DefaultLanguageCode::LanguageCode
@@ -99,6 +106,8 @@ public sealed class Query : IQuery
                               JOIN FlowerCategory fc ON fc.FlowerId = f.Id
                               JOIN Categories c ON fc.CategoryId = c.Id
                               """ : "")}
+         JOIN FlowerImage fi ON f.Id = fi.FlowerId AND fi.IsPrimary = true
+         JOIN Image i ON fi.ImageId = i.Id
          WHERE f.IsDeleted = false
          {(searchByCategory ? " AND c.Slug = @Category" : "")}
          ORDER BY {orderBy} {orderDirection}
@@ -109,16 +118,15 @@ public sealed class Query : IQuery
          """;
 
     private const string GetCategoriesForFlowerSql =
-        """
+        $"""
         SELECT
-            fc.FlowerId,
-            COALESCE(cn.Name, cn_default.Name) as CategoryName,
-            c.Slug as CategorySlug
+            fc.FlowerId as {nameof(GetCategoriesResponse.FlowerId)},
+            COALESCE(cn.Name, cn_default.Name) as {nameof(GetCategoriesResponse.CategoryName)},
+            c.Slug as {nameof(GetCategoriesResponse.CategorySlug)}
         FROM FlowerCategory fc
         JOIN Categories c ON fc.CategoryId = c.Id
         JOIN CategoryName cn_default ON fc.CategoryId = cn_default.CategoryId AND cn_default.LanguageCode = @DefaultLanguageCode::LanguageCode
-        LEFT JOIN CategoryName cn ON fc.CategoryId = cn.CategoryId 
-            AND cn.LanguageCode = @LanguageCode::LanguageCode
+        LEFT JOIN CategoryName cn ON fc.CategoryId = cn.CategoryId AND cn.LanguageCode = @LanguageCode::LanguageCode
         WHERE fc.FlowerId = ANY(@FlowerIds)
         """;
 }

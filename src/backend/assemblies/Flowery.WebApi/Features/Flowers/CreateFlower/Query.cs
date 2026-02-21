@@ -54,12 +54,16 @@ public sealed class Query : IQuery
             VALUES (@PrimaryImageId, @PrimaryImagePathToSource, @PrimaryImageCompressedPath, @PrimaryImageThumbnailPath)
         ),
         insert_flower AS (
-            INSERT INTO flowers (Id, Price, Slug, Description, PrimaryImageId)
-            VALUES (@FlowerId, @Price, @Slug, @Description, @PrimaryImageId)
+            INSERT INTO flowers (Id, Price, Slug, Description)
+            VALUES (@FlowerId, @Price, @Slug, @Description)
         ),
         insert_flower_names AS (
             INSERT INTO flowername (FlowerId, LanguageCode, Name)
             SELECT @FlowerId, UNNEST(@FlowerNameLanguageCodes::LanguageCode[]), UNNEST(@FlowerNames)
+        ),
+        insert_primary_flower_image AS (
+            INSERT INTO flowerimage (FlowerId, ImageId, IsPrimary)
+            VALUES (@FlowerId, @PrimaryImageId, TRUE)
         ),
         insert_gallery_images AS (
             INSERT INTO image (Id, PathToSource, CompressedPath, ThumbnailPath)
@@ -69,8 +73,8 @@ public sealed class Query : IQuery
                    UNNEST(@GalleryImageThumbnailPaths::varchar(255)[])
             WHERE array_length(@GalleryImageIds::uuid[], 1) IS NOT NULL
         )
-        INSERT INTO FlowerImage (FlowerId, ImageId)
-        SELECT @FlowerId, UNNEST(@GalleryImageIds::uuid[])
+        INSERT INTO flowerimage (FlowerId, ImageId, IsPrimary)
+        SELECT @FlowerId, UNNEST(@GalleryImageIds::uuid[]), FALSE
         WHERE array_length(@GalleryImageIds::uuid[], 1) IS NOT NULL;
         """;
 }

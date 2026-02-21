@@ -11,5 +11,4 @@ public sealed class Flower : IDeletable
     public decimal Price { get; init; }
     public FlowerName FlowerName { get; init; } = null!;
     public string Description { get; init; } = null!;
-    public Guid PrimaryImageId { get; init; }
 }
