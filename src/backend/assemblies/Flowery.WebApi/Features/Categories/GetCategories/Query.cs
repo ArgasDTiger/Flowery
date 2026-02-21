@@ -22,8 +22,8 @@ public sealed class Query : IQuery
         await using var connection = await _dbConnectionFactory.CreateConnectionAsync(cancellationToken);
         var categories = await connection.QueryAsync<Response>(GetCategoriesSql, new 
         { 
-            LanguageCode = languageCode,
-            DefaultLanguageCode = _translationSettings.SlugDefaultLanguage
+            LanguageCode = languageCode.ToString(),
+            DefaultLanguageCode = _translationSettings.SlugDefaultLanguageString
         });
         return [..categories];
     }
@@ -32,8 +32,8 @@ public sealed class Query : IQuery
         $"""
          SELECT COALESCE(cn_requested.Name, cn_default.Name) as {nameof(Response.Name)}, Categories.{nameof(Response.Slug)}
          FROM Categories
-         LEFT JOIN CategoryName cn_requested ON Categories.Id = cn_requested.Categoryid AND cn_requested.LanguageCode = @LanguageCode
-         LEFT JOIN CategoryName cn_default ON Categories.Id = cn_default.Categoryid AND cn_default.LanguageCode = @DefaultLanguageCode
+         LEFT JOIN CategoryName cn_requested ON Categories.Id = cn_requested.Categoryid AND cn_requested.LanguageCode = @LanguageCode::LanguageCode
+         LEFT JOIN CategoryName cn_default ON Categories.Id = cn_default.Categoryid AND cn_default.LanguageCode = @DefaultLanguageCode::LanguageCode
          WHERE cn_requested.Name IS NOT NULL OR cn_default.Name IS NOT NULL
          """;
 }

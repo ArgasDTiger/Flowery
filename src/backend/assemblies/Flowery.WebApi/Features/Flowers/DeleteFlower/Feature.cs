@@ -28,7 +28,7 @@ public sealed class DeleteFlowerFeature : IFeature
                     }
                     catch (Exception ex)
                     {
-                        logger.LogError("Error occured while deleting flower: {Message}", ex.Message);
+                        logger.LogError(ex, "Error occured while deleting flower: {Message}", ex.Message);
                         return Results.InternalServerError();
                     }
                 })

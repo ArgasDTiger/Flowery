@@ -32,10 +32,8 @@ public sealed class Query : IQuery
                 flowerToCreate,
                 transaction);
 
-            if (model.FlowerNames.Length > 0)
+            await using (var importer = await connection.BeginBinaryImportAsync(CopyCommand, cancellationToken))
             {
-                await using var importer =
-                    await connection.BeginBinaryImportAsync(CopyCommand, cancellationToken);
                 foreach (var flowerName in model.FlowerNames)
                 {
                     await importer.StartRowAsync(cancellationToken);

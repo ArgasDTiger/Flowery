@@ -39,7 +39,7 @@ public sealed class UpdateFlowerFeature : IFeature
             }
             catch (Exception ex)
             {
-                logger.LogError("Error occured while updating flower: {Message}", ex.Message);
+                logger.LogError(ex, "Error occured while updating flower: {Message}", ex.Message);
                 return Results.InternalServerError();
             }
         })

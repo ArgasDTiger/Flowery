@@ -1,5 +1,6 @@
 ﻿using Flowery.IntegrationTests.TestHelpers;
 using Flowery.IntegrationTests.TestHelpers.ApiFactories;
+using Flowery.Shared.Enums;
 using Flowery.WebApi.Features.Flowers.GetFlowerById;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,7 +24,7 @@ public sealed class QueryTests
         var query = scope.ServiceProvider.GetRequiredService<IQuery>();
 
         // Act
-        var result = await query.GetFlowerBySlug("rose", CancellationToken.None);
+        var result = await query.GetFlowerBySlug("rose", LanguageCode.UA, CancellationToken.None);
 
         // Assert
         result.ShouldNotBeNull();
@@ -38,7 +39,7 @@ public sealed class QueryTests
         var query = scope.ServiceProvider.GetRequiredService<IQuery>();
 
         // Act
-        var result = await query.GetFlowerBySlug("111111", CancellationToken.None);
+        var result = await query.GetFlowerBySlug("111111", LanguageCode.UA, CancellationToken.None);
 
         // Assert
         result.ShouldBeNull();

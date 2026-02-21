@@ -1,9 +1,9 @@
 ﻿using Flowery.WebApi.Shared.Features;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
+namespace Flowery.WebApi.Features.Categories.GetCategoryById;
 
-public sealed class GetFlowerByIdFeature : IFeature
+public sealed class GetCategoryByIdFeature : IFeature
 {
     public static void Register(IServiceCollection services)
     {
@@ -13,28 +13,29 @@ public sealed class GetFlowerByIdFeature : IFeature
 
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("api/v1/flowers/{flowerId}", async ([FromServices] IHandler handler,
-                [FromServices] ILogger<GetFlowerByIdFeature> logger,
-                [FromRoute] string flowerId,
+        endpoints.MapGet("api/v1/category/{slug}", async (
+                [FromServices] IHandler handler,
+                [FromServices] ILogger<GetCategoryByIdFeature> logger,
+                [FromRoute] string slug,
                 CancellationToken cancellationToken) =>
             {
                 try
                 {
-                    var result = await handler.GetFlowerById(flowerId, cancellationToken);
+                    var result = await handler.GetCategoryBySlug(slug, cancellationToken);
                     return result.Match(
-                        Results.Ok,
+                        category => Results.Ok(category),
                         _ => Results.NotFound());
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Error occured while getting flower: {Message}", ex.Message);
+                    logger.LogError(ex, "Error occured while getting category: {Message}", ex.Message);
                     return Results.InternalServerError();
                 }
             })
-            .Produces<Response>()
+            .Produces<Response>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .WithSummary("Gets a flower by its slug.")
-            .WithTags("Flowers");
+            .WithSummary("Gets a category by slug.")
+            .WithTags("Categories");
     }
 }

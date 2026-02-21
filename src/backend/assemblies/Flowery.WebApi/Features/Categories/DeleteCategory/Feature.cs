@@ -1,9 +1,9 @@
 ﻿using Flowery.WebApi.Shared.Features;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Flowery.WebApi.Features.Flowers.GetFlowerById;
+namespace Flowery.WebApi.Features.Categories.DeleteCategory;
 
-public sealed class GetFlowerByIdFeature : IFeature
+public sealed class DeleteCategoryFeature : IFeature
 {
     public static void Register(IServiceCollection services)
     {
@@ -13,28 +13,30 @@ public sealed class GetFlowerByIdFeature : IFeature
 
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("api/v1/flowers/{flowerId}", async ([FromServices] IHandler handler,
-                [FromServices] ILogger<GetFlowerByIdFeature> logger,
-                [FromRoute] string flowerId,
+        endpoints.MapDelete("api/v1/category/{slug}", async (
+                [FromServices] IHandler handler,
+                [FromServices] ILogger<DeleteCategoryFeature> logger,
+                [FromRoute] string slug,
                 CancellationToken cancellationToken) =>
             {
                 try
                 {
-                    var result = await handler.GetFlowerById(flowerId, cancellationToken);
+                    var result = await handler.DeleteCategory(slug, cancellationToken);
                     return result.Match(
-                        Results.Ok,
+                        _ => Results.NoContent(),
                         _ => Results.NotFound());
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Error occured while getting flower: {Message}", ex.Message);
+                    logger.LogError(ex, "Error occured while deleting category: {Message}", ex.Message);
                     return Results.InternalServerError();
                 }
             })
-            .Produces<Response>()
+            .DisableAntiforgery()
+            .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError)
-            .WithSummary("Gets a flower by its slug.")
-            .WithTags("Flowers");
+            .WithSummary("Deletes a category by slug.")
+            .WithTags("Categories");
     }
 }

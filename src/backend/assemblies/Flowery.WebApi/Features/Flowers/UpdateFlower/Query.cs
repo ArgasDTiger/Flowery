@@ -104,7 +104,7 @@ public sealed class Query : IQuery
         SELECT f.Id, fn.Name FROM Flowers f 
         JOIN FlowerName fn ON fn.FlowerId = f.Id 
         WHERE f.Slug = @Slug 
-          AND fn.LanguageCode = @NameLanguage 
+          AND fn.LanguageCode = @NameLanguage::LanguageCode
           AND f.IsDeleted = false
         LIMIT 1
         """;
@@ -136,7 +136,6 @@ public sealed class Query : IQuery
     private const string DeleteRemovedFlowerNamesSql =
         """
         DELETE FROM FlowerName
-        WHERE FlowerId = @FlowerId 
-          AND LanguageCode != ALL(@LanguageCodes);
+        WHERE FlowerId = @FlowerId AND LanguageCode != ALL(@LanguageCodes);
         """;
 }

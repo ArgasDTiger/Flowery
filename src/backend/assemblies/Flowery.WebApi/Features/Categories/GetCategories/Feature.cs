@@ -34,6 +34,6 @@ public sealed class GetCategoriesFeature : IFeature
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
             .WithSummary("Gets all categories.")
-            .WithTags("Flowers"); 
+            .WithTags("Categories"); 
     }
 }

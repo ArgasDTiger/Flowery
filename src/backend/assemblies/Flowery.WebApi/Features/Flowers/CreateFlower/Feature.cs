@@ -52,7 +52,7 @@ public sealed class CreateFlowerFeature : IFeature
                     }
                     catch (Exception ex)
                     {
-                        logger.LogError("Error occured while creating flower: {Message}", ex.Message);
+                        logger.LogError(ex, "Error occured while creating flower: {Message}", ex.Message);
                         return Results.InternalServerError();
                     }
                 })
