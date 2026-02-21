@@ -18,7 +18,7 @@ public sealed class DeleteFlowerFeatureTest : IAsyncLifetime
         _factory = factory;
         _httpClient = factory.GetClientByPath("flowers");
     }
-    
+
     public async ValueTask InitializeAsync()
     {
         await SeedTestData();
@@ -39,7 +39,7 @@ public sealed class DeleteFlowerFeatureTest : IAsyncLifetime
         // Assert
         response.ShouldBeNoContent();
     }
-    
+
     [Theory]
     [InlineData("32321")]
     public async ValueTask DeleteFlower_ShouldReturnNotFound_WhenFlowerDoesNotExist(string flowerId)
@@ -50,7 +50,7 @@ public sealed class DeleteFlowerFeatureTest : IAsyncLifetime
         // Assert
         response.ShouldBeNotFound();
     }
-    
+
     private async ValueTask SeedTestData()
     {
         var dbConnectionFactory = _factory.Services.GetRequiredService<IDbConnectionFactory>();

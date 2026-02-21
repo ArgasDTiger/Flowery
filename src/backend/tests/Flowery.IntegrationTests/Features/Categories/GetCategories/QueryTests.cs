@@ -43,10 +43,10 @@ public sealed class QueryTests
 
         // Assert
         result.ShouldContain(r => r.Slug == "wedding-flowers" && r.Name == "Весільні квіти");
-        result.ShouldContain(r => r.Slug == "garden-flowers"  && r.Name == "Садові квіти");
-        result.ShouldContain(r => r.Slug == "exotic-flowers"  && r.Name == "Екзотичні квіти");
-        result.ShouldContain(r => r.Slug == "spring-flowers"  && r.Name == "Весняні квіти");
-        result.ShouldContain(r => r.Slug == "summer-flowers"  && r.Name == "Літні квіти");
+        result.ShouldContain(r => r.Slug == "garden-flowers" && r.Name == "Садові квіти");
+        result.ShouldContain(r => r.Slug == "exotic-flowers" && r.Name == "Екзотичні квіти");
+        result.ShouldContain(r => r.Slug == "spring-flowers" && r.Name == "Весняні квіти");
+        result.ShouldContain(r => r.Slug == "summer-flowers" && r.Name == "Літні квіти");
         result.ShouldContain(r => r.Slug == "romantic-flowers" && r.Name == "Романтичні квіти");
     }
 }

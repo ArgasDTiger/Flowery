@@ -20,7 +20,8 @@ public sealed class GetFlowersFeatureTests
     [InlineData(1, 2, null, null)]
     [InlineData(1, 2, "Name", nameof(SortDirection.Asc))]
     [InlineData(1, 2, null, "1")]
-    public async Task GetFlowers_WithValidParameters_ReturnsOk(int pageNumber, int pageSize, string? sortBy, string? sortDirection)
+    public async Task GetFlowers_WithValidParameters_ReturnsOk(int pageNumber, int pageSize, string? sortBy,
+        string? sortDirection)
     {
         // Arrange
         var queryParams = new Dictionary<string, string?>
@@ -39,7 +40,9 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         responseBody.Items.Length.ShouldBe(pageSize);
     }
@@ -133,7 +136,9 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         responseBody.Items.Length.ShouldBe(5);
     }
@@ -157,7 +162,9 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         responseBody.Items.Length.ShouldBeGreaterThan(0);
         responseBody.Items.ShouldAllBe(f => f.Categories.Any(c => c.Slug == category));
@@ -180,7 +187,9 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         var flowerSlugs = responseBody.Items.Select(f => f.Slug).ToArray();
         flowerSlugs.ShouldContain("rose");
@@ -207,7 +216,9 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         responseBody.Items.Length.ShouldBe(0);
     }
@@ -228,7 +239,9 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         responseBody.TotalCount.ShouldBe(12);
         responseBody.Items.ShouldAllBe(f => f.Slug != "lily" && f.Slug != "violet" && f.Slug != "lotus");
@@ -253,7 +266,9 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         responseBody.Items.Length.ShouldBe(expectedCount);
         responseBody.TotalCount.ShouldBe(12);
@@ -275,9 +290,11 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
-        
+
         var rose = responseBody.Items.FirstOrDefault(f => f.Slug == "rose");
         rose.ShouldNotBeNull();
         rose.Categories.Length.ShouldBeGreaterThan(0);
@@ -302,9 +319,11 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
-        
+
         for (int i = 0; i < responseBody.Items.Length - 1; i++)
         {
             responseBody.Items[i].Price.ShouldBeLessThanOrEqualTo(responseBody.Items[i + 1].Price);
@@ -330,10 +349,12 @@ public sealed class GetFlowersFeatureTests
 
         // Assert
         response.ShouldBeOk();
-        var responseBody = await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current.CancellationToken);
+        var responseBody =
+            await response.Content.ReadFromJsonAsync<PaginatedResponse<Response>>(TestContext.Current
+                .CancellationToken);
         responseBody.ShouldNotBeNull();
         responseBody.Items.ShouldAllBe(f => f.Categories.Any(c => c.Slug == "garden-flowers"));
-        
+
         for (int i = 0; i < responseBody.Items.Length - 1; i++)
         {
             responseBody.Items[i].Price.ShouldBeGreaterThanOrEqualTo(responseBody.Items[i + 1].Price);

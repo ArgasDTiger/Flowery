@@ -110,7 +110,8 @@ public sealed class QueryTests : IAsyncLifetime
         await connection.ExecuteAsync(SeedCategories.SeedCategoriesSql);
     }
 
-    private static async ValueTask<string?> GetCategoryName(IServiceScope scope, Guid categoryId, LanguageCode languageCode)
+    private static async ValueTask<string?> GetCategoryName(IServiceScope scope, Guid categoryId,
+        LanguageCode languageCode)
     {
         var dbConnectionFactory = scope.ServiceProvider.GetRequiredService<IDbConnectionFactory>();
         await using var connection = await dbConnectionFactory.CreateConnectionAsync(CancellationToken.None);

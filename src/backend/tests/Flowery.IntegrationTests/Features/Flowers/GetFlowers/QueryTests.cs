@@ -283,7 +283,7 @@ public sealed class QueryTests
 
         var rose = result.Items.FirstOrDefault(f => f.Slug == "rose");
         rose.ShouldNotBeNull();
-        rose.Categories.Length.ShouldBe(3); 
+        rose.Categories.Length.ShouldBe(3);
     }
 
     [Fact]

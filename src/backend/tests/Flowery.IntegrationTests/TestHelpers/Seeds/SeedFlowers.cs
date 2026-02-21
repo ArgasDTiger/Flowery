@@ -1,5 +1,4 @@
-﻿
-namespace Flowery.IntegrationTests.TestHelpers.Seeds;
+﻿namespace Flowery.IntegrationTests.TestHelpers.Seeds;
 
 public static class SeedFlowers
 {
@@ -40,5 +39,4 @@ public static class SeedFlowers
                ('4e509aa7-1428-4a51-9b92-0df546ae2c7d', 'UA', 'Лотос'),
                ('5f60ab11-3c88-4b22-a92e-a55edee5e97b', 'UA', 'Магнолія');
 ";
-
 }
