@@ -22,15 +22,15 @@ public sealed class CreateCategoryFeature : IFeature
                 [FromBody] Request request,
                 CancellationToken cancellationToken) =>
             {
+                ValidationResult validationResult = validator.Validate(request);
+
+                if (!validationResult.IsValid)
+                {
+                    return Results.ValidationProblem(validationResult.ToDictionary());
+                }
+
                 try
                 {
-                    ValidationResult validationResult = validator.Validate(request);
-
-                    if (!validationResult.IsValid)
-                    {
-                        return Results.ValidationProblem(validationResult.ToDictionary());
-                    }
-
                     var result = await handler.CreateCategory(request, cancellationToken);
                     return result.Match(
                         slug => Results.Created(new Uri($"api/v1/category/{slug}", UriKind.Relative), slug),

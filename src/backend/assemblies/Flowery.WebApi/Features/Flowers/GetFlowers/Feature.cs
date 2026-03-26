@@ -24,15 +24,15 @@ public sealed class GetFlowersFeature : IFeature
                     [AsParameters] Request request,
                     CancellationToken cancellationToken) =>
                 {
+                    ValidationResult validationResult = validator.Validate(request);
+
+                    if (!validationResult.IsValid)
+                    {
+                        return Results.ValidationProblem(validationResult.ToDictionary());
+                    }
+
                     try
                     {
-                        ValidationResult validationResult = validator.Validate(request);
-
-                        if (!validationResult.IsValid)
-                        {
-                            return Results.ValidationProblem(validationResult.ToDictionary());
-                        }
-
                         var responses = await handler.GetFlowers(request, LanguageCode.UA, cancellationToken);
                         return Results.Ok(responses);
                     }

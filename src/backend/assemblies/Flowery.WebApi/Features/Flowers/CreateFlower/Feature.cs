@@ -24,16 +24,16 @@ public sealed class CreateFlowerFeature : IFeature
                     [FromForm] Request request,
                     CancellationToken cancellationToken) =>
                 {
+                    ValidationResult validationResult = validator.Validate(request);
+
+                    if (!validationResult.IsValid)
+                    {
+                        return Results.ValidationProblem(validationResult.ToDictionary());
+                    }
+
+                    var handlerModel = RequestToHandlerModel(request);
                     try
                     {
-                        ValidationResult validationResult = validator.Validate(request);
-
-                        if (!validationResult.IsValid)
-                        {
-                            return Results.ValidationProblem(validationResult.ToDictionary());
-                        }
-
-                        var handlerModel = RequestToHandlerModel(request);
                         string createdFlowerSlug = await handler.CreateFlower(handlerModel, cancellationToken);
                         return Results.Created(new Uri($"api/v1/flowers/{createdFlowerSlug}", UriKind.Relative),
                             createdFlowerSlug);

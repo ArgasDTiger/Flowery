@@ -17,13 +17,11 @@ public sealed class UpdateFlowerFeature : IFeature
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPut("api/v1/flowers/{flowerId}", async ([FromServices] IHandler handler,
-            [FromServices] IValidator<Request> validator,
-            [FromServices] ILogger<UpdateFlowerFeature> logger,
-            [FromRoute] string flowerId,
-            [FromBody] Request request,
-            CancellationToken cancellationToken) =>
-        {
-            try
+                [FromServices] IValidator<Request> validator,
+                [FromServices] ILogger<UpdateFlowerFeature> logger,
+                [FromRoute] string flowerId,
+                [FromBody] Request request,
+                CancellationToken cancellationToken) =>
             {
                 ValidationResult validationResult = validator.Validate(request);
 
@@ -32,21 +30,23 @@ public sealed class UpdateFlowerFeature : IFeature
                     return Results.ValidationProblem(validationResult.ToDictionary());
                 }
 
-                var result = await handler.UpdateFlower(flowerId, request, cancellationToken);
-                return result.Match(
-                    _ => Results.NoContent(),
-                    _ => Results.NotFound());
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error occured while updating flower: {Message}", ex.Message);
-                return Results.InternalServerError();
-            }
-        })
-        .Produces(StatusCodes.Status204NoContent)
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithSummary("Updates an existing flower.")
-        .WithTags("Flowers");
+                try
+                {
+                    var result = await handler.UpdateFlower(flowerId, request, cancellationToken);
+                    return result.Match(
+                        _ => Results.NoContent(),
+                        _ => Results.NotFound());
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Error occured while updating flower: {Message}", ex.Message);
+                    return Results.InternalServerError();
+                }
+            })
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithSummary("Updates an existing flower.")
+            .WithTags("Flowers");
     }
 }

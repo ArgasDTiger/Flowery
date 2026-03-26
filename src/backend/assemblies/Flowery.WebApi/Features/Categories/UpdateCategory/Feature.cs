@@ -24,15 +24,15 @@ public sealed class UpdateCategoryFeature : IFeature
                 [FromBody] Request request,
                 CancellationToken cancellationToken) =>
             {
+                ValidationResult validationResult = validator.Validate(request);
+
+                if (!validationResult.IsValid)
+                {
+                    return Results.ValidationProblem(validationResult.ToDictionary());
+                }
+
                 try
                 {
-                    ValidationResult validationResult = validator.Validate(request);
-
-                    if (!validationResult.IsValid)
-                    {
-                        return Results.ValidationProblem(validationResult.ToDictionary());
-                    }
-
                     var result = await handler.UpdateCategory(slug, request, cancellationToken);
                     return result.Match(
                         _ => Results.NoContent(),

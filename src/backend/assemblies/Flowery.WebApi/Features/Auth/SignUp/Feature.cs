@@ -17,13 +17,11 @@ public sealed class SignUpFeature : IFeature
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("api/v1/auth/signUp",
-            async ([FromServices] IHandler handler,
-                [FromServices] IValidator<Request> validator,
-                [FromServices] ILogger<SignUpFeature> logger,
-                [FromBody] Request request,
-                CancellationToken cancellationToken) =>
-            {
-                try
+                async ([FromServices] IHandler handler,
+                    [FromServices] IValidator<Request> validator,
+                    [FromServices] ILogger<SignUpFeature> logger,
+                    [FromBody] Request request,
+                    CancellationToken cancellationToken) =>
                 {
                     ValidationResult validationResult = validator.Validate(request);
 
@@ -32,17 +30,19 @@ public sealed class SignUpFeature : IFeature
                         return Results.ValidationProblem(validationResult.ToDictionary());
                     }
 
-                    var result = await handler.SignUpUser(request, cancellationToken);
-                    return result.Match(
-                        _ => Results.Created(),
-                        error => Results.BadRequest(error.Message));
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError("Error occured while signing up: {Message}", ex.Message);
-                    return Results.InternalServerError();
-                }
-            })
+                    try
+                    {
+                        var result = await handler.SignUpUser(request, cancellationToken);
+                        return result.Match(
+                            _ => Results.Created(),
+                            error => Results.BadRequest(error.Message));
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError("Error occured while signing up: {Message}", ex.Message);
+                        return Results.InternalServerError();
+                    }
+                })
             .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
