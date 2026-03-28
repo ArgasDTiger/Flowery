@@ -1,4 +1,5 @@
-﻿using Flowery.WebApi.Shared.Features;
+﻿using Flowery.WebApi.Shared.Extensions;
+using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public sealed class CreateCategoryFeature : IFeature
 
                 if (!validationResult.IsValid)
                 {
-                    return Results.ValidationProblem(validationResult.ToDictionary());
+                    return Results.ValidationProblem(validationResult.ToValidatedDictionary());
                 }
 
                 try

@@ -1,4 +1,5 @@
 ﻿using Flowery.Infrastructure.Auth.Tokens;
+using Flowery.WebApi.Shared.Extensions;
 using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
@@ -29,7 +30,7 @@ public sealed class SignInFeature : IFeature
 
                     if (!validationResult.IsValid)
                     {
-                        return Results.ValidationProblem(validationResult.ToDictionary());
+                        return Results.ValidationProblem(validationResult.ToValidatedDictionary());
                     }
 
                     try

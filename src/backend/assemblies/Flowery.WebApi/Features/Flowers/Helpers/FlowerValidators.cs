@@ -4,7 +4,7 @@ namespace Flowery.WebApi.Features.Flowers.Helpers;
 
 public static class FlowerValidators
 {
-    private const int MaxImageSize = 5 * 1024 * 1024;
+    private const int MaxImageSize = 10 * 1024 * 1024;
 
     public static IRuleBuilderOptions<T, IFormFile> MustBeValidFlowerImage<T>(
         this IRuleBuilderOptions<T, IFormFile> rule)

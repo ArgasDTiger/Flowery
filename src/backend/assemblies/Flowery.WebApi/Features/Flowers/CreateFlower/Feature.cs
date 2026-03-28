@@ -1,4 +1,5 @@
 ﻿using Flowery.WebApi.Features.Flowers.Helpers;
+using Flowery.WebApi.Shared.Extensions;
 using Flowery.WebApi.Shared.Features;
 using FluentValidation;
 using FluentValidation.Results;
@@ -28,7 +29,7 @@ public sealed class CreateFlowerFeature : IFeature
 
                     if (!validationResult.IsValid)
                     {
-                        return Results.ValidationProblem(validationResult.ToDictionary());
+                        return Results.ValidationProblem(validationResult.ToValidatedDictionary());
                     }
 
                     var handlerModel = RequestToHandlerModel(request);
@@ -52,7 +53,7 @@ public sealed class CreateFlowerFeature : IFeature
             .WithTags("Flowers");
     }
 
-    private static HandlerModel RequestToHandlerModel(Request request) => new HandlerModel(
+    private static HandlerModel RequestToHandlerModel(Request request) => new(
         Price: request.Price,
         Description: request.Description,
         FlowerNames: request.FlowerNames,
