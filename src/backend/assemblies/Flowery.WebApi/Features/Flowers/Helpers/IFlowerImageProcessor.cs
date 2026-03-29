@@ -2,5 +2,6 @@
 
 public interface IFlowerImageProcessor
 {
-    Task<FlowerImageProcessorResponse> ProcessImage(Stream stream, string imageName, string extension, bool includeThumbnail, CancellationToken cancellationToken);
+    Task<string> SaveImage(Stream stream, string fileName, CancellationToken cancellationToken);
+    void SaveCopies(Guid flowerId, string originalFilePath);
 }

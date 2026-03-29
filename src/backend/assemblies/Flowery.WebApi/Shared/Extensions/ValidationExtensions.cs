@@ -10,7 +10,7 @@ public static partial class ValidationExtensions
         if (string.IsNullOrEmpty(email)) return false;
         return email.Contains('@') && !email.TrimEnd().EndsWith('.') && email.Length <= 255; // TODO: find the best place to define constants
     }
-    
+
     public static bool IsValidPassword(this string password)
     {
         return !string.IsNullOrWhiteSpace(password) && PasswordRegex().IsMatch(password);

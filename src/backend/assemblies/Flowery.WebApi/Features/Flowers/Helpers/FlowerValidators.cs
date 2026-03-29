@@ -12,6 +12,6 @@ public static class FlowerValidators
         return rule.Must(image => image.Length <= MaxImageSize)
             .WithMessage($"Image size must not exceed {MaxImageSize} bytes.")
             .Must(image => image.ContentType is "image/jpeg" or "image/png" or "image/webp")
-            .WithMessage("Primary image must be a JPEG, PNG or WebP file.");
+            .WithMessage("Image must be a JPEG, PNG or WebP file.");
     }
 }

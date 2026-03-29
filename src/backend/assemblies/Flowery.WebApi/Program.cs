@@ -2,8 +2,11 @@ using System.Text.Json.Serialization;
 using Flowery.WebApi;
 using Flowery.WebApi.Shared;
 using Flowery.WebApi.Shared.Extensions;
+using Hangfire;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Scalar.AspNetCore;
 
 const string solutionName = "Flowery";
@@ -33,7 +36,8 @@ builder.Services.AddOpenApi(opt =>
             string folderName = type.Namespace.Split('.').Last();
             return $"{folderName}{type.Name}";
         }
-        return null; 
+
+        return null;
     };
 });
 
@@ -69,6 +73,7 @@ app.UseCors("CorsPolicy");
 // app.UseHttpsRedirection();
 
 app.UseAntiforgery();
+app.UseHangfireDashboard();
 app.UseStatusCodePages();
 app.UseStaticFiles();
 
@@ -78,12 +83,26 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 app.MapFeatures();
+app.MapHangfireDashboard();
 
 if (app.Environment.IsDevelopment())
 {
-    using var scope = app.Services.CreateScope();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("Scalar is available at: http://localhost:5200/scalar");
+    app.Lifetime.ApplicationStarted.Register(() =>
+    {
+        var server = app.Services.GetRequiredService<IServer>();
+        var addresses = server.Features.Get<IServerAddressesFeature>()?.Addresses;
+
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+        if (addresses is not null)
+        {
+            foreach (var address in addresses)
+            {
+                logger.LogInformation("Scalar is available at: {Address}/scalar", address);
+                logger.LogInformation("Hangfire Dashboard is available at: {Address}/hangfire", address);
+            }
+        }
+    });
 }
 
 app.Run();

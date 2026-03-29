@@ -1,36 +1,34 @@
 ﻿using Flowery.Infrastructure.Images;
-using SixLabors.ImageSharp;
+using Flowery.Infrastructure.Jobs;
+using Flowery.Infrastructure.Jobs.Images;
+using Hangfire;
 
 namespace Flowery.WebApi.Features.Flowers.Helpers;
 
-public sealed class FlowerImageProcessor : IFlowerImageProcessor
+internal sealed class FlowerImageProcessor : IFlowerImageProcessor
 {
-    private readonly IImageProcessor _imageProcessor;
+    private readonly IImageSaver _imageSaver;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
-    private static readonly Size ThumbnailDimensions = new(400, 400);
     private const string ImagesDir = "flowers";
 
-    public FlowerImageProcessor(IImageProcessor imageProcessor)
+    public FlowerImageProcessor(IImageSaver imageSaver, IBackgroundJobClient backgroundJobClient)
     {
-        _imageProcessor = imageProcessor;
+        _imageSaver = imageSaver;
+        _backgroundJobClient = backgroundJobClient;
     }
 
-    public async Task<FlowerImageProcessorResponse> ProcessImage(Stream stream, string imageName, string extension,
-        bool includeThumbnail, CancellationToken cancellationToken)
+    public Task<string> SaveImage(Stream stream, string fileName, CancellationToken cancellationToken)
     {
-        using var image = await Image.LoadAsync(stream, cancellationToken);
+        return _imageSaver.SaveAsync(stream, ImagesDir, fileName, cancellationToken);
+    }
 
-        var saveOriginal = _imageProcessor.SaveOriginal(image, imageName, extension, ImagesDir, cancellationToken);
-        var saveCompressed = _imageProcessor.SaveCompressed(image, imageName, ImagesDir, cancellationToken);
-
-        if (includeThumbnail)
-        {
-            var saveThumbnail = _imageProcessor.SaveThumbnail(image, imageName, ImagesDir, ThumbnailDimensions, cancellationToken);
-            var results = await Task.WhenAll(saveOriginal, saveCompressed, saveThumbnail);
-            return new FlowerImageProcessorResponse(results[0], results[2], results[1]);
-        }
-
-        var paths = await Task.WhenAll(saveOriginal, saveCompressed);
-        return new FlowerImageProcessorResponse(paths[0], null, paths[1]);
+    public void SaveCopies(Guid flowerId, string originalFilePath)
+    {
+        var model = new ProcessFlowerImages(
+            FlowerId: flowerId,
+            FolderName: ImagesDir,
+            OriginalImagePath: originalFilePath);
+        _backgroundJobClient.Enqueue<IJobExecutor<ProcessFlowerImages>>(x => x.Execute(model));
     }
 }

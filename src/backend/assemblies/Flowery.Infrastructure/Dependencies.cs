@@ -4,6 +4,8 @@ using Flowery.Infrastructure.Auth.Tokens;
 using Flowery.Infrastructure.Data;
 using Flowery.Infrastructure.Health;
 using Flowery.Infrastructure.Images;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,9 +18,10 @@ public static class Dependencies
     {
         public void AddInfrastructureDependencies(IConfiguration config)
         {
+            string connectionString = config.GetConnectionString("Postgres") ??
+                                      throw new Exception("Connection string is not configured.");
             services.AddSingleton<IDbConnectionFactory>(_ =>
-                new NpgsqlConnectionFactory(config.GetConnectionString("Postgres") ??
-                                            throw new Exception("Connection string is not configured.")));
+                new NpgsqlConnectionFactory(connectionString));
             services.AddHealthChecks()
                 .AddCheck<PostgresDatabaseHealthCheck>("Database");
 
@@ -27,6 +30,10 @@ public static class Dependencies
             services.AddHttpContextAccessor();
 
             services.AddSingleton<IImageProcessor, ImageProcessor>();
+            services.AddSingleton<IImageRetrieval, FileSystemImageRetrieval>();
+            services.AddSingleton<IImageSaver, FileSystemImageSaver>();
+
+            services.AddHangfire(connectionString);
         }
 
         private void AddAuthentication()
@@ -49,6 +56,33 @@ public static class Dependencies
                 .Bind(config.GetSection(nameof(AuthConfiguration)))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+        }
+
+        private void AddHangfire(string connectionString)
+        {
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
+            {
+                Attempts = 3
+            });
+
+            // TODO: probably better to use separate db with another, less privileged, user
+            services.AddHangfire(config => config
+                .UseSerilogLogProvider()
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(opt => opt.UseNpgsqlConnection(connectionString), 
+                    new PostgreSqlStorageOptions
+                    {
+                        QueuePollInterval = TimeSpan.FromSeconds(20),
+                        InvisibilityTimeout = TimeSpan.FromMinutes(5),
+                        DistributedLockTimeout = TimeSpan.FromMinutes(1),
+                    }));
+
+            services.AddHangfireServer(options =>
+            {
+                options.ServerName = $"Flowery-{Environment.MachineName}";
+            });
         }
     }
 }

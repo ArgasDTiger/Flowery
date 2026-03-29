@@ -2,5 +2,4 @@
 
 public sealed record FlowerImageProcessorResponse(
     string PrimaryImagePath,
-    string? ThumbnailImagePath,
     string CompressedImagePath);
