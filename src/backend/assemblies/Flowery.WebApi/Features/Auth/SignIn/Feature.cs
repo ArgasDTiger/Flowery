@@ -26,13 +26,6 @@ public sealed class SignInFeature : IFeature
                     [FromBody] Request request,
                     CancellationToken cancellationToken) =>
                 {
-                    ValidationResult validationResult = validator.Validate(request);
-
-                    if (!validationResult.IsValid)
-                    {
-                        return Results.ValidationProblem(validationResult.ToValidatedDictionary());
-                    }
-
                     try
                     {
                         var result = await handler.SignInUser(request, cancellationToken);
@@ -56,6 +49,7 @@ public sealed class SignInFeature : IFeature
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
+            .WithValidation<Request>()
             .WithSummary("Signs in an existing user.")
             .WithTags("Auth");
     }

@@ -24,13 +24,6 @@ public sealed class SignUpFeature : IFeature
                     [FromBody] Request request,
                     CancellationToken cancellationToken) =>
                 {
-                    ValidationResult validationResult = validator.Validate(request);
-
-                    if (!validationResult.IsValid)
-                    {
-                        return Results.ValidationProblem(validationResult.ToValidatedDictionary());
-                    }
-
                     try
                     {
                         var result = await handler.SignUpUser(request, cancellationToken);
@@ -47,6 +40,7 @@ public sealed class SignUpFeature : IFeature
             .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
+            .WithValidation<Request>()
             .WithSummary("Signs up a new user.")
             .WithTags("Auth");
     }
