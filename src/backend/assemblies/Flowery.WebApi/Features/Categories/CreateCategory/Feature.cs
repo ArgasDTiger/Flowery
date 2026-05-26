@@ -23,13 +23,6 @@ public sealed class CreateCategoryFeature : IFeature
                 [FromBody] Request request,
                 CancellationToken cancellationToken) =>
             {
-                ValidationResult validationResult = validator.Validate(request);
-
-                if (!validationResult.IsValid)
-                {
-                    return Results.ValidationProblem(validationResult.ToValidatedDictionary());
-                }
-
                 try
                 {
                     var result = await handler.CreateCategory(request, cancellationToken);
@@ -47,6 +40,7 @@ public sealed class CreateCategoryFeature : IFeature
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
+            .WithValidation<Request>()
             .WithSummary("Creates a new category.")
             .WithTags("Categories");
     }

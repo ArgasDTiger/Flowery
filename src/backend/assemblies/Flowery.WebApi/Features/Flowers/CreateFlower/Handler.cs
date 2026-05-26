@@ -42,18 +42,20 @@ public sealed class Handler : IHandler
         Guid flowerId = Guid.CreateVersion7();
 
         await Task.WhenAll(primaryImageTask, galleryImagesTask);
-
+        var primaryImage = await primaryImageTask;
+        var galleryImages = await galleryImagesTask;
+        
         DatabaseModel dbModel = new DatabaseModel(
             Id: flowerId,
             Price: request.Price,
             Description: request.Description,
             Slug: slug,
             FlowerNames: request.FlowerNames,
-            PrimaryImage: await primaryImageTask,
-            GalleryImages: await galleryImagesTask);
+            PrimaryImage: primaryImage,
+            GalleryImages: galleryImages);
         await _query.CreateFlower(dbModel, cancellationToken);
 
-        SaveCopies(await primaryImageTask, await galleryImagesTask);
+        SaveCopies(primaryImage, galleryImages);
 
         // TODO: job to remove file?
         return slug;

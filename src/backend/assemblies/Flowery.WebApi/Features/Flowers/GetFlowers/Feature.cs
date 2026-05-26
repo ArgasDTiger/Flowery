@@ -25,13 +25,6 @@ public sealed class GetFlowersFeature : IFeature
                     [AsParameters] Request request,
                     CancellationToken cancellationToken) =>
                 {
-                    ValidationResult validationResult = validator.Validate(request);
-
-                    if (!validationResult.IsValid)
-                    {
-                        return Results.ValidationProblem(validationResult.ToValidatedDictionary());
-                    }
-
                     try
                     {
                         var responses = await handler.GetFlowers(request, LanguageCode.UA, cancellationToken);
@@ -46,6 +39,7 @@ public sealed class GetFlowersFeature : IFeature
             .Produces<Response[]>()
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
+            .WithValidation<Request>()
             .WithSummary("Gets all flowers.")
             .WithTags("Flowers");
     }

@@ -25,13 +25,6 @@ public sealed class CreateFlowerFeature : IFeature
                     [FromForm] Request request,
                     CancellationToken cancellationToken) =>
                 {
-                    ValidationResult validationResult = validator.Validate(request);
-
-                    if (!validationResult.IsValid)
-                    {
-                        return Results.ValidationProblem(validationResult.ToValidatedDictionary());
-                    }
-
                     var handlerModel = RequestToHandlerModel(request);
                     try
                     {
@@ -49,6 +42,7 @@ public sealed class CreateFlowerFeature : IFeature
             .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
+            .WithValidation<Request>()
             .WithSummary("Creates a new flower.")
             .WithTags("Flowers");
     }

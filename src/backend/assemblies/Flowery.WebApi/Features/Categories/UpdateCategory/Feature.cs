@@ -25,13 +25,6 @@ public sealed class UpdateCategoryFeature : IFeature
                 [FromBody] Request request,
                 CancellationToken cancellationToken) =>
             {
-                ValidationResult validationResult = validator.Validate(request);
-
-                if (!validationResult.IsValid)
-                {
-                    return Results.ValidationProblem(validationResult.ToValidatedDictionary());
-                }
-
                 try
                 {
                     var result = await handler.UpdateCategory(slug, request, cancellationToken);
@@ -50,6 +43,7 @@ public sealed class UpdateCategoryFeature : IFeature
             .Produces(StatusCodes.Status404NotFound)
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status500InternalServerError)
+            .WithValidation<Request>()
             .WithSummary("Updates an existing category.")
             .WithTags("Categories");
     }
