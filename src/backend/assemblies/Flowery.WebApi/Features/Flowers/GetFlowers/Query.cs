@@ -33,20 +33,19 @@ public sealed class Query
         (GetFlowersResponse[] flowersQueryResult, int totalCount) =
             await QueryFlowers(request, languageCode, dbConnection);
 
-        Guid[] flowerIds = flowersQueryResult.AsValueEnumerable().Select(f => f.Id).ToArray();
+        var flowerIds = flowersQueryResult.AsValueEnumerable().Select(f => f.Id).ToArray();
         var categories = (await dbConnection.QueryAsync<GetCategoriesResponse>(GetCategoriesForFlowerSql, new
         {
             FlowerIds = flowerIds,
             DefaultLanguageCode = _defaultLanguageCode,
             LanguageCode = languageCode.ToString()
-        })).ToArray();
+        })).ToLookup(c => c.FlowerId);
 
         var flowers = flowersQueryResult.AsValueEnumerable().Select(f => new Response(
             Name: f.Name,
             Slug: f.Slug,
             Price: f.Price,
-            Categories: categories.AsValueEnumerable()
-                .Where(c => c.FlowerId == f.Id)
+            Categories: categories[f.Id].AsValueEnumerable()
                 .Select(c => new CategoryResponse(c.CategoryName, c.CategorySlug))
                 .ToImmutableArray(),
             ThumbnailUrl: _imagePrefix + f.ThumbnailPath)).ToImmutableArray();
@@ -87,9 +86,9 @@ public sealed class Query
         return (flowers.ToArray(), count);
     }
 
-    private sealed record GetFlowersResponse(Guid Id, string Name, string Slug, decimal Price, string ThumbnailPath);
+    private readonly record struct GetFlowersResponse(Guid Id, string Name, string Slug, decimal Price, string ThumbnailPath);
 
-    private sealed record GetCategoriesResponse(Guid FlowerId, string CategoryName, string CategorySlug);
+    private readonly record struct GetCategoriesResponse(Guid FlowerId, string CategoryName, string CategorySlug);
 
     private static string GetFlowersSql(string orderBy, string orderDirection, bool searchByCategory) =>
         $"""
