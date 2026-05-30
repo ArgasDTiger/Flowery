@@ -22,7 +22,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -44,7 +44,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -69,7 +69,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -94,7 +94,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -119,7 +119,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -143,7 +143,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -171,7 +171,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -194,7 +194,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -217,7 +217,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -241,7 +241,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -265,7 +265,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -291,7 +291,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -316,7 +316,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -341,7 +341,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 100,
@@ -366,7 +366,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
@@ -389,7 +389,7 @@ public sealed class QueryTests
     {
         // Arrange
         using var scope = _factory.Services.CreateScope();
-        var query = scope.ServiceProvider.GetRequiredService<IQuery>();
+        var query = scope.ServiceProvider.GetRequiredService<Query>();
         var request = new Request
         {
             PageNumber = 1,
