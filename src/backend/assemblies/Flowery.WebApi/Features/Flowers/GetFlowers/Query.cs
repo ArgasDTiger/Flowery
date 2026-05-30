@@ -9,7 +9,7 @@ using Npgsql;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
-public sealed class Query : IQuery
+public sealed class Query
 {
     private readonly IDbConnectionFactory _dbConnectionFactory;
     private readonly string _defaultLanguageCode;
@@ -61,7 +61,7 @@ public sealed class Query : IQuery
     private async Task<(GetFlowersResponse[] Flowers, int TotalCount)> QueryFlowers(Request request,
         LanguageCode languageCode, NpgsqlConnection connection)
     {
-        string orderBy = request.SortBy switch
+        string orderBy = request.SortBy?.Value switch
         {
             SortField.Name => "fn.Name",
             SortField.Price => "f.Price",

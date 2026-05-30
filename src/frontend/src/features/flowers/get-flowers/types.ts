@@ -16,6 +16,6 @@ export interface GetFlowersRequest extends OrderedPaginationParams {
 }
 
 export enum GetFlowersSortField {
-  Date = 'date',
+  Name = 'name',
   Price = 'price',
 }

@@ -3,11 +3,11 @@ using Flowery.WebApi.Shared.Pagination;
 
 namespace Flowery.WebApi.Features.Flowers.GetFlowers;
 
-public sealed class Handler : IHandler
+public sealed class Handler
 {
-    private readonly IQuery _query;
+    private readonly Query _query;
 
-    public Handler(IQuery query)
+    public Handler(Query query)
     {
         _query = query;
     }

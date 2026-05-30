@@ -10,10 +10,10 @@ public static class DatabaseQueryExtensions
     public static string ToSqlOrderDirection(this SortDirection sortDirection) =>
         sortDirection == SortDirection.Asc ? Asc : Desc;
 
-    public static string ToSqlOrderDirection(this SortDirection? sortDirection,
+    public static string ToSqlOrderDirection(this SortDirectionQuery? sortDirection,
         SortDirection defaultSortDirection = SortDirection.Asc) => sortDirection is null
         ? defaultSortDirection.ToSqlOrderDirection()
-        : sortDirection.Value.ToSqlOrderDirection();
+        : sortDirection.Value.Value.ToSqlOrderDirection();
 
     public static int GetSqlOffset(this PaginationParams paginationParams) =>
         (paginationParams.PageNumber - 1) * paginationParams.PageSize;

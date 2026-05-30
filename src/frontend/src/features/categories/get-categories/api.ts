@@ -4,7 +4,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import type { QueryConfig } from "@lib/react-query";
 
 export const getCategories = (request: GetCategoriesRequest): Promise<PaginatedCategoriesResponse> => {
-  return api.get("/categories", {
+  return api.get("/category", {
     params: {
       ...request
     },

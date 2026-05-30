@@ -104,7 +104,7 @@ function RouteComponent() {
   const flowerItems = data?.items ?? [];
   const totalCount = data?.totalCount ?? 0;
 
-  const categoryOptions: ComboboxData = categoriesData?.items.map(cat => ({
+  const categoryOptions: ComboboxData = categoriesData?.items?.map(cat => ({
     value: cat.slug,
     label: cat.name,
   })) ?? [];

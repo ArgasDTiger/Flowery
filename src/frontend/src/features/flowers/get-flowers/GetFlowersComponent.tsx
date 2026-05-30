@@ -28,7 +28,7 @@ interface Props {
 
 const sortByOptions = [
   { value: GetFlowersSortField.Price, label: 'Price' },
-  { value: GetFlowersSortField.Date, label: 'Date' },
+  { value: GetFlowersSortField.Name, label: 'Name' },
 ];
 
 const sortDirectionOptions = [
