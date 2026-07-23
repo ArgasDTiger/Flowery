@@ -1,0 +1,316 @@
+﻿@use '@styles/dependencies' as *;
+
+.page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding-bottom: 3rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 2px solid $black;
+
+    h1 {
+        font-size: $text-xxl;
+        font-weight: $weight-bold;
+        color: $black;
+        letter-spacing: -0.02em;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.sectionTitle {
+    font-size: $text-base;
+    font-weight: $weight-bold;
+    color: $black;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.requiredBadge {
+    font-size: $text-xs;
+    font-weight: $weight-bold;
+    background: $black;
+    color: $white;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.optionalBadge {
+    font-size: $text-xs;
+    font-weight: $weight-medium;
+    background: #f0f0f0;
+    color: #666;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.languageCard {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem 1.125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    background: #fafafa;
+}
+
+.languageCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+        font-size: $text-sm;
+        font-weight: $weight-bold;
+
+
+    }
+}
+
+.fieldInput {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.3rem;
+    font-size: $text-sm;
+    color: $black;
+    background: $white;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        border-color: $black;
+    }
+
+    &::placeholder {
+        color: #aaa;
+    }
+}
+
+.fieldError {
+    color: $red;
+    font-size: $text-xs;
+    margin-top: 2px;
+}
+
+.addLanguageRow {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+}
+
+.addLangBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.4rem 0.875rem;
+    border: 1px dashed #bbb;
+    border-radius: 0.3rem;
+    background: transparent;
+    color: #666;
+    font-size: $text-sm;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+
+    &:hover {
+        border-color: $black;
+        color: $black;
+    }
+}
+
+.priceWrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 0.3rem;
+    overflow: hidden;
+    background: $white;
+    max-width: 200px;
+
+    &:focus-within {
+        border-color: $black;
+    }
+}
+
+.priceCurrency {
+    padding: 0 0.75rem;
+    font-size: $text-base;
+    font-weight: $weight-bold;
+    color: #555;
+    background: #f5f5f5;
+    border-right: 1px solid #ced4da;
+    line-height: 2.375rem;
+    height: 2.375rem;
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+
+.priceInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0 0.75rem;
+    font-size: $text-base;
+    color: $black;
+    background: transparent;
+    height: 2.375rem;
+    min-width: 0;
+
+    &::placeholder {
+        color: #aaa;
+    }
+
+    /* hide native number spinners */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    -moz-appearance: textfield;
+}
+
+.imageUpload {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    background: #fafafa;
+
+    &:hover {
+        border-color: $black;
+        background: #f4f4f4;
+    }
+}
+
+.uploadIcon {
+    color: #bbb;
+    margin-bottom: 0.5rem;
+}
+
+.uploadLabel {
+    font-size: $text-sm;
+    color: #555;
+    margin-bottom: 0.25rem;
+}
+
+.uploadHint {
+    font-size: $text-xs;
+    color: #aaa;
+}
+
+.imagePreview {
+    position: relative;
+    display: inline-block;
+
+    img {
+        display: block;
+        max-height: 220px;
+        max-width: 100%;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 1px solid #e0e0e0;
+    }
+}
+
+.removeBtn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: $black;
+    color: $white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    &:hover {
+        background: $black-hover;
+    }
+}
+
+.galleryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 0.75rem;
+}
+
+.galleryItem {
+    position: relative;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+    }
+}
+
+.addGalleryBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px dashed #bbb;
+    border-radius: 0.3rem;
+    background: transparent;
+    color: #555;
+    font-size: $text-sm;
+    cursor: pointer;
+    width: fit-content;
+    transition: border-color 0.15s, color 0.15s;
+
+    &:hover {
+        border-color: $black;
+        color: $black;
+    }
+}
+
+.formActions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+
+    & > * {
+        flex: 1;
+        max-width: 160px;
+
+        button {
+            width: 100%;
+        }
+    }
+}

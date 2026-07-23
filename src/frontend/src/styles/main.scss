@@ -3,60 +3,60 @@
 @import '@mantine/core/styles.css';
 
 a {
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: $line-height-normal;
-  font-weight: $weight-regular;
-  font-size: $text-base;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: $line-height-normal;
+    font-weight: $weight-regular;
+    font-size: $text-base;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 button {
-  border-radius: 0.3rem;
-  padding: 0.5rem;
+    border-radius: 0.3rem;
+    padding: 0.5rem;
 
-  &.black {
-    background-color: $black;
-    color: $white;
+    &.black {
+        background-color: $black;
+        color: $white;
 
-    &:disabled {
-      background-color: $black-disabled;
-      color: $white-disabled;
-      cursor: not-allowed;
+        &:disabled {
+            background-color: $black-disabled;
+            color: $white-disabled;
+            cursor: not-allowed;
+        }
+
+        &:hover {
+            background-color: $black-hover;
+            transition: all 0.2s ease-in-out;
+        }
     }
-
-    &:hover {
-      background-color: $black-hover;
-      transition: all 0.2s ease-in-out;
-    }
-  }
 }
 
 input {
-  border-radius: 0.3rem;
+    border-radius: 0.3rem;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
 
-  h1 {
-    text-align: center;
-    font-weight: $weight-bold;
-    font-size: $text-md;
-  }
+    h1 {
+        text-align: center;
+        font-weight: $weight-bold;
+        font-size: $text-md;
+    }
 
-  button {
-    margin-top: 0.6rem;
-    width: $form-default-width;
-    padding: 0.5rem;
-  }
+    button[type="submit"] {
+        margin-top: 0.6rem;
+        width: $form-default-width;
+        padding: 0.5rem;
+    }
 }

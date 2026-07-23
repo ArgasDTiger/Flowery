@@ -3,7 +3,7 @@ import styles from './Header.module.scss';
 
 export const Header = () => {
   return (
-    <header>
+    <header className={styles.layoutHeader}>
       <div className={styles.pageNames}>
         <button className={styles.pageName}>
           <Link to='/home'>Home</Link>

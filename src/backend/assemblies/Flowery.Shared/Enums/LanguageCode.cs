@@ -1,7 +1,11 @@
-﻿namespace Flowery.Shared.Enums;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
+namespace Flowery.Shared.Enums;
+
+[JsonConverter(typeof(JsonStringEnumConverter<LanguageCode>))]
 public enum LanguageCode : byte
 {
-    UA = 0,
-    RO = 1
+    [EnumMember(Value = "ua")] UA = 0,
+    [EnumMember(Value = "ro")] RO = 1
 }
