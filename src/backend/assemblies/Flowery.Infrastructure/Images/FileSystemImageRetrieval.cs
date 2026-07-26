@@ -6,12 +6,13 @@ internal sealed class FileSystemImageRetrieval : IImageRetrieval
     private static readonly string BaseDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
     private const int DefaultBufferSize = 4096;
 
-    public Stream GetImageStream(string path)
+    public Task<Stream> GetImageStream(string path)
     {
         // TODO: remove slash from saving in db? concat logic with saver? spans?
         path = path.TrimStart('/');
         path = Path.Combine(BaseDir, path);
-        return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize,
+        Stream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, DefaultBufferSize,
             FileOptions.Asynchronous);
+        return Task.FromResult(fileStream);
     }
 }

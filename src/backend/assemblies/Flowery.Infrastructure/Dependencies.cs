@@ -1,4 +1,5 @@
-﻿using Flowery.Infrastructure.Auth;
+﻿using Azure.Identity;
+using Flowery.Infrastructure.Auth;
 using Flowery.Infrastructure.Auth.Passwords;
 using Flowery.Infrastructure.Auth.Tokens;
 using Flowery.Infrastructure.Data;
@@ -7,6 +8,7 @@ using Flowery.Infrastructure.Images;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,10 +32,12 @@ public static class Dependencies
             services.AddHttpContextAccessor();
 
             services.AddSingleton<IImageProcessor, ImageProcessor>();
-            services.AddSingleton<IImageRetrieval, FileSystemImageRetrieval>();
-            services.AddSingleton<IImageSaver, FileSystemImageSaver>();
+            services.AddSingleton<IImageRetrieval, AzureImageRetrieval>();
+            services.AddSingleton<IImageSaver, AzureImageSaver>();
 
             services.AddHangfire(connectionString);
+
+            services.ConfigureAzure();
         }
 
         private void AddAuthentication()
@@ -82,6 +86,15 @@ public static class Dependencies
             services.AddHangfireServer(options =>
             {
                 options.ServerName = $"Flowery-{Environment.MachineName}";
+            });
+        }
+
+        private void ConfigureAzure()
+        {
+            services.AddAzureClients(clientBuilder =>
+            {
+                clientBuilder.UseCredential(new DefaultAzureCredential());
+                clientBuilder.AddBlobServiceClient(new Uri("https://flowery.blob.core.windows.net"));
             });
         }
     }

@@ -28,7 +28,7 @@ public sealed class ProcessFlowerImagesJob : IJobExecutor<ProcessFlowerImages>
 
     public async Task Execute(ProcessFlowerImages payload)
     {
-        await using var originalImageStream = _imageRetrieval.GetImageStream(payload.OriginalImagePath);
+        await using var originalImageStream = await _imageRetrieval.GetImageStream(payload.OriginalImagePath);
 
         string fileName = Path.GetFileNameWithoutExtension(payload.OriginalImagePath);
         await CreateThumbnail(originalImageStream, fileName + "-thumb.webp", payload.FolderName);

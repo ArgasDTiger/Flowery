@@ -2,5 +2,5 @@
 
 public interface IImageRetrieval
 {
-    Stream GetImageStream(string path);
+    Task<Stream> GetImageStream(string path);
 }
